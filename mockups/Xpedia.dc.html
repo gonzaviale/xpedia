@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/nocturne-fe7002fc-3193-410f-a828-588fe25132bd/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<script src="_ds/nocturne-fe7002fc-3193-410f-a828-588fe25132bd/_ds_bundle.js"></script>
+<style>
+  body { margin: 0; background: var(--color-bg); }
+  a { color: var(--color-accent-300); text-decoration: none; }
+  a:hover { color: var(--color-accent-200); }
+  @keyframes xpPop { 0% { opacity: 0; transform: translateY(14px) scale(0.94); } 100% { opacity: 1; transform: none; } }
+  @keyframes xpFill { from { width: 0; } }
+  @keyframes xpGlow { 0%,100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+  .xp-row:hover { background: var(--color-neutral-900); }
+  .xp-nav:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+  .xp-node:hover { transform: translateY(-2px); }
+  .xp-opt:hover { border-color: var(--color-accent) !important; background: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
+  .xp-card:hover { box-shadow: var(--shadow-md); }
+  .btn, .tag, .xp-nav { white-space: nowrap; flex-shrink: 0; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 14px;">
+
+  <div style="display: flex; align-items: center; gap: 18px; padding: 0 20px; height: 46px; border-bottom: 1px solid var(--color-neutral-800); background: var(--color-neutral-900); position: sticky; top: 0; z-index: 40;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div style="width: 20px; height: 20px; border-radius: 5px; border: 1px solid var(--color-accent); display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-size: 12px;"><i class="ph ph-hexagon"></i></div>
+      <span style="font-family: var(--font-heading); font-weight: 500; letter-spacing: 0.14em; font-size: 12px; text-transform: uppercase;">Xpedia</span>
+    </div>
+    <div style="width: 1px; height: 18px; background: var(--color-neutral-800);"></div>
+    <div style="display: flex; gap: 4px;">
+      <sc-for list="{{ profiles }}" as="p" hint-placeholder-count="3">
+        <button type="button" class="xp-nav" onClick="{{ p.onClick }}" style="{{ p.style }}">
+          <i class="{{ p.icon }}"></i><span>{{ p.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 14px; color: var(--color-neutral-500); font-size: 12px;">
+      <span>Prototipo · datos de demostración</span>
+      <i class="ph ph-bell"></i>
+      <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-accent-800); color: var(--color-accent-200); display: flex; align-items: center; justify-content: center; font-size: 10px; letter-spacing: 0.04em;">{{ avatarInitials }}</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ EMPRESA ══════════════════ -->
+  <sc-if value="{{ isEmpresa }}" hint-placeholder-val="{{ true }}">
+  <div style="display: flex; align-items: stretch; min-height: calc(100vh - 46px);">
+
+    <aside style="width: 216px; flex: 0 0 216px; border-right: 1px solid var(--color-neutral-800); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; background: color-mix(in srgb, var(--color-neutral-900) 55%, transparent);">
+      <div style="padding: 0 10px 14px; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-500);">Espacio de trabajo</span>
+        <span style="font-family: var(--font-heading); font-size: 15px;">Nordex Soporte</span>
+        <span style="font-size: 11px; color: var(--color-neutral-500);">Plan Scale · 148 empleados</span>
+      </div>
+      <sc-for list="{{ empresaNav }}" as="n" hint-placeholder-count="5">
+        <button type="button" class="xp-nav" onClick="{{ n.onClick }}" style="{{ n.style }}">
+          <i class="{{ n.icon }}" style="font-size: 16px;"></i><span>{{ n.label }}</span>
+        </button>
+      </sc-for>
+      <div style="margin-top: auto; padding: 12px 10px; border-top: 1px solid var(--color-neutral-800); display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-500);">Motor de IA</span>
+        <div style="display: flex; align-items: center; gap: 7px; color: var(--color-accent-300); font-size: 12px;">
+          <i class="ph-fill ph-sparkle" style="animation: xpGlow 3.2s ease-in-out infinite;"></i>
+          <span>12 experiencias en revisión</span>
+        </div>
+      </div>
+    </aside>
+
+    <main style="flex: 1 1 auto; min-width: 0; padding: 26px 30px 48px;">
+
+      <!-- Dashboard empresa -->
+      <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Empresa · Dashboard" style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+          <div>
+            <h1 style="font-size: 26px; margin: 0 0 4px;">Dashboard</h1>
+            <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">Semana del 14 al 20 de septiembre · Soporte y atención al cliente</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-ghost"><i class="ph ph-calendar-blank"></i> Esta semana</button>
+            <button type="button" class="btn btn-primary"><i class="ph ph-export"></i> Exportar informe</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
+          <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Empleados activos</span>
+            <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1;">132<span style="font-size: 15px; color: var(--color-neutral-500);"> / 148</span></span>
+            <span style="font-size: 12px; color: var(--color-accent-300);"><i class="ph ph-trend-up"></i> +6 vs. semana anterior</span>
+          </div>
+          <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Objetivo semanal</span>
+            <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1;">78<span style="font-size: 15px; color: var(--color-neutral-500);">%</span></span>
+            <div style="height: 5px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;">
+              <div style="height: 100%; width: 78%; background: var(--color-accent); animation: xpFill 1s ease-out;"></div>
+            </div>
+          </div>
+          <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Misiones completadas</span>
+            <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1;">1.284</span>
+            <span style="font-size: 12px; color: var(--color-neutral-500);">Tasa de resolución 81%</span>
+          </div>
+          <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Progreso general</span>
+            <span style="font-family: var(--font-heading); font-size: 30px; line-height: 1;">Nivel 6,4</span>
+            <span style="font-size: 12px; color: var(--color-neutral-500);">Promedio del equipo</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 18px; background: var(--color-surface);">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px;">
+              <h3 style="font-size: 15px; margin: 0;">Misiones completadas por día</h3>
+              <span style="font-size: 11px; color: var(--color-neutral-500);">Últimos 14 días</span>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 6px; height: 132px;">
+              <sc-for list="{{ dailyBars }}" as="b" hint-placeholder-count="14">
+                <div style="flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%;">
+                  <div style="{{ b.style }}"></div>
+                  <span style="font-size: 9px; color: var(--color-neutral-600);">{{ b.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 18px; background: var(--color-surface); display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 7px;">
+              <i class="ph-fill ph-sparkle" style="color: var(--color-accent); font-size: 14px;"></i>
+              <h3 style="font-size: 15px; margin: 0;">Habilidades a reforzar</h3>
+            </div>
+            <sc-for list="{{ weakSkills }}" as="s" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                  <span>{{ s.name }}</span><span style="color: var(--color-neutral-500);">{{ s.pct }}%</span>
+                </div>
+                <div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;">
+                  <div style="{{ s.bar }}"></div>
+                </div>
+              </div>
+            </sc-for>
+            <p style="margin: 4px 0 0; font-size: 12px; color: var(--color-neutral-400); line-height: 1.5; border-top: 1px solid var(--color-neutral-800); padding-top: 12px;">La IA sugiere reforzar <strong style="color: var(--color-accent-300); font-weight: 500;">Gestión de reclamos</strong> en Soporte N1: 9 de 34 empleados quedaron por debajo del objetivo dos semanas seguidas.</p>
+            <button type="button" class="btn btn-primary btn-block">Generar misiones de refuerzo</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <h3 style="font-size: 15px; margin: 0 0 14px;">Actividad reciente</h3>
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="5">
+                <div style="display: flex; align-items: flex-start; gap: 11px; padding: 10px 0; border-top: 1px solid var(--color-neutral-900);">
+                  <i class="{{ a.icon }}" style="color: var(--color-accent-400); font-size: 15px; margin-top: 2px;"></i>
+                  <div style="flex: 1 1 auto; min-width: 0;">
+                    <div style="font-size: 13px;">{{ a.text }}</div>
+                    <div style="font-size: 11px; color: var(--color-neutral-600);">{{ a.time }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <h3 style="font-size: 15px; margin: 0 0 14px;">Alertas</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-sm); padding: 12px; background: color-mix(in srgb, var(--color-accent) 8%, transparent); display: flex; gap: 10px;">
+                <i class="ph ph-warning-circle" style="color: var(--color-accent-300); margin-top: 2px;"></i>
+                <div>
+                  <div style="font-size: 13px;">14 empleados sin actividad esta semana</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">Mayoría en Retención · turno noche</div>
+                </div>
+              </div>
+              <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 12px; display: flex; gap: 10px;">
+                <i class="ph ph-seal-check" style="color: var(--color-neutral-400); margin-top: 2px;"></i>
+                <div>
+                  <div style="font-size: 13px;">12 experiencias generadas esperan aprobación</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">Manual de reclamos v4 · Política de reembolsos</div>
+                </div>
+              </div>
+              <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 12px; display: flex; gap: 10px;">
+                <i class="ph ph-clock-countdown" style="color: var(--color-neutral-400); margin-top: 2px;"></i>
+                <div>
+                  <div style="font-size: 13px;">El objetivo semanal se reinicia en 2 días</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">78% del equipo ya lo cumplió</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Empleados -->
+      <sc-if value="{{ isEmployees }}">
+      <div data-screen-label="Empresa · Empleados" style="display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+          <div>
+            <h1 style="font-size: 26px; margin: 0 0 4px;">Empleados</h1>
+            <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">148 personas · 5 áreas</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" class="btn btn-ghost"><i class="ph ph-upload-simple"></i> Importar CSV</button>
+            <button type="button" class="btn btn-primary" onClick="{{ goNewEmployee }}"><i class="ph ph-plus"></i> Alta de empleado</button>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 12px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-surface) 60%, transparent);">
+          <div style="display: flex; align-items: center; gap: 7px; padding: 0 10px; height: 30px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); color: var(--color-neutral-500); min-width: 190px;">
+            <i class="ph ph-magnifying-glass"></i><span style="font-size: 12px;">Buscar por nombre o email</span>
+          </div>
+          <sc-for list="{{ empFilters }}" as="f" hint-placeholder-count="4">
+            <button type="button" onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }} <i class="ph ph-caret-down" style="font-size: 10px;"></i></button>
+          </sc-for>
+          <span style="margin-left: auto; font-size: 12px; color: var(--color-neutral-500);">Mostrando {{ employeeCount }} de 148</span>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface);">
+          <table class="table" style="width: 100%;">
+            <thead>
+              <tr>
+                <th style="text-align: left;">Nombre</th>
+                <th style="text-align: left;">Área</th>
+                <th style="text-align: left;">Nivel</th>
+                <th style="text-align: left; width: 180px;">Progreso</th>
+                <th style="text-align: left;">Cumplimiento semanal</th>
+                <th style="text-align: left;">Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ employees }}" as="e" hint-placeholder-count="8">
+                <tr class="xp-row" style="cursor: pointer;" onClick="{{ e.onClick }}">
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <div style="{{ e.avatarStyle }}">{{ e.initials }}</div>
+                      <div>
+                        <div style="font-size: 13px;">{{ e.name }}</div>
+                        <div style="font-size: 11px; color: var(--color-neutral-600);">{{ e.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="font-size: 13px; color: var(--color-neutral-400);">{{ e.area }}</td>
+                  <td><span style="font-family: var(--font-heading); font-size: 13px;">Nv {{ e.level }}</span></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="flex: 1 1 auto; height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;">
+                        <div style="{{ e.barStyle }}"></div>
+                      </div>
+                      <span style="font-size: 11px; color: var(--color-neutral-500); width: 30px;">{{ e.prog }}%</span>
+                    </div>
+                  </td>
+                  <td style="font-size: 13px;">{{ e.weekly }}</td>
+                  <td><span class="{{ e.tagClass }}">{{ e.state }}</span></td>
+                  <td style="text-align: right; color: var(--color-neutral-600);"><i class="ph ph-dots-three"></i></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: var(--color-neutral-600);">Haz clic en una fila para abrir el perfil del empleado.</p>
+      </div>
+      </sc-if>
+
+      <!-- Alta de empleado -->
+      <sc-if value="{{ isNewEmployee }}">
+      <div data-screen-label="Empresa · Alta de empleado" style="max-width: 720px; display: flex; flex-direction: column; gap: 20px;">
+        <div>
+          <button type="button" class="btn btn-ghost" onClick="{{ goEmployees }}" style="padding-left: 0;"><i class="ph ph-arrow-left"></i> Empleados</button>
+          <h1 style="font-size: 26px; margin: 8px 0 4px;">Alta de empleado</h1>
+          <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">La persona recibirá una invitación por email y su primera ruta de misiones.</p>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Nombre</span><input class="input" type="text" value="Camila" /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Apellido</span><input class="input" type="text" value="Ferreyra" /></label>
+          </div>
+          <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Email corporativo</span><input class="input" type="email" value="camila.ferreyra@nordex.com" /></label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Área</span>
+              <select class="input"><option>Soporte N1</option><option>Soporte N2</option><option>Retención</option><option>Calidad</option><option>Onboarding</option></select>
+            </label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Puesto</span><input class="input" type="text" value="Agente de soporte" /></label>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between;">
+            <h3 style="font-size: 15px; margin: 0;">Contenido asignado</h3>
+            <span style="font-size: 11px; color: var(--color-neutral-500);">La IA generará misiones a partir de lo seleccionado</span>
+          </div>
+          <sc-for list="{{ assignable }}" as="c" hint-placeholder-count="4">
+            <label style="display: flex; align-items: center; gap: 11px; padding: 11px 12px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); cursor: pointer;">
+              <input type="checkbox" checked="{{ c.checked }}" style="accent-color: var(--color-accent);" />
+              <div style="flex: 1 1 auto;">
+                <div style="font-size: 13px;">{{ c.name }}</div>
+                <div style="font-size: 11px; color: var(--color-neutral-600);">{{ c.meta }}</div>
+              </div>
+              <span class="tag tag-outline">{{ c.missions }} misiones</span>
+            </label>
+          </sc-for>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+          <h3 style="font-size: 15px; margin: 0;">Objetivo semanal</h3>
+          <div style="display: flex; gap: 8px;">
+            <sc-for list="{{ goalModes }}" as="g" hint-placeholder-count="2">
+              <button type="button" onClick="{{ g.onClick }}" style="{{ g.style }}">
+                <div style="font-size: 13px;">{{ g.label }}</div>
+                <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">{{ g.meta }}</div>
+              </button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ customGoal }}">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border-top: 1px solid var(--color-neutral-800); padding-top: 14px;">
+              <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Misiones por semana</span><input class="input" type="number" value="6" /></label>
+              <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">XP mínima semanal</span><input class="input" type="number" value="900" /></label>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button type="button" class="btn btn-ghost" onClick="{{ goEmployees }}">Cancelar</button>
+          <button type="button" class="btn btn-primary" onClick="{{ goEmployees }}">Crear y enviar invitación</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Perfil de empleado -->
+      <sc-if value="{{ isProfile }}">
+      <div data-screen-label="Empresa · Perfil de empleado" style="display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <button type="button" class="btn btn-ghost" onClick="{{ goEmployees }}" style="padding-left: 0;"><i class="ph ph-arrow-left"></i> Empleados</button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px;">
+          <div style="width: 54px; height: 54px; border-radius: 50%; background: var(--color-accent-800); color: var(--color-accent-200); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 18px;">{{ sel.initials }}</div>
+          <div style="flex: 1 1 220px; min-width: 0;">
+            <h1 style="font-size: 24px; margin: 0 0 2px;">{{ sel.name }}</h1>
+            <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">{{ sel.area }} · {{ sel.email }} · alta {{ sel.since }}</p>
+          </div>
+          <div style="display: flex; gap: 26px;">
+            <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Nivel</div><div style="font-family: var(--font-heading); font-size: 24px;">{{ sel.level }}</div></div>
+            <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">XP total</div><div style="font-family: var(--font-heading); font-size: 24px;">{{ sel.xp }}</div></div>
+            <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Misiones</div><div style="font-family: var(--font-heading); font-size: 24px;">{{ sel.missions }}</div></div>
+          </div>
+          <button type="button" class="btn btn-primary">Ajustar objetivo</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="font-size: 15px; margin: 0;">Habilidades</h3>
+            <sc-for list="{{ sel.skills }}" as="s" hint-placeholder-count="5">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                  <span>{{ s.name }}</span>
+                  <span style="color: var(--color-neutral-500);">{{ s.label }}</span>
+                </div>
+                <div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ s.bar }}"></div></div>
+              </div>
+            </sc-for>
+            <div style="border-top: 1px solid var(--color-neutral-800); padding-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Fortalezas</span>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag tag-accent">Escucha activa</span><span class="tag tag-accent">Conocimiento de producto</span></div>
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-top: 6px;">A reforzar</span>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag tag-outline">Gestión de reclamos</span><span class="tag tag-outline">Retención</span></div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+              <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px;">
+                <h3 style="font-size: 15px; margin: 0;">Evolución de XP</h3>
+                <span style="font-size: 11px; color: var(--color-neutral-500);">8 semanas</span>
+              </div>
+              <svg viewBox="0 0 320 96" style="width: 100%; height: 96px; overflow: visible;">
+                <polyline points="0,86 44,74 88,70 132,52 176,46 220,30 264,24 316,10" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
+                <polyline points="0,86 44,74 88,70 132,52 176,46 220,30 264,24 316,10 316,96 0,96" fill="var(--color-accent-900)" stroke="none" opacity="0.7"></polyline>
+                <circle cx="316" cy="10" r="3.5" fill="var(--color-accent-300)"></circle>
+              </svg>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--color-neutral-600); margin-top: 6px;">
+                <span>Jul S1</span><span>Ago S1</span><span>Sep S3</span>
+              </div>
+            </div>
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+              <h3 style="font-size: 15px; margin: 0 0 12px;">Objetivo semanal</h3>
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="flex: 1 1 auto;">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span>5 de 6 misiones</span><span style="color: var(--color-accent-300);">83%</span></div>
+                  <div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="height: 100%; width: 83%; background: var(--color-accent); animation: xpFill 1s ease-out;"></div></div>
+                </div>
+                <span class="tag tag-accent">En curso</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <div style="padding: 16px 18px; display: flex; align-items: baseline; justify-content: space-between;">
+            <h3 style="font-size: 15px; margin: 0;">Misiones completadas</h3>
+            <span style="font-size: 11px; color: var(--color-neutral-500);">Últimas 6</span>
+          </div>
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Misión</th><th style="text-align: left;">Tipo</th><th style="text-align: left;">Habilidad</th><th style="text-align: left;">Resultado</th><th style="text-align: right;">XP</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ sel.history }}" as="h" hint-placeholder-count="6">
+                <tr class="xp-row">
+                  <td style="font-size: 13px;">{{ h.name }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-400);">{{ h.type }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-400);">{{ h.skill }}</td>
+                  <td><span class="{{ h.tagClass }}">{{ h.result }}</span></td>
+                  <td style="text-align: right; font-family: var(--font-heading); font-size: 13px; color: var(--color-accent-300);">+{{ h.xp }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Capacitación -->
+      <sc-if value="{{ isTraining }}">
+      <div data-screen-label="Empresa · Capacitación" style="display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+          <div>
+            <h1 style="font-size: 26px; margin: 0 0 4px;">Capacitación</h1>
+            <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">Contenido cargado, habilidades detectadas y experiencias generadas</p>
+          </div>
+          <button type="button" class="btn btn-primary"><i class="ph ph-upload-simple"></i> Cargar contenido</button>
+        </div>
+
+        <div style="border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); padding: 22px; display: flex; align-items: center; gap: 16px; background: color-mix(in srgb, var(--color-surface) 45%, transparent);">
+          <i class="ph ph-file-arrow-up" style="font-size: 26px; color: var(--color-accent-400);"></i>
+          <div style="flex: 1 1 auto;">
+            <div style="font-size: 14px;">Arrastra manuales, guiones de atención, políticas o transcripciones</div>
+            <div style="font-size: 12px; color: var(--color-neutral-500); margin-top: 3px;">PDF, DOCX, TXT, MD · hasta 50 MB por archivo</div>
+          </div>
+          <button type="button" class="btn btn-ghost">Explorar archivos</button>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <i class="ph-fill ph-sparkle" style="color: var(--color-accent); font-size: 14px;"></i>
+            <h3 style="font-size: 15px; margin: 0;">Contenido → habilidades → misiones</h3>
+          </div>
+          <p style="margin: 0 0 18px; font-size: 12px; color: var(--color-neutral-500);">Cómo la IA transformó «Manual de reclamos v4» en experiencias de capacitación.</p>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr) 40px minmax(0, 1.1fr); align-items: center; gap: 0;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600);">Contenido</span>
+              <div style="border: 1px solid var(--color-neutral-700); border-radius: var(--radius-sm); padding: 12px; display: flex; gap: 9px; align-items: center;">
+                <i class="ph ph-file-text" style="color: var(--color-neutral-400);"></i>
+                <div><div style="font-size: 13px;">Manual de reclamos v4</div><div style="font-size: 11px; color: var(--color-neutral-600);">38 páginas · procesado</div></div>
+              </div>
+              <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 12px; display: flex; gap: 9px; align-items: center; opacity: 0.6;">
+                <i class="ph ph-file-text" style="color: var(--color-neutral-500);"></i>
+                <div><div style="font-size: 13px;">Política de reembolsos</div><div style="font-size: 11px; color: var(--color-neutral-600);">9 páginas</div></div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center; color: var(--color-accent-600);"><i class="ph ph-arrow-right" style="font-size: 18px;"></i></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600);">Habilidades detectadas</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="tag tag-accent">Gestión de reclamos</span>
+                <span class="tag tag-accent">Resolución de conflictos</span>
+                <span class="tag tag-neutral">Comunicación</span>
+                <span class="tag tag-neutral">Procesos internos</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center; color: var(--color-accent-600);"><i class="ph ph-arrow-right" style="font-size: 18px;"></i></div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <span style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-600);">Misiones generadas</span>
+              <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-sm); padding: 10px 12px; background: color-mix(in srgb, var(--color-accent) 7%, transparent); font-size: 13px;">Cobro duplicado · caso práctico</div>
+              <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-sm); padding: 10px 12px; background: color-mix(in srgb, var(--color-accent) 7%, transparent); font-size: 13px;">Escalar o resolver · decisión</div>
+              <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; color: var(--color-neutral-400);">+ 9 misiones más</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+            <h3 style="font-size: 15px; margin: 0;">Experiencias generadas por IA</h3>
+            <span style="font-size: 12px; color: var(--color-neutral-500);">12 esperan revisión humana</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 12px;">
+            <sc-for list="{{ generated }}" as="g" hint-placeholder-count="6">
+              <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 15px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                  <span class="tag tag-outline">{{ g.type }}</span>
+                  <span class="{{ g.statusClass }}">{{ g.status }}</span>
+                </div>
+                <div style="font-family: var(--font-heading); font-size: 15px;">{{ g.name }}</div>
+                <div style="font-size: 12px; color: var(--color-neutral-500); line-height: 1.5;">{{ g.desc }}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--color-neutral-900); padding-top: 10px; font-size: 12px;">
+                  <span style="color: var(--color-neutral-400);">{{ g.skill }}</span>
+                  <span style="color: var(--color-accent-300); font-family: var(--font-heading);">+{{ g.xp }} XP</span>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-ghost" style="flex: 1 1 auto; font-size: 12px;">Revisar</button>
+                  <button type="button" class="btn btn-primary" style="flex: 1 1 auto; font-size: 12px;">Aprobar</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Métricas -->
+      <sc-if value="{{ isMetrics }}">
+      <div data-screen-label="Empresa · Métricas" style="display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <h1 style="font-size: 26px; margin: 0 0 4px;">Métricas</h1>
+          <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">Progreso, cumplimiento y desarrollo de habilidades</p>
+        </div>
+        <div style="display: flex; gap: 4px; border-bottom: 1px solid var(--color-neutral-800);">
+          <sc-for list="{{ metricTabs }}" as="t" hint-placeholder-count="5">
+            <button type="button" onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 12px;">
+          <sc-for list="{{ metricKpis }}" as="k" hint-placeholder-count="5">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 15px; display: flex; flex-direction: column; gap: 6px;">
+              <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500);">{{ k.label }}</span>
+              <span style="font-family: var(--font-heading); font-size: 25px; line-height: 1;">{{ k.value }}</span>
+              <span style="font-size: 11px; color: var(--color-neutral-500);">{{ k.delta }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <h3 style="font-size: 15px; margin: 0 0 16px;">{{ chartTitle }}</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <sc-for list="{{ metricRows }}" as="r" hint-placeholder-count="5">
+                <div style="display: grid; grid-template-columns: 150px minmax(0, 1fr) 54px; align-items: center; gap: 12px;">
+                  <span style="font-size: 13px; color: var(--color-neutral-300);">{{ r.name }}</span>
+                  <div style="height: 8px; border-radius: 4px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ r.bar }}"></div></div>
+                  <span style="font-size: 12px; color: var(--color-neutral-400); text-align: right;">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="ph-fill ph-sparkle" style="color: var(--color-accent); font-size: 14px;"></i>
+              <h3 style="font-size: 15px; margin: 0;">Lectura de la IA</h3>
+            </div>
+            <sc-for list="{{ insights }}" as="i" hint-placeholder-count="3">
+              <div style="border-left: 1px solid var(--color-accent-700); padding-left: 12px;">
+                <div style="font-size: 13px; line-height: 1.5;">{{ i.text }}</div>
+                <div style="font-size: 11px; color: var(--color-neutral-600); margin-top: 4px;">{{ i.meta }}</div>
+              </div>
+            </sc-for>
+            <button type="button" class="btn btn-ghost btn-block" style="margin-top: auto;">Ver oportunidades de mejora</button>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px;">
+            <h3 style="font-size: 15px; margin: 0;">Evolución temporal</h3>
+            <div style="display: flex; gap: 14px; font-size: 11px; color: var(--color-neutral-500);">
+              <span><span style="display: inline-block; width: 18px; height: 2px; background: var(--color-accent); vertical-align: middle; margin-right: 5px;"></span>Cumplimiento</span>
+              <span><span style="display: inline-block; width: 18px; height: 2px; background: var(--color-neutral-500); vertical-align: middle; margin-right: 5px;"></span>Tasa de resolución</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 600 150" style="width: 100%; height: 150px;">
+            <line x1="0" y1="140" x2="600" y2="140" stroke="var(--color-neutral-800)" stroke-width="1"></line>
+            <line x1="0" y1="95" x2="600" y2="95" stroke="var(--color-neutral-900)" stroke-width="1"></line>
+            <line x1="0" y1="50" x2="600" y2="50" stroke="var(--color-neutral-900)" stroke-width="1"></line>
+            <polyline points="10,108 90,96 170,88 250,72 330,66 410,52 490,44 580,30" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"></polyline>
+            <polyline points="10,120 90,116 170,100 250,104 330,86 410,80 490,72 580,62" fill="none" stroke="var(--color-neutral-500)" stroke-width="1.5" stroke-dasharray="4 4" stroke-linecap="round"></polyline>
+          </svg>
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--color-neutral-600);">
+            <span>Sem 29</span><span>Sem 31</span><span>Sem 33</span><span>Sem 35</span><span>Sem 37</span><span>Sem 38</span>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Configuración -->
+      <sc-if value="{{ isSettings }}">
+      <div data-screen-label="Empresa · Configuración" style="display: flex; flex-direction: column; gap: 18px; max-width: 980px;">
+        <div>
+          <h1 style="font-size: 26px; margin: 0 0 4px;">Configuración</h1>
+          <p style="margin: 0; color: var(--color-neutral-500); font-size: 13px;">Empresa, equipo, plan y facturación</p>
+        </div>
+        <div style="display: flex; gap: 4px; border-bottom: 1px solid var(--color-neutral-800);">
+          <sc-for list="{{ settingsTabs }}" as="t" hint-placeholder-count="5">
+            <button type="button" onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ stCompany }}">
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="font-size: 15px; margin: 0;">Información de empresa</h3>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Razón social</span><input class="input" type="text" value="Nordex Soporte S.A." /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Dominio de email</span><input class="input" type="text" value="nordex.com" /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Objetivo semanal global</span><input class="input" type="text" value="6 misiones / 900 XP" /></label>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+            <h3 style="font-size: 15px; margin: 0;">Preferencias</h3>
+            <sc-for list="{{ prefs }}" as="p" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; border-top: 1px solid var(--color-neutral-900);">
+                <div>
+                  <div style="font-size: 13px;">{{ p.name }}</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-600);">{{ p.meta }}</div>
+                </div>
+                <div style="{{ p.trackStyle }}"><div style="{{ p.knobStyle }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ stUsers }}">
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <div style="padding: 16px 18px; display: flex; align-items: center; justify-content: space-between;">
+            <h3 style="font-size: 15px; margin: 0;">Usuarios y permisos</h3>
+            <button type="button" class="btn btn-primary"><i class="ph ph-plus"></i> Invitar usuario</button>
+          </div>
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Usuario</th><th style="text-align: left;">Rol</th><th style="text-align: left;">Áreas</th><th style="text-align: left;">Estado</th><th></th></tr></thead>
+            <tbody>
+              <sc-for list="{{ users }}" as="u" hint-placeholder-count="4">
+                <tr class="xp-row">
+                  <td><div style="font-size: 13px;">{{ u.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ u.email }}</div></td>
+                  <td style="font-size: 13px;">{{ u.role }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-400);">{{ u.areas }}</td>
+                  <td><span class="{{ u.tagClass }}">{{ u.state }}</span></td>
+                  <td style="text-align: right; color: var(--color-neutral-600);"><i class="ph ph-dots-three"></i></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ stPlan }}">
+        <div style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-accent) 7%, transparent); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <span class="tag tag-accent">Plan actual</span>
+                <h3 style="font-size: 22px; margin: 10px 0 2px;">Scale</h3>
+                <p style="margin: 0; font-size: 12px; color: var(--color-neutral-400);">USD 1.480 / mes · facturación anual</p>
+              </div>
+              <button type="button" class="btn btn-primary">Cambiar plan</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--color-accent-800); padding-top: 14px;">
+              <sc-for list="{{ planUsage }}" as="p" hint-placeholder-count="3">
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span>{{ p.label }}</span><span style="color: var(--color-neutral-400);">{{ p.value }}</span></div>
+                  <div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ p.bar }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="font-size: 15px; margin: 0;">Facturación</h3>
+            <div style="display: flex; align-items: center; gap: 12px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 12px;">
+              <i class="ph ph-credit-card" style="font-size: 20px; color: var(--color-neutral-400);"></i>
+              <div style="flex: 1 1 auto;"><div style="font-size: 13px;">Visa ···· 4417</div><div style="font-size: 11px; color: var(--color-neutral-600);">Vence 08/28</div></div>
+              <button type="button" class="btn btn-ghost" style="font-size: 12px;">Editar</button>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ invoices }}" as="i" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--color-neutral-900); font-size: 13px;">
+                  <span>{{ i.date }}</span>
+                  <span style="color: var(--color-neutral-400);">{{ i.amount }}</span>
+                  <a href="#0">Descargar</a>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ stIntegrations }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px;">
+          <sc-for list="{{ integrations }}" as="i" hint-placeholder-count="4">
+            <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px; display: flex; flex-direction: column; gap: 10px;">
+              <i class="{{ i.icon }}" style="font-size: 20px; color: var(--color-accent-400);"></i>
+              <div style="font-family: var(--font-heading); font-size: 14px;">{{ i.name }}</div>
+              <div style="font-size: 12px; color: var(--color-neutral-500); line-height: 1.45;">{{ i.desc }}</div>
+              <button type="button" class="{{ i.btnClass }}" style="margin-top: auto;">{{ i.action }}</button>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════════ EMPLEADO ══════════════════ -->
+  <sc-if value="{{ isEmpleado }}">
+  <div style="min-height: calc(100vh - 46px); background: radial-gradient(1100px 520px at 18% -8%, var(--color-accent-900) 0%, transparent 62%), var(--color-bg);">
+    <div style="max-width: 1080px; margin: 0 auto; padding: 0 26px;">
+      <nav style="display: flex; align-items: center; gap: 6px; padding: 16px 0 6px; flex-wrap: wrap;">
+        <sc-for list="{{ empleadoNav }}" as="n" hint-placeholder-count="5">
+          <button type="button" class="xp-nav" onClick="{{ n.onClick }}" style="{{ n.style }}">
+            <i class="{{ n.icon }}" style="font-size: 15px;"></i><span>{{ n.label }}</span>
+          </button>
+        </sc-for>
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 10px; border: 1px solid var(--color-accent-800); border-radius: 999px; padding: 5px 12px 5px 8px;">
+          <div style="width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: var(--font-heading); color: var(--color-accent-200);">7</div>
+          <span style="font-size: 12px; color: var(--color-neutral-300); white-space: nowrap;">2.340 / 3.000 XP</span>
+        </div>
+      </nav>
+
+      <!-- Inicio empleado -->
+      <sc-if value="{{ isHome }}">
+      <div data-screen-label="Empleado · Inicio" style="padding: 22px 0 48px; display: flex; flex-direction: column; gap: 22px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;">
+          <div>
+            <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">Nivel 7 · Especialista de soporte</span>
+            <h1 style="font-size: 34px; margin: 8px 0 6px;">Buen día, Martín</h1>
+            <p style="margin: 0; font-size: 14px; color: var(--color-neutral-400);">Te faltan 2 misiones para cerrar el objetivo de la semana.</p>
+          </div>
+          <button type="button" class="btn btn-primary" onClick="{{ goMissions }}" style="font-size: 15px; padding: 10px 18px;">Continuar aventura <i class="ph ph-arrow-right"></i></button>
+        </div>
+
+        <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-lg); padding: 22px; background: linear-gradient(120deg, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 70%); display: flex; flex-wrap: wrap; gap: 28px; align-items: center;">
+          <div style="flex: 1 1 340px; min-width: 0;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px;">
+              <span style="font-family: var(--font-heading); font-size: 15px;">Progreso al nivel 8</span>
+              <span style="font-size: 13px; color: var(--color-accent-300);">2.340 / 3.000 XP</span>
+            </div>
+            <div style="height: 10px; border-radius: 5px; background: var(--color-neutral-800); overflow: hidden; box-shadow: inset 0 0 0 1px var(--color-neutral-800);">
+              <div style="height: 100%; width: 78%; background: linear-gradient(90deg, var(--color-accent-600), var(--color-accent-300)); animation: xpFill 1.1s ease-out;"></div>
+            </div>
+            <div style="display: flex; gap: 22px; margin-top: 16px;">
+              <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Racha</div><div style="font-family: var(--font-heading); font-size: 20px;">9 días</div></div>
+              <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Misiones</div><div style="font-family: var(--font-heading); font-size: 20px;">64</div></div>
+              <div><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Precisión</div><div style="font-family: var(--font-heading); font-size: 20px;">86%</div></div>
+            </div>
+          </div>
+          <div style="flex: 0 0 210px; border-left: 1px solid var(--color-accent-800); padding-left: 24px;">
+            <div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 8px;">Objetivo semanal</div>
+            <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+              <sc-for list="{{ weekPips }}" as="p" hint-placeholder-count="6">
+                <div style="{{ p.style }}"></div>
+              </sc-for>
+            </div>
+            <div style="font-size: 13px; color: var(--color-neutral-300);">4 de 6 misiones</div>
+            <div style="font-size: 11px; color: var(--color-neutral-600); margin-top: 2px;">Se reinicia el domingo</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between;">
+              <h2 style="font-size: 18px; margin: 0;">Misiones disponibles</h2>
+              <a href="#0" onClick="{{ goMissions }}" style="font-size: 12px;">Ver el mapa completo</a>
+            </div>
+            <sc-for list="{{ availableMissions }}" as="m" hint-placeholder-count="3">
+              <div class="xp-card" style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px; display: flex; gap: 15px; align-items: center;">
+                <div style="width: 38px; height: 38px; flex: 0 0 38px; border-radius: var(--radius-sm); border: 1px solid var(--color-accent-700); display: flex; align-items: center; justify-content: center; color: var(--color-accent-300);">
+                  <i class="{{ m.icon }}" style="font-size: 17px;"></i>
+                </div>
+                <div style="flex: 1 1 auto; min-width: 0;">
+                  <div style="font-family: var(--font-heading); font-size: 15px;">{{ m.name }}</div>
+                  <div style="font-size: 12px; color: var(--color-neutral-500); margin-top: 3px;">{{ m.type }} · {{ m.difficulty }} · {{ m.skill }}</div>
+                </div>
+                <div style="text-align: right; flex: 0 0 auto; white-space: nowrap;">
+                  <div style="font-family: var(--font-heading); font-size: 14px; color: var(--color-accent-300);">+{{ m.xp }} XP</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-600);">{{ m.minutes }} min</div>
+                </div>
+                <button type="button" class="btn btn-primary" onClick="{{ m.onClick }}">Iniciar</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+              <h3 style="font-size: 15px; margin: 0 0 14px;">Tus habilidades</h3>
+              <div style="display: flex; flex-direction: column; gap: 11px;">
+                <sc-for list="{{ mySkills }}" as="s" hint-placeholder-count="5">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span>{{ s.name }}</span><span style="color: var(--color-neutral-500);">{{ s.label }}</span></div>
+                    <div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ s.bar }}"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+              <h3 style="font-size: 15px; margin: 0 0 12px;">Actividad reciente</h3>
+              <div style="display: flex; flex-direction: column;">
+                <sc-for list="{{ myActivity }}" as="a" hint-placeholder-count="4">
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--color-neutral-900);">
+                    <i class="{{ a.icon }}" style="color: var(--color-accent-400); font-size: 14px;"></i>
+                    <span style="flex: 1 1 auto; font-size: 12px;">{{ a.text }}</span>
+                    <span style="font-size: 11px; color: var(--color-accent-300); font-family: var(--font-heading);">{{ a.xp }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Mission Hub -->
+      <sc-if value="{{ isHub }}">
+      <div data-screen-label="Empleado · Mission Hub" style="padding: 22px 0 48px; display: flex; flex-direction: column; gap: 24px;">
+        <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px;">
+          <div>
+            <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">Ruta activa · Atención al cliente</span>
+            <h1 style="font-size: 32px; margin: 8px 0 6px;">Tu aventura</h1>
+            <p style="margin: 0; font-size: 14px; color: var(--color-neutral-400); max-width: 520px;">Capítulo 3 de 5 · «Reclamos difíciles». Cada nodo se desbloquea al superar el anterior.</p>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="tag tag-outline">6 completadas</span>
+            <span class="tag tag-accent">2 disponibles</span>
+            <span class="tag tag-neutral">3 bloqueadas</span>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: linear-gradient(160deg, color-mix(in srgb, var(--color-accent) 6%, transparent), transparent 60%), var(--color-surface); padding: 30px 26px; position: relative; overflow: hidden;">
+          <svg viewBox="0 0 900 300" preserveAspectRatio="none" style="position: absolute; inset: 30px 26px; width: calc(100% - 52px); height: calc(100% - 60px); pointer-events: none;">
+            <path d="M 40 60 L 240 60 L 440 60 L 640 60 Q 860 60 860 150 Q 860 240 640 240 L 440 240 L 240 240 L 40 240" fill="none" stroke="var(--color-neutral-800)" stroke-width="2" stroke-dasharray="6 7"></path>
+            <path d="M 40 60 L 240 60 L 440 60 L 640 60" fill="none" stroke="var(--color-accent-600)" stroke-width="2"></path>
+          </svg>
+          <div style="position: relative; display: flex; flex-direction: column; gap: 46px;">
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+              <sc-for list="{{ hubTop }}" as="n" hint-placeholder-count="4">
+                <div class="xp-node" onClick="{{ n.onClick }}" style="{{ n.style }}">
+                  <div style="{{ n.badgeStyle }}"><i class="{{ n.icon }}"></i></div>
+                  <div style="font-family: var(--font-heading); font-size: 14px;">{{ n.name }}</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-500);">{{ n.type }} · {{ n.difficulty }}</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-400);">{{ n.skill }}</div>
+                  <div style="{{ n.xpStyle }}">{{ n.xpLabel }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px;">
+              <sc-for list="{{ hubBottom }}" as="n" hint-placeholder-count="4">
+                <div class="xp-node" onClick="{{ n.onClick }}" style="{{ n.style }}">
+                  <div style="{{ n.badgeStyle }}"><i class="{{ n.icon }}"></i></div>
+                  <div style="font-family: var(--font-heading); font-size: 14px;">{{ n.name }}</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-500);">{{ n.type }} · {{ n.difficulty }}</div>
+                  <div style="font-size: 11px; color: var(--color-neutral-400);">{{ n.skill }}</div>
+                  <div style="{{ n.xpStyle }}">{{ n.xpLabel }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;">
+          <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-md); padding: 16px; background: color-mix(in srgb, var(--color-accent) 7%, transparent); display: flex; gap: 12px; align-items: center;">
+            <i class="ph-fill ph-trophy" style="font-size: 22px; color: var(--color-accent-300);"></i>
+            <div><div style="font-size: 13px;">Recompensa de capítulo</div><div style="font-size: 11px; color: var(--color-neutral-400);">Insignia «Mediador» + 400 XP</div></div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; gap: 12px; align-items: center;">
+            <i class="ph-fill ph-sparkle" style="font-size: 20px; color: var(--color-accent-400);"></i>
+            <div><div style="font-size: 13px;">Dificultad adaptada</div><div style="font-size: 11px; color: var(--color-neutral-400);">La IA subió el nivel tras tu racha de 9 días</div></div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 16px; background: var(--color-surface); display: flex; gap: 12px; align-items: center;">
+            <i class="ph ph-lock-simple" style="font-size: 20px; color: var(--color-neutral-500);"></i>
+            <div><div style="font-size: 13px;">Próximo capítulo</div><div style="font-size: 11px; color: var(--color-neutral-400);">«Retención» se abre al completar el mapa</div></div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Misión (flujo interactivo) -->
+      <sc-if value="{{ isMission }}">
+      <div data-screen-label="Empleado · Misión" style="padding: 18px 0 48px; max-width: 760px; margin: 0 auto;">
+        <sc-if value="{{ missionRunning }}">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <button type="button" class="btn btn-ghost" onClick="{{ goHub }}" style="padding-left: 0;"><i class="ph ph-x"></i> Salir</button>
+            <div style="flex: 1 1 auto; height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;">
+              <div style="{{ missionProgressStyle }}"></div>
+            </div>
+            <span style="font-size: 12px; color: var(--color-neutral-500);">{{ stepLabel }}</span>
+          </div>
+
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+              <span class="tag tag-accent">{{ step.kind }}</span>
+              <span class="tag tag-outline">{{ step.difficulty }}</span>
+              <span style="font-size: 12px; color: var(--color-accent-300); font-family: var(--font-heading); white-space: nowrap; flex-shrink: 0;">+{{ step.xp }} XP</span>
+            </div>
+            <h1 style="font-size: 28px; margin: 0 0 8px;">Cobro duplicado</h1>
+            <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Caso práctico · Gestión de reclamos · generado del Manual de reclamos v4</p>
+          </div>
+
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 22px; display: flex; flex-direction: column; gap: 16px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Contexto</div>
+            <p style="margin: 0; font-size: 15px; line-height: 1.6; color: var(--color-neutral-200); text-wrap: pretty;">{{ step.context }}</p>
+            <div style="border-top: 1px solid var(--color-neutral-800); padding-top: 16px;">
+              <div style="font-family: var(--font-heading); font-size: 17px; margin-bottom: 14px;">{{ step.question }}</div>
+
+              <sc-if value="{{ step.isChoice }}">
+              <div style="display: flex; flex-direction: column; gap: 9px;">
+                <sc-for list="{{ step.options }}" as="o" hint-placeholder-count="3">
+                  <button type="button" class="xp-opt" onClick="{{ o.onClick }}" style="{{ o.style }}">
+                    <span style="{{ o.keyStyle }}">{{ o.key }}</span>
+                    <span style="flex: 1 1 auto; font-size: 14px; line-height: 1.45;">{{ o.text }}</span>
+                  </button>
+                </sc-for>
+              </div>
+              </sc-if>
+
+              <sc-if value="{{ step.isOpen }}">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <textarea placeholder="Escribe tu respuesta al cliente…" onChange="{{ onText }}" style="width: 100%; box-sizing: border-box; min-height: 128px; resize: vertical; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-neutral-700); border-radius: var(--radius-sm); padding: 12px; font-family: var(--font-body); font-size: 14px; line-height: 1.55;"></textarea>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--color-neutral-600);">
+                  <i class="ph-fill ph-sparkle" style="color: var(--color-accent-500);"></i>
+                  <span>La IA evaluará claridad, tono y si aplicaste el procedimiento correcto.</span>
+                </div>
+              </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+            <span style="font-size: 12px; color: var(--color-neutral-600);">{{ hintText }}</span>
+            <button type="button" class="btn btn-primary" onClick="{{ onAdvance }}" style="font-size: 15px; padding: 10px 20px;">{{ advanceLabel }} <i class="ph ph-arrow-right"></i></button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- Resultado -->
+        <sc-if value="{{ missionDone }}">
+        <div style="display: flex; flex-direction: column; gap: 20px; animation: xpPop 0.5s ease-out;">
+          <div style="text-align: center; padding: 26px 0 6px;">
+            <div style="width: 62px; height: 62px; margin: 0 auto 16px; border-radius: 50%; border: 1px solid var(--color-accent); display: flex; align-items: center; justify-content: center; color: var(--color-accent-200); background: color-mix(in srgb, var(--color-accent) 12%, transparent); box-shadow: 0 0 34px color-mix(in srgb, var(--color-accent) 28%, transparent);">
+              <i class="ph-fill ph-check-fat" style="font-size: 26px;"></i>
+            </div>
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent-400);">Misión completada</span>
+            <h1 style="font-size: 32px; margin: 10px 0 4px;">{{ resultTitle }}</h1>
+            <p style="margin: 0; font-size: 14px; color: var(--color-neutral-400);">{{ resultSubtitle }}</p>
+          </div>
+
+          <div style="display: flex; justify-content: center;">
+            <div style="font-family: var(--font-heading); font-size: 56px; color: var(--color-accent-200); line-height: 1; animation: xpPop 0.6s 0.1s ease-out backwards;">+{{ earnedXp }} <span style="font-size: 20px; color: var(--color-accent-400);">XP</span></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+            <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-accent) 7%, transparent); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+              <h3 style="font-size: 14px; margin: 0;">Habilidades desarrolladas</h3>
+              <sc-for list="{{ gainedSkills }}" as="g" hint-placeholder-count="2">
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px;">
+                    <span>{{ g.name }}</span><span style="color: var(--color-accent-300); font-family: var(--font-heading);">+{{ g.gain }}</span>
+                  </div>
+                  <div style="height: 5px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ g.bar }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 7px;">
+                <i class="ph-fill ph-sparkle" style="color: var(--color-accent); font-size: 14px;"></i>
+                <h3 style="font-size: 14px; margin: 0;">Feedback de la IA</h3>
+              </div>
+              <p style="margin: 0; font-size: 13px; line-height: 1.55; color: var(--color-neutral-300);">{{ feedback }}</p>
+              <div style="margin-top: auto; font-size: 11px; color: var(--color-neutral-600); border-top: 1px solid var(--color-neutral-900); padding-top: 10px;">{{ adaptNote }}</div>
+            </div>
+          </div>
+
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 9px;">
+              <span style="font-size: 13px;">Progreso al nivel 8</span>
+              <span style="font-size: 12px; color: var(--color-accent-300);">{{ newXpLabel }}</span>
+            </div>
+            <div style="height: 9px; border-radius: 5px; background: var(--color-neutral-800); overflow: hidden;">
+              <div style="{{ newBarStyle }}"></div>
+            </div>
+            <div style="font-size: 11px; color: var(--color-neutral-600); margin-top: 8px;">Objetivo semanal: 5 de 6 misiones</div>
+          </div>
+
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button type="button" class="btn btn-ghost" onClick="{{ goHub }}">Volver al mapa</button>
+            <button type="button" class="btn btn-primary" onClick="{{ restartMission }}" style="font-size: 15px; padding: 10px 20px;">Siguiente misión <i class="ph ph-arrow-right"></i></button>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- Árbol de habilidades -->
+      <sc-if value="{{ isSkills }}">
+      <div data-screen-label="Empleado · Habilidades" style="padding: 22px 0 48px; display: flex; flex-direction: column; gap: 22px;">
+        <div>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">Desarrollo profesional</span>
+          <h1 style="font-size: 32px; margin: 8px 0 6px;">Árbol de habilidades</h1>
+          <p style="margin: 0; font-size: 14px; color: var(--color-neutral-400);">Cada rama se abre al alcanzar el dominio requerido en la anterior.</p>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: radial-gradient(600px 300px at 50% 0%, var(--color-accent-900) 0%, transparent 70%), var(--color-surface); padding: 26px; position: relative; height: 520px;">
+          <svg viewBox="0 0 900 420" preserveAspectRatio="none" style="position: absolute; inset: 26px; width: calc(100% - 52px); height: calc(100% - 52px);">
+            <line x1="450" y1="42" x2="220" y2="187" stroke="var(--color-accent-700)" stroke-width="2"></line>
+            <line x1="450" y1="42" x2="450" y2="187" stroke="var(--color-accent-700)" stroke-width="2"></line>
+            <line x1="450" y1="42" x2="680" y2="187" stroke="var(--color-accent-700)" stroke-width="2"></line>
+            <line x1="220" y1="187" x2="110" y2="341" stroke="var(--color-neutral-700)" stroke-width="2" stroke-dasharray="5 6"></line>
+            <line x1="220" y1="187" x2="330" y2="341" stroke="var(--color-accent-700)" stroke-width="2"></line>
+            <line x1="450" y1="187" x2="560" y2="341" stroke="var(--color-neutral-700)" stroke-width="2" stroke-dasharray="5 6"></line>
+            <line x1="680" y1="187" x2="790" y2="341" stroke="var(--color-neutral-700)" stroke-width="2" stroke-dasharray="5 6"></line>
+          </svg>
+          <sc-for list="{{ skillTree }}" as="n" hint-placeholder-count="8">
+            <div class="xp-node" style="{{ n.style }}">
+              <div style="{{ n.ringStyle }}"><i class="{{ n.icon }}"></i></div>
+              <div style="font-family: var(--font-heading); font-size: 13px; text-align: center;">{{ n.name }}</div>
+              <div style="font-size: 11px; color: var(--color-neutral-500);">{{ n.meta }}</div>
+              <div style="width: 74px; height: 3px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ n.bar }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 8px;">Habilidad enfocada</div>
+            <div style="font-family: var(--font-heading); font-size: 17px; margin-bottom: 4px;">Gestión de reclamos</div>
+            <div style="font-size: 12px; color: var(--color-neutral-400); line-height: 1.5;">Dominio 3 · 62% al siguiente rango. 4 misiones relacionadas disponibles.</div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 8px;">Siguiente desbloqueo</div>
+            <div style="font-family: var(--font-heading); font-size: 17px; margin-bottom: 4px;">Negociación avanzada</div>
+            <div style="font-size: 12px; color: var(--color-neutral-400); line-height: 1.5;">Requiere dominio 4 en Resolución de conflictos.</div>
+          </div>
+          <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-accent) 7%, transparent); padding: 16px;">
+            <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent-400); margin-bottom: 8px;">Logro cercano</div>
+            <div style="font-family: var(--font-heading); font-size: 17px; margin-bottom: 4px;">Mediador</div>
+            <div style="font-size: 12px; color: var(--color-neutral-400); line-height: 1.5;">Resuelve 3 casos de conflicto sin escalar. 2 de 3.</div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Progreso -->
+      <sc-if value="{{ isProgress }}">
+      <div data-screen-label="Empleado · Progreso" style="padding: 22px 0 48px; display: flex; flex-direction: column; gap: 20px;">
+        <div>
+          <h1 style="font-size: 32px; margin: 0 0 6px;">Progreso</h1>
+          <p style="margin: 0; font-size: 14px; color: var(--color-neutral-400);">Tu evolución desde que te uniste, en marzo.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+          <sc-for list="{{ progressKpis }}" as="k" hint-placeholder-count="4">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px;">
+              <div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">{{ k.label }}</div>
+              <div style="font-family: var(--font-heading); font-size: 26px; margin-top: 6px;">{{ k.value }}</div>
+              <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">{{ k.meta }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px;">
+              <h3 style="font-size: 15px; margin: 0;">XP por semana</h3>
+              <span style="font-size: 11px; color: var(--color-neutral-500);">Últimas 12 semanas</span>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 7px; height: 150px;">
+              <sc-for list="{{ xpBars }}" as="b" hint-placeholder-count="12">
+                <div style="flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%;">
+                  <div style="{{ b.style }}"></div>
+                  <span style="font-size: 9px; color: var(--color-neutral-600);">{{ b.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <h3 style="font-size: 15px; margin: 0;">Rendimiento</h3>
+            <sc-for list="{{ perf }}" as="p" hint-placeholder-count="3">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span>{{ p.label }}</span><span style="color: var(--color-neutral-400);">{{ p.value }}</span></div>
+                <div style="height: 5px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ p.bar }}"></div></div>
+              </div>
+            </sc-for>
+            <div style="margin-top: auto; border-top: 1px solid var(--color-neutral-900); padding-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <span class="tag tag-accent">Insignia Mediador</span>
+              <span class="tag tag-accent">Racha 9 días</span>
+              <span class="tag tag-outline">Top 15% del área</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <div style="padding: 16px 18px;"><h3 style="font-size: 15px; margin: 0;">Historial</h3></div>
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Misión</th><th style="text-align: left;">Fecha</th><th style="text-align: left;">Resultado</th><th style="text-align: right;">XP</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ myHistory }}" as="h" hint-placeholder-count="6">
+                <tr class="xp-row">
+                  <td style="font-size: 13px;">{{ h.name }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-500);">{{ h.date }}</td>
+                  <td><span class="{{ h.tagClass }}">{{ h.result }}</span></td>
+                  <td style="text-align: right; font-family: var(--font-heading); font-size: 13px; color: var(--color-accent-300);">+{{ h.xp }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- Cuenta -->
+      <sc-if value="{{ isAccount }}">
+      <div data-screen-label="Empleado · Cuenta" style="padding: 22px 0 48px; max-width: 700px; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <h1 style="font-size: 30px; margin: 0 0 6px;">Cuenta</h1>
+          <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Tus datos personales. El área, el puesto y los objetivos los administra tu empresa.</p>
+        </div>
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 58px; height: 58px; border-radius: 50%; background: var(--color-accent-800); color: var(--color-accent-200); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 19px;">MR</div>
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="btn btn-ghost">Cambiar foto</button>
+              <button type="button" class="btn btn-ghost" style="color: var(--color-neutral-500);">Quitar</button>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Nombre</span><input class="input" type="text" value="Martín" /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Apellido</span><input class="input" type="text" value="Reyes" /></label>
+          </div>
+          <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Email</span><input class="input" type="email" value="martin.reyes@nordex.com" /></label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; opacity: 0.55;">
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Área (gestionada por la empresa)</span><input class="input" type="text" value="Soporte N2" disabled="{{ true }}" /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Objetivo semanal</span><input class="input" type="text" value="6 misiones / 900 XP" disabled="{{ true }}" /></label>
+          </div>
+        </div>
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+          <h3 style="font-size: 15px; margin: 0;">Notificaciones</h3>
+          <sc-for list="{{ notifPrefs }}" as="p" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; border-top: 1px solid var(--color-neutral-900);">
+              <div><div style="font-size: 13px;">{{ p.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ p.meta }}</div></div>
+              <div style="{{ p.trackStyle }}"><div style="{{ p.knobStyle }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button type="button" class="btn btn-ghost">Descartar</button>
+          <button type="button" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ══════════════════ ADMIN XPEDIA ══════════════════ -->
+  <sc-if value="{{ isAdmin }}">
+  <div style="display: flex; align-items: stretch; min-height: calc(100vh - 46px);">
+    <aside style="width: 196px; flex: 0 0 196px; border-right: 1px solid var(--color-neutral-800); padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; background: var(--color-neutral-900);">
+      <div style="padding: 0 10px 14px;">
+        <span style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">Consola interna</span>
+        <div style="font-family: var(--font-heading); font-size: 14px; margin-top: 3px;">Xpedia Admin</div>
+      </div>
+      <sc-for list="{{ adminNav }}" as="n" hint-placeholder-count="5">
+        <button type="button" class="xp-nav" onClick="{{ n.onClick }}" style="{{ n.style }}">
+          <i class="{{ n.icon }}" style="font-size: 16px;"></i><span>{{ n.label }}</span>
+        </button>
+      </sc-for>
+      <div style="margin-top: auto; padding: 12px 10px; border-top: 1px solid var(--color-neutral-800); font-size: 11px; color: var(--color-neutral-600);">Región: us-east · v2.14</div>
+    </aside>
+
+    <main style="flex: 1 1 auto; min-width: 0; padding: 26px 30px 48px;">
+
+      <sc-if value="{{ isAdminDash }}">
+      <div data-screen-label="Admin · Dashboard" style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+          <h1 style="font-size: 26px; margin: 0 0 4px;">Dashboard</h1>
+          <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Estado general de la plataforma</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: 12px;">
+          <sc-for list="{{ adminKpis }}" as="k" hint-placeholder-count="6">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 15px;">
+              <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500);">{{ k.label }}</div>
+              <div style="font-family: var(--font-heading); font-size: 26px; margin-top: 6px;">{{ k.value }}</div>
+              <div style="font-size: 11px; color: var(--color-neutral-500); margin-top: 2px;">{{ k.meta }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px;">
+              <h3 style="font-size: 15px; margin: 0;">Uso de plataforma</h3>
+              <span style="font-size: 11px; color: var(--color-neutral-500);">Misiones resueltas / semana</span>
+            </div>
+            <div style="display: flex; align-items: flex-end; gap: 6px; height: 128px;">
+              <sc-for list="{{ usageBars }}" as="b" hint-placeholder-count="12">
+                <div style="flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%;">
+                  <div style="{{ b.style }}"></div>
+                  <span style="font-size: 9px; color: var(--color-neutral-600);">{{ b.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <h3 style="font-size: 15px; margin: 0 0 12px;">Actividad reciente</h3>
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ adminActivity }}" as="a" hint-placeholder-count="5">
+                <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-top: 1px solid var(--color-neutral-900);">
+                  <i class="{{ a.icon }}" style="color: var(--color-accent-400); font-size: 14px; margin-top: 2px;"></i>
+                  <div><div style="font-size: 13px;">{{ a.text }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ a.time }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isCompanies }}">
+      <div data-screen-label="Admin · Empresas" style="display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-wrap: wrap;">
+          <div>
+            <h1 style="font-size: 26px; margin: 0 0 4px;">Empresas</h1>
+            <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">86 activas · 11 inactivas</p>
+          </div>
+          <button type="button" class="btn btn-primary"><i class="ph ph-plus"></i> Nueva empresa</button>
+        </div>
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Empresa</th><th style="text-align: left;">Plan</th><th style="text-align: left;">Empleados</th><th style="text-align: left;">Estado</th><th style="text-align: left;">Fecha de alta</th><th></th></tr></thead>
+            <tbody>
+              <sc-for list="{{ companies }}" as="c" hint-placeholder-count="8">
+                <tr class="xp-row" style="cursor: pointer;" onClick="{{ c.onClick }}">
+                  <td><div style="font-size: 13px;">{{ c.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ c.domain }}</div></td>
+                  <td><span class="tag tag-outline">{{ c.plan }}</span></td>
+                  <td style="font-size: 13px;">{{ c.employees }}</td>
+                  <td><span class="{{ c.tagClass }}">{{ c.state }}</span></td>
+                  <td style="font-size: 12px; color: var(--color-neutral-500);">{{ c.since }}</td>
+                  <td style="text-align: right; color: var(--color-neutral-600);"><i class="ph ph-dots-three"></i></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin: 0; font-size: 12px; color: var(--color-neutral-600);">Haz clic en una empresa para ver su detalle.</p>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isCompanyDetail }}">
+      <div data-screen-label="Admin · Detalle de empresa" style="display: flex; flex-direction: column; gap: 18px;">
+        <div><button type="button" class="btn btn-ghost" onClick="{{ goCompanies }}" style="padding-left: 0;"><i class="ph ph-arrow-left"></i> Empresas</button></div>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 18px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px;">
+          <div style="width: 46px; height: 46px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-700); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 15px; color: var(--color-neutral-300);">{{ company.initials }}</div>
+          <div style="flex: 1 1 200px;">
+            <h1 style="font-size: 23px; margin: 0 0 2px;">{{ company.name }}</h1>
+            <p style="margin: 0; font-size: 12px; color: var(--color-neutral-500);">{{ company.domain }} · alta {{ company.since }}</p>
+          </div>
+          <span class="{{ company.tagClass }}">{{ company.state }}</span>
+          <button type="button" class="btn btn-ghost">Suspender</button>
+          <button type="button" class="btn btn-primary">Cambiar plan</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 12px;">
+          <sc-for list="{{ company.kpis }}" as="k" hint-placeholder-count="4">
+            <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 15px;">
+              <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500);">{{ k.label }}</div>
+              <div style="font-family: var(--font-heading); font-size: 24px; margin-top: 6px;">{{ k.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
+            <h3 style="font-size: 15px; margin: 0;">Consumo del plan</h3>
+            <sc-for list="{{ company.usage }}" as="u" hint-placeholder-count="3">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span>{{ u.label }}</span><span style="color: var(--color-neutral-400);">{{ u.value }}</span></div>
+                <div style="height: 5px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ u.bar }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px;">
+            <h3 style="font-size: 15px; margin: 0 0 12px;">Administradores</h3>
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ company.admins }}" as="a" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--color-neutral-900);">
+                  <div><div style="font-size: 13px;">{{ a.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ a.email }}</div></div>
+                  <span class="tag tag-neutral">{{ a.role }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isSubs }}">
+      <div data-screen-label="Admin · Suscripciones" style="display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <h1 style="font-size: 26px; margin: 0 0 4px;">Suscripciones</h1>
+          <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Planes, límites y consumo agregado</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(226px, 1fr)); gap: 12px;">
+          <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+            <div class="xp-card" style="{{ p.cardStyle }}">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-family: var(--font-heading); font-size: 18px;">{{ p.name }}</span>
+                <span class="{{ p.tagClass }}">{{ p.tag }}</span>
+              </div>
+              <div style="font-size: 12px; color: var(--color-neutral-400);">{{ p.price }}</div>
+              <div style="display: flex; flex-direction: column; gap: 7px; border-top: 1px solid var(--color-neutral-800); padding-top: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px;"><span style="color: var(--color-neutral-500);">Empresas</span><span>{{ p.companies }}</span></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px;"><span style="color: var(--color-neutral-500);">Límite empleados</span><span>{{ p.limit }}</span></div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px;"><span style="color: var(--color-neutral-500);">Contenido / mes</span><span>{{ p.content }}</span></div>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--color-neutral-500); margin-bottom: 5px;"><span>Uso medio</span><span>{{ p.usageLabel }}</span></div>
+                <div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ p.bar }}"></div></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <div style="padding: 16px 18px;"><h3 style="font-size: 15px; margin: 0;">Estado de suscripciones</h3></div>
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Empresa</th><th style="text-align: left;">Plan</th><th style="text-align: left;">Renovación</th><th style="text-align: left;">Uso</th><th style="text-align: left;">Estado</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ subs }}" as="s" hint-placeholder-count="6">
+                <tr class="xp-row">
+                  <td style="font-size: 13px;">{{ s.name }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-400);">{{ s.plan }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-500);">{{ s.renew }}</td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="width: 90px; height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ s.bar }}"></div></div>
+                      <span style="font-size: 11px; color: var(--color-neutral-500);">{{ s.usage }}</span>
+                    </div>
+                  </td>
+                  <td><span class="{{ s.tagClass }}">{{ s.state }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isAdminUsers }}">
+      <div data-screen-label="Admin · Usuarios" style="display: flex; flex-direction: column; gap: 18px;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; flex-wrap: wrap;">
+          <div>
+            <h1 style="font-size: 26px; margin: 0 0 4px;">Usuarios</h1>
+            <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Cuentas internas de Xpedia y accesos de soporte</p>
+          </div>
+          <button type="button" class="btn btn-primary"><i class="ph ph-plus"></i> Nuevo usuario interno</button>
+        </div>
+        <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); overflow: hidden;">
+          <table class="table" style="width: 100%;">
+            <thead><tr><th style="text-align: left;">Usuario</th><th style="text-align: left;">Rol</th><th style="text-align: left;">Alcance</th><th style="text-align: left;">Último acceso</th><th style="text-align: left;">Estado</th></tr></thead>
+            <tbody>
+              <sc-for list="{{ adminUsers }}" as="u" hint-placeholder-count="5">
+                <tr class="xp-row">
+                  <td><div style="font-size: 13px;">{{ u.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ u.email }}</div></td>
+                  <td style="font-size: 13px;">{{ u.role }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-400);">{{ u.scope }}</td>
+                  <td style="font-size: 12px; color: var(--color-neutral-500);">{{ u.last }}</td>
+                  <td><span class="{{ u.tagClass }}">{{ u.state }}</span></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isAdminSettings }}">
+      <div data-screen-label="Admin · Configuración" style="display: flex; flex-direction: column; gap: 18px; max-width: 860px;">
+        <div>
+          <h1 style="font-size: 26px; margin: 0 0 4px;">Configuración</h1>
+          <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Parámetros globales de la plataforma</p>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+            <h3 style="font-size: 15px; margin: 0;">Motor de generación</h3>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Modelo de generación</span><select class="input"><option>Xpedia Engine 2.4</option><option>Xpedia Engine 2.3 (estable)</option></select></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Misiones por documento (máx.)</span><input class="input" type="number" value="24" /></label>
+            <label class="field" style="display: flex; flex-direction: column; gap: 5px;"><span style="font-size: 12px; color: var(--color-neutral-400);">Umbral de revisión humana</span><select class="input"><option>Siempre antes de publicar</option><option>Solo simulaciones</option></select></label>
+          </div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <h3 style="font-size: 15px; margin: 0;">Plataforma</h3>
+            <sc-for list="{{ adminPrefs }}" as="p" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 0; border-top: 1px solid var(--color-neutral-900);">
+                <div><div style="font-size: 13px;">{{ p.name }}</div><div style="font-size: 11px; color: var(--color-neutral-600);">{{ p.meta }}</div></div>
+                <div style="{{ p.trackStyle }}"><div style="{{ p.knobStyle }}"></div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startProfile&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;empresa&quot;,&quot;empleado&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;empresa&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototipo&quot;},&quot;aiLabels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototipo&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: props.startProfile || 'empresa',
+      screen: 'dashboard',
+      empScreen: 'inicio',
+      adminScreen: 'dashboard',
+      metricTab: 'General',
+      settingsTab: 'Empresa',
+      goalMode: 'global',
+      selIdx: 0,
+      companyIdx: 0,
+      step: 0,
+      answers: [],
+      text: ''
+    };
+  }
+
+  set(patch) { this.setState(patch); }
+
+  bar(pct, color, extra) {
+    return 'height: 100%; width: ' + pct + '%; border-radius: inherit; background: ' + (color || 'var(--color-accent)') + '; ' + (extra || '');
+  }
+
+  navStyle(active, pad) {
+    return 'display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; cursor: pointer; font-family: var(--font-body); font-size: 13px; padding: ' + (pad || '8px 10px') + '; border-radius: var(--radius-sm); border: 1px solid ' + (active ? 'var(--color-accent-700)' : 'transparent') + '; background: ' + (active ? 'color-mix(in srgb, var(--color-accent) 12%, transparent)' : 'transparent') + '; color: ' + (active ? 'var(--color-accent-200)' : 'var(--color-neutral-400)') + ';';
+  }
+
+  chipStyle(active) {
+    return 'display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; cursor: pointer; font-family: var(--font-body); font-size: 12px; border-radius: var(--radius-sm); border: 1px solid ' + (active ? 'var(--color-accent-700)' : 'var(--color-neutral-800)') + '; background: ' + (active ? 'color-mix(in srgb, var(--color-accent) 12%, transparent)' : 'transparent') + '; color: ' + (active ? 'var(--color-accent-200)' : 'var(--color-neutral-300)') + ';';
+  }
+
+  tabStyle(active) {
+    return 'cursor: pointer; background: transparent; border: 0; border-bottom: 2px solid ' + (active ? 'var(--color-accent)' : 'transparent') + '; padding: 9px 13px; font-family: var(--font-heading); font-size: 13px; color: ' + (active ? 'var(--color-text)' : 'var(--color-neutral-500)') + ';';
+  }
+
+  toggle(on) {
+    return {
+      trackStyle: 'width: 34px; height: 19px; flex: 0 0 34px; border-radius: 999px; padding: 2px; display: flex; justify-content: ' + (on ? 'flex-end' : 'flex-start') + '; background: ' + (on ? 'var(--color-accent-600)' : 'var(--color-neutral-800)') + '; border: 1px solid ' + (on ? 'var(--color-accent-500)' : 'var(--color-neutral-700)') + ';',
+      knobStyle: 'width: 15px; height: 15px; border-radius: 50%; background: ' + (on ? 'var(--color-accent-100)' : 'var(--color-neutral-500)') + ';'
+    };
+  }
+
+  prefRows(rows) {
+    return rows.map(r => Object.assign({ name: r[0], meta: r[1] }, this.toggle(r[2])));
+  }
+
+  barsFrom(vals, labels, max, height) {
+    return vals.map((v, i) => ({
+      label: labels[i],
+      style: 'width: 100%; border-radius: 3px 3px 0 0; height: ' + Math.round((v / max) * (height || 112)) + 'px; background: ' + (i === vals.length - 1 ? 'var(--color-accent)' : 'var(--color-accent-700)') + ';'
+    }));
+  }
+
+  resultTag(r) {
+    if (r === 'Correcta') return 'tag tag-accent';
+    if (r === 'Parcial') return 'tag tag-outline';
+    return 'tag tag-neutral';
+  }
+
+  missionSteps() {
+    return [
+      {
+        kind: 'Caso práctico', difficulty: 'Intermedia', xp: 120,
+        context: 'Una clienta escribe por chat: le cobraron dos veces la suscripción anual. Es clienta desde hace cuatro años, el tono del mensaje es firme y pide la baja si no se resuelve hoy. En el sistema ves el cobro duplicado confirmado y el reembolso disponible.',
+        question: '¿Cuál es tu primera respuesta?',
+        isChoice: true,
+        options: [
+          { text: 'Reconozco el error, confirmo que veo el cobro duplicado y le digo en cuánto tiempo estará el reembolso.', quality: 'best' },
+          { text: 'Le pido el comprobante de los dos cobros antes de revisar el caso.', quality: 'partial' },
+          { text: 'Le explico la política de facturación y le pido que espere el cierre del ciclo.', quality: 'poor' }
+        ]
+      },
+      {
+        kind: 'Decisión', difficulty: 'Intermedia', xp: 90,
+        context: 'La clienta acepta el reembolso, pero agrega que ya perdió confianza y pregunta qué garantía tiene de que no vuelva a pasar. El reembolso tarda entre 5 y 10 días hábiles según el banco.',
+        question: '¿Escalás el caso o lo resolvés vos?',
+        isChoice: true,
+        options: [
+          { text: 'Lo resuelvo: doy el plazo real, activo la alerta de facturación en su cuenta y dejo nota en el caso.', quality: 'best' },
+          { text: 'Escalo a Facturación para que ellos expliquen el plazo.', quality: 'partial' },
+          { text: 'Ofrezco un descuento para compensar, sin explicar el plazo.', quality: 'poor' }
+        ]
+      },
+      {
+        kind: 'Respuesta abierta', difficulty: 'Avanzada', xp: 150,
+        context: 'Cerrá la conversación. La clienta ya sabe que el reembolso está en curso y aceptó la alerta de facturación.',
+        question: 'Escribí el mensaje de cierre que le enviarías.',
+        isOpen: true
+      }
+    ];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const steps = this.missionSteps();
+    const aiLabels = this.props.aiLabels !== false;
+
+    const profiles = [
+      { key: 'empresa', label: 'Empresa', icon: 'ph ph-buildings' },
+      { key: 'empleado', label: 'Empleado', icon: 'ph ph-game-controller' },
+      { key: 'admin', label: 'Admin Xpedia', icon: 'ph ph-shield-check' }
+    ].map(p => ({
+      label: p.label, icon: p.icon,
+      style: this.navStyle(s.profile === p.key, '5px 11px') + 'width: auto; font-size: 12px;',
+      onClick: () => this.set({ profile: p.key })
+    }));
+
+    const empresaNav = [
+      { key: 'dashboard', label: 'Dashboard', icon: 'ph ph-squares-four' },
+      { key: 'employees', label: 'Empleados', icon: 'ph ph-users-three' },
+      { key: 'training', label: 'Capacitación', icon: 'ph ph-books' },
+      { key: 'metrics', label: 'Métricas', icon: 'ph ph-chart-line-up' },
+      { key: 'settings', label: 'Configuración', icon: 'ph ph-gear-six' }
+    ].map(n => ({
+      label: n.label, icon: n.icon,
+      style: this.navStyle(s.screen === n.key || (n.key === 'employees' && (s.screen === 'new' || s.screen === 'profile'))),
+      onClick: () => this.set({ screen: n.key })
+    }));
+
+    const empleadoNav = [
+      { key: 'inicio', label: 'Inicio', icon: 'ph ph-house' },
+      { key: 'hub', label: 'Misiones', icon: 'ph ph-map-trifold' },
+      { key: 'skills', label: 'Habilidades', icon: 'ph ph-tree-structure' },
+      { key: 'progress', label: 'Progreso', icon: 'ph ph-chart-bar' },
+      { key: 'account', label: 'Cuenta', icon: 'ph ph-user' }
+    ].map(n => ({
+      label: n.label, icon: n.icon,
+      style: this.navStyle(s.empScreen === n.key || (n.key === 'hub' && s.empScreen === 'mission'), '7px 13px') + 'width: auto;',
+      onClick: () => this.set({ empScreen: n.key, step: 0, answers: [] })
+    }));
+
+    const adminNav = [
+      { key: 'dashboard', label: 'Dashboard', icon: 'ph ph-squares-four' },
+      { key: 'companies', label: 'Empresas', icon: 'ph ph-buildings' },
+      { key: 'subs', label: 'Suscripciones', icon: 'ph ph-credit-card' },
+      { key: 'users', label: 'Usuarios', icon: 'ph ph-users' },
+      { key: 'settings', label: 'Configuración', icon: 'ph ph-gear-six' }
+    ].map(n => ({
+      label: n.label, icon: n.icon,
+      style: this.navStyle(s.adminScreen === n.key || (n.key === 'companies' && s.adminScreen === 'company')),
+      onClick: () => this.set({ adminScreen: n.key })
+    }));
+
+    const rawEmployees = [
+      ['Lucía Ibarra', 'Soporte N1', 5, 72, '5 / 6', 'Activo', 'lucia.ibarra@nordex.com'],
+      ['Martín Reyes', 'Soporte N2', 7, 88, '5 / 6', 'Activo', 'martin.reyes@nordex.com'],
+      ['Nadia Kuri', 'Retención', 6, 54, '3 / 6', 'En riesgo', 'nadia.kuri@nordex.com'],
+      ['Tomás Álvez', 'Soporte N1', 4, 41, '2 / 6', 'En riesgo', 'tomas.alvez@nordex.com'],
+      ['Sofía Bran', 'Calidad', 9, 94, '6 / 6', 'Activo', 'sofia.bran@nordex.com'],
+      ['Iván Pérez', 'Onboarding', 3, 28, '1 / 6', 'Sin actividad', 'ivan.perez@nordex.com'],
+      ['Carla Domínguez', 'Soporte N2', 8, 81, '6 / 6', 'Activo', 'carla.dominguez@nordex.com'],
+      ['Diego Rausch', 'Retención', 6, 66, '4 / 6', 'Activo', 'diego.rausch@nordex.com']
+    ];
+    const employees = rawEmployees.map((e, i) => ({
+      name: e[0], area: e[1], level: e[2], prog: e[3], weekly: e[4], state: e[5], email: e[6],
+      initials: e[0].split(' ').map(w => w[0]).join(''),
+      avatarStyle: 'width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: var(--color-neutral-800); color: var(--color-neutral-300); display: flex; align-items: center; justify-content: center; font-size: 10px;',
+      barStyle: this.bar(e[3], e[3] > 70 ? 'var(--color-accent)' : 'var(--color-accent-600)'),
+      tagClass: e[5] === 'Activo' ? 'tag tag-accent' : (e[5] === 'En riesgo' ? 'tag tag-outline' : 'tag tag-neutral'),
+      onClick: () => this.set({ screen: 'profile', selIdx: i })
+    }));
+
+    const base = rawEmployees[s.selIdx] || rawEmployees[0];
+    const selSkills = [
+      ['Escucha activa', 82, 'Dominio 4'],
+      ['Conocimiento de producto', 76, 'Dominio 4'],
+      ['Resolución de conflictos', 58, 'Dominio 3'],
+      ['Gestión de reclamos', 44, 'Dominio 2'],
+      ['Retención', 31, 'Dominio 2']
+    ].map(k => ({ name: k[0], pct: k[1], label: k[2], bar: this.bar(k[1], k[1] < 50 ? 'var(--color-accent-600)' : 'var(--color-accent)') }));
+
+    const histRaw = [
+      ['Cliente sin respuesta 48h', 'Caso práctico', 'Comunicación', 'Correcta', 180],
+      ['Escalar o resolver', 'Decisión', 'Procesos', 'Parcial', 90],
+      ['Reclamo por demora', 'Simulación', 'Gestión de reclamos', 'Correcta', 220],
+      ['Política de reembolsos', 'Pregunta', 'Producto', 'Correcta', 60],
+      ['Cliente que pide la baja', 'Simulación', 'Retención', 'A reforzar', 40],
+      ['Tono en canal escrito', 'Respuesta abierta', 'Comunicación', 'Parcial', 110]
+    ];
+    const history = histRaw.map(h => ({ name: h[0], type: h[1], skill: h[2], result: h[3], xp: h[4], tagClass: this.resultTag(h[3]) }));
+
+    const hubRaw = [
+      ['Fundamentos del reclamo', 'Pregunta', 'Fácil', 'Procesos', 60, 'done'],
+      ['Tono en canal escrito', 'Respuesta abierta', 'Fácil', 'Comunicación', 110, 'done'],
+      ['Cliente sin respuesta 48h', 'Caso práctico', 'Intermedia', 'Comunicación', 180, 'done'],
+      ['Cobro duplicado', 'Caso práctico', 'Intermedia', 'Gestión de reclamos', 360, 'active'],
+      ['Escalar o resolver', 'Decisión', 'Intermedia', 'Procesos', 140, 'next'],
+      ['Reclamo con daño reputacional', 'Simulación', 'Avanzada', 'Conflictos', 280, 'locked'],
+      ['Desafío de capítulo', 'Desafío', 'Avanzada', 'Mixta', 400, 'locked'],
+      ['Recompensa: Mediador', 'Recompensa', '—', 'Insignia', 0, 'reward']
+    ];
+    const nodeStyle = (st) => {
+      const on = st === 'active';
+      const done = st === 'done';
+      const reward = st === 'reward';
+      const border = on ? 'var(--color-accent)' : (done ? 'var(--color-accent-700)' : (reward ? 'var(--color-accent-800)' : 'var(--color-neutral-800)'));
+      return 'display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 14px; border-radius: var(--radius-md); background: ' + (on ? 'color-mix(in srgb, var(--color-accent) 12%, var(--color-surface))' : 'var(--color-surface)') + '; border: 1px solid ' + border + '; transition: transform 0.16s ease; cursor: ' + (st === 'locked' ? 'not-allowed' : 'pointer') + '; opacity: ' + (st === 'locked' ? '0.5' : '1') + ';' + (on ? ' box-shadow: 0 0 26px color-mix(in srgb, var(--color-accent) 22%, transparent);' : '');
+    };
+    const badge = (st) => 'width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 3px; border: 1px solid ' + (st === 'locked' ? 'var(--color-neutral-700)' : 'var(--color-accent-600)') + '; color: ' + (st === 'locked' ? 'var(--color-neutral-500)' : 'var(--color-accent-200)') + '; background: ' + (st === 'active' ? 'color-mix(in srgb, var(--color-accent) 18%, transparent)' : 'transparent') + ';';
+    const nodeIcon = { done: 'ph-fill ph-check-circle', active: 'ph-fill ph-play-circle', next: 'ph ph-arrow-right', locked: 'ph ph-lock-simple', reward: 'ph-fill ph-trophy' };
+    const hubNodes = hubRaw.map(n => ({
+      name: n[0], type: n[1], difficulty: n[2], skill: n[3],
+      icon: nodeIcon[n[5]],
+      style: nodeStyle(n[5]),
+      badgeStyle: badge(n[5]),
+      xpLabel: n[5] === 'done' ? 'Completada · +' + n[4] + ' XP' : (n[5] === 'locked' ? 'Bloqueada' : (n[5] === 'reward' ? 'Insignia + 400 XP' : '+' + n[4] + ' XP')),
+      xpStyle: 'font-size: 11px; font-family: var(--font-heading); margin-top: 3px; color: ' + (n[5] === 'locked' ? 'var(--color-neutral-600)' : 'var(--color-accent-300)') + ';',
+      onClick: n[5] === 'active' || n[5] === 'next' ? () => this.set({ empScreen: 'mission', step: 0, answers: [], text: '' }) : () => {}
+    }));
+
+    const treeRaw = [
+      ['Atención al cliente', 'Dominio 5 · base', 100, 'ph-fill ph-headset', 50, 14, true],
+      ['Comunicación', 'Dominio 4', 82, 'ph ph-chats-circle', 24, 45, true],
+      ['Procesos internos', 'Dominio 3', 64, 'ph ph-flow-arrow', 50, 45, true],
+      ['Conocimiento de producto', 'Dominio 4', 76, 'ph ph-cube', 76, 45, true],
+      ['Gestión de reclamos', 'Dominio 3 · 62%', 62, 'ph ph-warning-octagon', 12, 78, true],
+      ['Resolución de conflictos', 'Dominio 2', 38, 'ph ph-handshake', 36, 78, true],
+      ['Retención', 'Bloqueada', 0, 'ph ph-lock-simple', 62, 78, false],
+      ['Negociación avanzada', 'Bloqueada', 0, 'ph ph-lock-simple', 87, 78, false]
+    ];
+    const skillTree = treeRaw.map(n => ({
+      name: n[0], meta: n[1], icon: n[3],
+      style: 'position: absolute; left: ' + n[4] + '%; top: ' + n[5] + '%; transform: translate(-50%, -50%); width: 126px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid ' + (n[6] ? 'var(--color-accent-700)' : 'var(--color-neutral-800)') + '; transition: transform 0.16s ease; cursor: pointer; opacity: ' + (n[6] ? '1' : '0.55') + ';',
+      ringStyle: 'width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid ' + (n[6] ? 'var(--color-accent)' : 'var(--color-neutral-700)') + '; color: ' + (n[6] ? 'var(--color-accent-200)' : 'var(--color-neutral-500)') + '; background: ' + (n[2] >= 80 ? 'color-mix(in srgb, var(--color-accent) 16%, transparent)' : 'transparent') + ';',
+      bar: this.bar(n[2], 'var(--color-accent)')
+    }));
+
+    // --- mission flow ---
+    const step = steps[Math.min(s.step, steps.length - 1)];
+    const picked = s.answers[s.step];
+    const stepOptions = (step.options || []).map((o, i) => ({
+      text: o.text,
+      key: String.fromCharCode(65 + i),
+      style: 'display: flex; align-items: flex-start; gap: 11px; width: 100%; text-align: left; cursor: pointer; padding: 13px 14px; border-radius: var(--radius-sm); font-family: var(--font-body); color: var(--color-text); transition: all 0.14s ease; border: 1px solid ' + (picked === i ? 'var(--color-accent)' : 'var(--color-neutral-800)') + '; background: ' + (picked === i ? 'color-mix(in srgb, var(--color-accent) 14%, transparent)' : 'transparent') + ';',
+      keyStyle: 'flex: 0 0 22px; width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: var(--font-heading); border: 1px solid ' + (picked === i ? 'var(--color-accent)' : 'var(--color-neutral-700)') + '; color: ' + (picked === i ? 'var(--color-accent-200)' : 'var(--color-neutral-400)') + ';',
+      onClick: () => {
+        const a = s.answers.slice();
+        a[s.step] = i;
+        this.set({ answers: a });
+      }
+    }));
+
+    const qualities = s.answers.map((ai, i) => (steps[i] && steps[i].options ? steps[i].options[ai].quality : null));
+    const bestCount = qualities.filter(q => q === 'best').length;
+    const poorCount = qualities.filter(q => q === 'poor').length;
+    const openWords = (s.text || '').trim().split(/\s+/).filter(Boolean).length;
+    let earnedXp = 120 + bestCount * 60 + Math.min(openWords, 60) * 2;
+    if (poorCount) earnedXp = Math.max(60, earnedXp - poorCount * 50);
+    earnedXp = Math.round(earnedXp / 10) * 10;
+    const strong = bestCount >= 2 && poorCount === 0;
+    const resultTitle = strong ? 'Resolución sólida' : (poorCount ? 'Resultado parcial' : 'Buen desempeño');
+    const feedback = strong
+      ? 'Reconociste el error antes de pedir pruebas y cerraste con un plazo concreto: eso es lo que baja la tensión en un reclamo de facturación. Para la próxima, sumá una línea sobre qué cambió del lado de la empresa para que no se repita.'
+      : (poorCount
+        ? 'Resolviste el caso, pero empezaste pidiendo evidencia que ya estaba en el sistema. Cuando el dato está confirmado, reconocelo primero: la clienta necesita saber que le creés antes de escuchar el procedimiento.'
+        : 'Tu respuesta resolvió el problema y el tono fue correcto. Podrías mejorar la claridad del plazo: decir «entre 5 y 10 días hábiles» evita un segundo contacto.');
+
+    const gainedSkills = [
+      { name: 'Gestión de reclamos', gain: strong ? 8 : 5, pct: strong ? 70 : 66 },
+      { name: 'Comunicación', gain: 5, pct: 84 },
+      { name: 'Resolución de conflictos', gain: poorCount ? 2 : 6, pct: poorCount ? 40 : 46 }
+    ].map(g => Object.assign({}, g, { bar: this.bar(g.pct, 'var(--color-accent)', 'animation: xpFill 0.9s 0.2s ease-out backwards;') }));
+
+    const newTotal = 2340 + earnedXp;
+    const newPct = Math.min(100, Math.round((newTotal / 3000) * 100));
+
+    const metricTabs = ['General', 'Por área', 'Por habilidad', 'Por empleado', 'Evolución'].map(t => ({
+      label: t, style: this.tabStyle(s.metricTab === t), onClick: () => this.set({ metricTab: t })
+    }));
+    const metricSets = {
+      'General': { title: 'Cumplimiento por área', rows: [['Soporte N1', 74, '74%'], ['Soporte N2', 88, '88%'], ['Retención', 61, '61%'], ['Calidad', 92, '92%'], ['Onboarding', 48, '48%']] },
+      'Por área': { title: 'Tasa de resolución por área', rows: [['Soporte N1', 79, '79%'], ['Soporte N2', 86, '86%'], ['Retención', 68, '68%'], ['Calidad', 94, '94%'], ['Onboarding', 57, '57%']] },
+      'Por habilidad': { title: 'Desarrollo de habilidades', rows: [['Comunicación', 81, 'Dom. 4'], ['Gestión de reclamos', 56, 'Dom. 3'], ['Producto', 77, 'Dom. 4'], ['Conflictos', 49, 'Dom. 2'], ['Retención', 42, 'Dom. 2']] },
+      'Por empleado': { title: 'Progreso promedio · top del período', rows: [['Sofía Bran', 94, 'Nv 9'], ['Carla Domínguez', 81, 'Nv 8'], ['Martín Reyes', 88, 'Nv 7'], ['Diego Rausch', 66, 'Nv 6'], ['Lucía Ibarra', 72, 'Nv 5']] },
+      'Evolución': { title: 'Cumplimiento semanal · últimas 5 semanas', rows: [['Semana 34', 64, '64%'], ['Semana 35', 69, '69%'], ['Semana 36', 71, '71%'], ['Semana 37', 76, '76%'], ['Semana 38', 78, '78%']] }
+    };
+    const set = metricSets[s.metricTab];
+    const metricRows = set.rows.map(r => ({ name: r[0], value: r[2], bar: this.bar(r[1], r[1] < 60 ? 'var(--color-accent-600)' : 'var(--color-accent)') }));
+
+    const settingsTabs = ['Empresa', 'Usuarios', 'Plan y facturación', 'Integraciones'].map(t => ({
+      label: t, style: this.tabStyle(s.settingsTab === t), onClick: () => this.set({ settingsTab: t })
+    }));
+
+    const rawCompanies = [
+      ['Nordex Soporte', 'nordex.com', 'Scale', 148, 'Activa', '12 mar 2025'],
+      ['Grupo Aledaña', 'aledana.com.ar', 'Growth', 62, 'Activa', '04 ene 2025'],
+      ['Ferro Logística', 'ferrolog.io', 'Scale', 310, 'Activa', '22 oct 2024'],
+      ['Casa Pilar', 'casapilar.com', 'Starter', 18, 'Prueba', '02 sep 2026'],
+      ['Vento Seguros', 'vento.com', 'Enterprise', 940, 'Activa', '15 jun 2024'],
+      ['Mardel Retail', 'mardel.shop', 'Growth', 74, 'Inactiva', '19 feb 2025'],
+      ['Clínica Ocre', 'ocre.health', 'Growth', 55, 'Activa', '30 abr 2025'],
+      ['Tandil Foods', 'tandilfoods.com', 'Starter', 12, 'Impago', '08 jul 2026']
+    ];
+    const stateTag = (st) => st === 'Activa' ? 'tag tag-accent' : (st === 'Prueba' ? 'tag tag-outline' : 'tag tag-neutral');
+    const companies = rawCompanies.map((c, i) => ({
+      name: c[0], domain: c[1], plan: c[2], employees: c[3], state: c[4], since: c[5],
+      tagClass: stateTag(c[4]),
+      onClick: () => this.set({ adminScreen: 'company', companyIdx: i })
+    }));
+    const cc = rawCompanies[s.companyIdx] || rawCompanies[0];
+    const company = {
+      name: cc[0], domain: cc[1], since: cc[5], state: cc[4], tagClass: stateTag(cc[4]),
+      initials: cc[0].split(' ').map(w => w[0]).join('').slice(0, 2),
+      kpis: [
+        { label: 'Empleados', value: cc[3] },
+        { label: 'Plan', value: cc[2] },
+        { label: 'Misiones / mes', value: '4.180' },
+        { label: 'Cumplimiento', value: '78%' }
+      ],
+      usage: [
+        { label: 'Licencias', value: cc[3] + ' / 200', bar: this.bar(Math.min(100, (cc[3] / 200) * 100)) },
+        { label: 'Contenido procesado', value: '38 / 60 docs', bar: this.bar(63) },
+        { label: 'Misiones generadas', value: '1.240 / 2.000', bar: this.bar(62) }
+      ],
+      admins: [
+        { name: 'Paula Mansilla', email: 'paula@' + cc[1], role: 'Owner' },
+        { name: 'Ezequiel Ruiz', email: 'eze@' + cc[1], role: 'Admin' },
+        { name: 'Vera Costa', email: 'vera@' + cc[1], role: 'Analista' }
+      ]
+    };
+
+    return {
+      profiles, empresaNav, empleadoNav, adminNav,
+      avatarInitials: s.profile === 'empleado' ? 'MR' : (s.profile === 'admin' ? 'XA' : 'PM'),
+      isEmpresa: s.profile === 'empresa',
+      isEmpleado: s.profile === 'empleado',
+      isAdmin: s.profile === 'admin',
+
+      isDash: s.screen === 'dashboard',
+      isEmployees: s.screen === 'employees',
+      isNewEmployee: s.screen === 'new',
+      isProfile: s.screen === 'profile',
+      isTraining: s.screen === 'training',
+      isMetrics: s.screen === 'metrics',
+      isSettings: s.screen === 'settings',
+      goEmployees: () => this.set({ screen: 'employees' }),
+      goNewEmployee: () => this.set({ screen: 'new' }),
+
+      dailyBars: this.barsFrom([62, 71, 58, 80, 94, 41, 33, 86, 91, 77, 102, 88, 96, 112], ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14'], 120),
+      weakSkills: [
+        { name: 'Gestión de reclamos', pct: 48, bar: this.bar(48, 'var(--color-accent-600)') },
+        { name: 'Retención', pct: 42, bar: this.bar(42, 'var(--color-accent-600)') },
+        { name: 'Resolución de conflictos', pct: 55, bar: this.bar(55, 'var(--color-accent)') },
+        { name: 'Procesos internos', pct: 63, bar: this.bar(63, 'var(--color-accent)') }
+      ],
+      activity: [
+        { icon: 'ph ph-check-circle', text: 'Sofía Bran completó «Reclamo con daño reputacional»', time: 'hace 12 min · +280 XP' },
+        { icon: aiLabels ? 'ph-fill ph-sparkle' : 'ph ph-file-text', text: '11 misiones generadas desde «Política de reembolsos»', time: 'hace 1 h' },
+        { icon: 'ph ph-arrow-up-right', text: 'Martín Reyes subió a nivel 7', time: 'hace 3 h' },
+        { icon: 'ph ph-user-plus', text: 'Camila Ferreyra aceptó la invitación', time: 'ayer' },
+        { icon: 'ph ph-upload-simple', text: 'Paula Mansilla cargó «Manual de reclamos v4»', time: 'ayer' }
+      ],
+
+      empFilters: [
+        { key: 'area', label: 'Área: todas' },
+        { key: 'estado', label: 'Estado: todos' },
+        { key: 'nivel', label: 'Nivel: 1-10' },
+        { key: 'progreso', label: 'Progreso: cualquiera' }
+      ].map((f, i) => ({ label: f.label, style: this.chipStyle(i === 0), onClick: () => {} })),
+      employees,
+      employeeCount: employees.length,
+
+      assignable: [
+        { name: 'Manual de reclamos v4', meta: 'PDF · 38 páginas · procesado', missions: 11, checked: true },
+        { name: 'Guion de atención telefónica', meta: 'DOCX · 14 páginas · procesado', missions: 7, checked: true },
+        { name: 'Catálogo de productos 2026', meta: 'PDF · 64 páginas · procesado', missions: 18, checked: false },
+        { name: 'Política de reembolsos', meta: 'PDF · 9 páginas · procesado', missions: 5, checked: false }
+      ],
+      goalModes: [
+        { key: 'global', label: 'Objetivo global de la empresa', meta: '6 misiones / 900 XP por semana' },
+        { key: 'custom', label: 'Valor personalizado', meta: 'Solo para esta persona' }
+      ].map(g => ({
+        label: g.label, meta: g.meta,
+        style: 'flex: 1 1 0; text-align: left; cursor: pointer; padding: 13px 14px; border-radius: var(--radius-sm); font-family: var(--font-body); color: var(--color-text); border: 1px solid ' + (s.goalMode === g.key ? 'var(--color-accent)' : 'var(--color-neutral-800)') + '; background: ' + (s.goalMode === g.key ? 'color-mix(in srgb, var(--color-accent) 12%, transparent)' : 'transparent') + ';',
+        onClick: () => this.set({ goalMode: g.key })
+      })),
+      customGoal: s.goalMode === 'custom',
+
+      sel: {
+        name: base[0], area: base[1], level: base[2], email: base[6],
+        xp: (base[2] * 340).toLocaleString('es-AR'), missions: 40 + base[2] * 3, since: 'mar 2025',
+        initials: base[0].split(' ').map(w => w[0]).join(''),
+        skills: selSkills, history
+      },
+
+      generated: [
+        { type: 'Caso práctico', status: 'En revisión', statusClass: 'tag tag-outline', name: 'Cobro duplicado', desc: 'Clienta antigua con cobro doble confirmado, pide la baja si no se resuelve hoy.', skill: 'Gestión de reclamos', xp: 360 },
+        { type: 'Decisión', status: 'En revisión', statusClass: 'tag tag-outline', name: 'Escalar o resolver', desc: 'Elegir entre resolver en primer contacto o derivar a Facturación.', skill: 'Procesos internos', xp: 140 },
+        { type: 'Simulación', status: 'Publicada', statusClass: 'tag tag-accent', name: 'Reclamo con daño reputacional', desc: 'Conversación de tres turnos con un cliente que amenaza con redes sociales.', skill: 'Resolución de conflictos', xp: 280 },
+        { type: 'Pregunta', status: 'Publicada', statusClass: 'tag tag-accent', name: 'Plazos de reembolso', desc: 'Verificación de conocimiento sobre plazos por medio de pago.', skill: 'Producto', xp: 60 },
+        { type: 'Respuesta abierta', status: 'En revisión', statusClass: 'tag tag-outline', name: 'Mensaje de cierre', desc: 'Redactar el cierre de un reclamo resuelto con reembolso en curso.', skill: 'Comunicación', xp: 150 },
+        { type: 'Desafío', status: 'Borrador', statusClass: 'tag tag-neutral', name: 'Desafío de capítulo', desc: 'Cinco situaciones encadenadas sin pistas, con tiempo límite.', skill: 'Mixta', xp: 400 }
+      ],
+
+      metricTabs, metricRows, chartTitle: set.title,
+      metricKpis: [
+        { label: 'Tasa de resolución', value: '81%', delta: '+4 pts vs. mes anterior' },
+        { label: 'Tasa de finalización', value: '93%', delta: 'misiones iniciadas y cerradas' },
+        { label: 'Misiones completadas', value: '1.284', delta: 'en el período' },
+        { label: 'Cumplimiento semanal', value: '78%', delta: '115 de 148 personas' },
+        { label: 'Progreso promedio', value: 'Nv 6,4', delta: '+0,8 en 8 semanas' }
+      ],
+      insights: [
+        { text: 'Retención concentra las oportunidades de mejora: 61% de cumplimiento con buen desempeño individual. El cuello parece de tiempo disponible, no de habilidad.', meta: 'Basado en 8 semanas · 34 personas' },
+        { text: 'Gestión de reclamos avanza 3 veces más rápido cuando la misión es un caso práctico que cuando es una pregunta.', meta: 'Sugerencia: priorizar casos prácticos en N1' },
+        { text: 'Onboarding tiene margen: 48% de cumplimiento en personas con menos de 60 días. Una ruta más corta al inicio suele corregirlo.', meta: '12 personas afectadas' }
+      ],
+
+      settingsTabs,
+      stCompany: s.settingsTab === 'Empresa',
+      stUsers: s.settingsTab === 'Usuarios',
+      stPlan: s.settingsTab === 'Plan y facturación',
+      stIntegrations: s.settingsTab === 'Integraciones',
+      prefs: this.prefRows([
+        ['Aprobación humana de misiones', 'Revisar lo generado antes de publicar', true],
+        ['Dificultad adaptativa', 'La IA ajusta según desempeño previo', true],
+        ['Resumen semanal por email', 'Lunes 9:00 a administradores', true],
+        ['Ranking visible para empleados', 'Mostrar posición relativa por área', false]
+      ]),
+      users: [
+        { name: 'Paula Mansilla', email: 'paula@nordex.com', role: 'Owner', areas: 'Todas', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Ezequiel Ruiz', email: 'eze@nordex.com', role: 'Admin', areas: 'Soporte N1, N2', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Vera Costa', email: 'vera@nordex.com', role: 'Analista', areas: 'Calidad', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Julián Ortiz', email: 'julian@nordex.com', role: 'Analista', areas: 'Retención', state: 'Invitación enviada', tagClass: 'tag tag-outline' }
+      ],
+      planUsage: [
+        { label: 'Licencias', value: '148 / 200', bar: this.bar(74) },
+        { label: 'Documentos procesados', value: '38 / 60 este mes', bar: this.bar(63) },
+        { label: 'Misiones generadas', value: '1.240 / 2.000', bar: this.bar(62) }
+      ],
+      invoices: [
+        { date: '01 sep 2026', amount: 'USD 1.480' },
+        { date: '01 ago 2026', amount: 'USD 1.480' },
+        { date: '01 jul 2026', amount: 'USD 1.320' }
+      ],
+      integrations: [
+        { name: 'Slack', icon: 'ph ph-chat-circle-dots', desc: 'Avisos de objetivo semanal y logros en el canal del equipo.', action: 'Conectado', btnClass: 'btn btn-ghost btn-block' },
+        { name: 'Google Drive', icon: 'ph ph-folder-simple', desc: 'Sincroniza carpetas de documentación como fuente de contenido.', action: 'Conectar', btnClass: 'btn btn-primary btn-block' },
+        { name: 'SSO SAML', icon: 'ph ph-key', desc: 'Inicio de sesión con el proveedor de identidad de la empresa.', action: 'Conectado', btnClass: 'btn btn-ghost btn-block' },
+        { name: 'Zendesk', icon: 'ph ph-lifebuoy', desc: 'Usa tickets reales como base de casos prácticos.', action: 'Conectar', btnClass: 'btn btn-primary btn-block' }
+      ],
+
+      // Empleado
+      isHome: s.empScreen === 'inicio',
+      isHub: s.empScreen === 'hub',
+      isMission: s.empScreen === 'mission',
+      isSkills: s.empScreen === 'skills',
+      isProgress: s.empScreen === 'progress',
+      isAccount: s.empScreen === 'account',
+      goMissions: () => this.set({ empScreen: 'hub' }),
+      goHub: () => this.set({ empScreen: 'hub', step: 0, answers: [], text: '' }),
+      restartMission: () => this.set({ step: 0, answers: [], text: '' }),
+
+      weekPips: [1, 1, 1, 1, 0, 0].map(v => ({
+        style: 'flex: 1 1 0; height: 6px; border-radius: 3px; background: ' + (v ? 'var(--color-accent)' : 'var(--color-neutral-800)') + ';'
+      })),
+      availableMissions: [
+        { name: 'Cobro duplicado', type: 'Caso práctico', difficulty: 'Intermedia', skill: 'Gestión de reclamos', xp: 360, minutes: 6, icon: 'ph ph-briefcase', onClick: () => this.set({ empScreen: 'mission', step: 0, answers: [], text: '' }) },
+        { name: 'Escalar o resolver', type: 'Decisión', difficulty: 'Intermedia', skill: 'Procesos internos', xp: 140, minutes: 3, icon: 'ph ph-git-branch', onClick: () => this.set({ empScreen: 'mission', step: 0, answers: [], text: '' }) },
+        { name: 'Plazos de reembolso', type: 'Pregunta', difficulty: 'Fácil', skill: 'Producto', xp: 60, minutes: 2, icon: 'ph ph-question', onClick: () => this.set({ empScreen: 'mission', step: 0, answers: [], text: '' }) }
+      ],
+      mySkills: selSkills,
+      myActivity: [
+        { icon: 'ph ph-check-circle', text: 'Cliente sin respuesta 48h · correcta', xp: '+180' },
+        { icon: 'ph ph-arrow-up-right', text: 'Subiste a nivel 7', xp: '' },
+        { icon: 'ph-fill ph-trophy', text: 'Insignia «Primera semana perfecta»', xp: '+200' },
+        { icon: 'ph ph-scales', text: 'Escalar o resolver · parcial', xp: '+90' }
+      ],
+
+      hubTop: hubNodes.slice(0, 4),
+      hubBottom: hubNodes.slice(4).reverse(),
+      skillTree,
+
+      missionRunning: s.step < steps.length,
+      missionDone: s.step >= steps.length,
+      step: Object.assign({}, step, { options: stepOptions }),
+      stepLabel: 'Paso ' + (Math.min(s.step, steps.length - 1) + 1) + ' de ' + steps.length,
+      missionProgressStyle: this.bar(Math.round(((Math.min(s.step, steps.length - 1)) / steps.length) * 100) + 8, 'var(--color-accent)'),
+      hintText: step.isOpen ? 'La IA evalúa contenido, no ortografía.' : 'Elige la opción que mejor resuelve la situación.',
+      advanceLabel: s.step === steps.length - 1 ? 'Enviar respuesta' : 'Continuar',
+      onText: (e) => this.set({ text: e.target.value }),
+      onAdvance: () => this.set({ step: s.step + 1 }),
+
+      earnedXp: earnedXp,
+      resultTitle,
+      resultSubtitle: 'Cobro duplicado · Gestión de reclamos · 3 pasos',
+      gainedSkills,
+      feedback,
+      adaptNote: 'La próxima misión de esta rama se ajustó a dificultad ' + (strong ? 'avanzada' : 'intermedia') + '.',
+      newXpLabel: newTotal.toLocaleString('es-AR') + ' / 3.000 XP',
+      newBarStyle: this.bar(newPct, 'linear-gradient(90deg, var(--color-accent-600), var(--color-accent-300))', 'animation: xpFill 1.1s 0.25s ease-out backwards;'),
+
+      progressKpis: [
+        { label: 'Nivel', value: '7', meta: 'Especialista de soporte' },
+        { label: 'XP acumulada', value: '14.240', meta: '+1.860 este mes' },
+        { label: 'Misiones', value: '64', meta: '58 resueltas correctamente' },
+        { label: 'Racha', value: '9 días', meta: 'Tu récord: 14' }
+      ],
+      xpBars: this.barsFrom([620, 780, 540, 910, 1020, 660, 840, 1180, 960, 1240, 1130, 1420], ['27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38'], 1500, 130),
+      perf: [
+        { label: 'Respuestas correctas', value: '86%', bar: this.bar(86) },
+        { label: 'Parcialmente correctas', value: '11%', bar: this.bar(11, 'var(--color-accent-600)') },
+        { label: 'Objetivos semanales cumplidos', value: '11 de 13', bar: this.bar(85) }
+      ],
+      myHistory: histRaw.map(h => ({ name: h[0], date: '1' + (h[4] % 7 + 2) + ' sep', result: h[3], xp: h[4], tagClass: this.resultTag(h[3]) })),
+      notifPrefs: this.prefRows([
+        ['Recordatorio de objetivo semanal', 'Viernes por la tarde si te falta alguna misión', true],
+        ['Nuevas misiones disponibles', 'Cuando se desbloquea un nodo', true],
+        ['Logros e insignias', 'Al desbloquear una recompensa', true],
+        ['Resumen mensual', 'Tu evolución del mes', false]
+      ]),
+
+      // Admin
+      isAdminDash: s.adminScreen === 'dashboard',
+      isCompanies: s.adminScreen === 'companies',
+      isCompanyDetail: s.adminScreen === 'company',
+      isSubs: s.adminScreen === 'subs',
+      isAdminUsers: s.adminScreen === 'users',
+      isAdminSettings: s.adminScreen === 'settings',
+      goCompanies: () => this.set({ adminScreen: 'companies' }),
+      adminKpis: [
+        { label: 'Empresas activas', value: '86', meta: '+4 este mes' },
+        { label: 'Empresas inactivas', value: '11', meta: '3 en riesgo de baja' },
+        { label: 'Empleados totales', value: '12.480', meta: 'en todas las cuentas' },
+        { label: 'Suscripciones', value: '97', meta: '8 renuevan este mes' },
+        { label: 'Misiones / semana', value: '48,2 mil', meta: 'pico histórico' },
+        { label: 'MRR', value: 'USD 214 mil', meta: '+6,1% mensual' }
+      ],
+      usageBars: this.barsFrom([28, 31, 27, 34, 38, 36, 41, 39, 44, 43, 46, 48], ['27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38'], 50, 110),
+      adminActivity: [
+        { icon: 'ph ph-buildings', text: 'Casa Pilar inició prueba del plan Starter', time: 'hace 40 min' },
+        { icon: 'ph ph-arrow-circle-up', text: 'Ferro Logística pasó de Growth a Scale', time: 'hace 5 h' },
+        { icon: 'ph ph-warning-circle', text: 'Tandil Foods registra un pago rechazado', time: 'ayer' },
+        { icon: 'ph ph-users', text: 'Vento Seguros sumó 120 licencias', time: 'hace 2 días' },
+        { icon: 'ph-fill ph-sparkle', text: 'Engine 2.4 desplegado al 100% de las cuentas', time: 'hace 3 días' }
+      ],
+      companies, company,
+      plans: [
+        { name: 'Starter', price: 'USD 6 / empleado / mes', companies: 24, limit: '25', content: '10 docs', usage: 38, tag: 'Entrada', tagClass: 'tag tag-neutral' },
+        { name: 'Growth', price: 'USD 11 / empleado / mes', companies: 41, limit: '100', content: '30 docs', usage: 64, tag: 'Más elegido', tagClass: 'tag tag-accent' },
+        { name: 'Scale', price: 'USD 14 / empleado / mes', companies: 26, limit: '500', content: '60 docs', usage: 71, tag: 'Escala', tagClass: 'tag tag-outline' },
+        { name: 'Enterprise', price: 'A medida', companies: 6, limit: 'Sin límite', content: 'Sin límite', usage: 52, tag: 'A medida', tagClass: 'tag tag-outline' }
+      ].map(p => Object.assign({}, p, {
+        usageLabel: p.usage + '%',
+        bar: this.bar(p.usage, p.name === 'Growth' ? 'var(--color-accent)' : 'var(--color-accent-600)'),
+        cardStyle: 'border: 1px solid ' + (p.name === 'Growth' ? 'var(--color-accent-800)' : 'var(--color-neutral-800)') + '; border-radius: var(--radius-md); padding: 17px; display: flex; flex-direction: column; gap: 12px; background: ' + (p.name === 'Growth' ? 'color-mix(in srgb, var(--color-accent) 7%, transparent)' : 'var(--color-surface)') + ';'
+      })),
+      subs: [
+        ['Nordex Soporte', 'Scale', '12 mar 2027', 74, 'Activa'],
+        ['Vento Seguros', 'Enterprise', '15 jun 2027', 88, 'Activa'],
+        ['Ferro Logística', 'Scale', '22 oct 2026', 62, 'Activa'],
+        ['Grupo Aledaña', 'Growth', '04 ene 2027', 55, 'Activa'],
+        ['Casa Pilar', 'Starter', '16 sep 2026', 22, 'Prueba'],
+        ['Tandil Foods', 'Starter', '08 jul 2026', 18, 'Impago']
+      ].map(r => ({
+        name: r[0], plan: r[1], renew: r[2], usage: r[3] + '%', state: r[4],
+        bar: this.bar(r[3], r[3] > 80 ? 'var(--color-accent-400)' : 'var(--color-accent-600)'),
+        tagClass: stateTag(r[4])
+      })),
+      adminUsers: [
+        { name: 'Renata Solís', email: 'renata@xpedia.io', role: 'Superadmin', scope: 'Global', last: 'hace 10 min', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Bruno Lacase', email: 'bruno@xpedia.io', role: 'Soporte', scope: 'LatAm', last: 'hace 2 h', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Inés Feijóo', email: 'ines@xpedia.io', role: 'Customer Success', scope: '18 cuentas', last: 'ayer', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Óscar Peña', email: 'oscar@xpedia.io', role: 'Facturación', scope: 'Global', last: 'hace 4 días', state: 'Activa', tagClass: 'tag tag-accent' },
+        { name: 'Lía Martel', email: 'lia@xpedia.io', role: 'Soporte', scope: 'EU', last: 'hace 3 semanas', state: 'Suspendida', tagClass: 'tag tag-neutral' }
+      ],
+      adminPrefs: this.prefRows([
+        ['Registro de auditoría', 'Guardar cada acción administrativa', true],
+        ['Acceso de soporte a cuentas', 'Requiere aprobación del owner', true],
+        ['Modo mantenimiento', 'Deshabilita el ingreso de empleados', false],
+        ['Alertas de consumo', 'Avisar al 85% del límite del plan', true]
+      ])
+    };
+  }
+}
+</script>
+</body>
+</html>
