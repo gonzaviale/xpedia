@@ -33,7 +33,7 @@
   @keyframes xpStar { 0% { opacity: 0; transform: scale(0) rotate(-45deg); } 70% { transform: scale(1.25); } 100% { opacity: 1; transform: none; } }
   @keyframes xpPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
   @keyframes xpSpin { to { transform: rotate(360deg); } }
-  @keyframes xpIdle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes xpIdle { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
   .xp-hero-bob { animation: xpIdle 1.4s ease-in-out infinite; }
   .xp-map-node:hover { filter: brightness(1.08); }
 </style>
@@ -54,6 +54,12 @@
         </sc-for>
       </div>
     </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 12px; color: var(--color-neutral-500);">Rubro</span>
+      <select value="{{ rubro }}" onChange="{{ onRubro }}" style="height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--color-neutral-800); background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 12px;">
+        <sc-for list="{{ rubroOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+      </select>
+    </div>
     <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
       <span style="font-size: 12px; color: var(--color-neutral-400);">{{ userName }}</span>
       <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-800); color: var(--color-accent-200); display: flex; align-items: center; justify-content: center; font-size: 11px;">{{ userInitials }}</div>
@@ -69,7 +75,7 @@
   <div style="display: flex; min-height: calc(100vh - 52px);">
     <aside style="flex: 0 0 214px; border-right: 1px solid var(--color-neutral-800); padding: 20px 12px; display: flex; flex-direction: column; gap: 4px;">
       <div style="padding: 0 10px 16px;">
-        <div style="font-family: var(--font-heading); font-size: 15px;">Nordex Soporte</div>
+        <div style="font-family: var(--font-heading); font-size: 15px;">{{ coName }}</div>
         <div style="font-size: 11px; color: var(--color-neutral-500);">Panel de empresa</div>
       </div>
       <sc-for list="{{ eNav }}" as="n" hint-placeholder-count="5">
@@ -393,9 +399,12 @@
             </sc-for>
           </div>
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 12px;">
-            <h3 style="font-size: 15px; margin: 0;">Mis habilidades</h3>
-            <sc-for list="{{ uSkills }}" as="k" hint-placeholder-count="5">
-              <div><div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px;"><span>{{ k.name }}</span><span style="color: var(--color-neutral-500);">{{ k.dom }}</span></div><div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ k.bar }}"></div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;"><h3 style="font-size: 15px; margin: 0;">Árbol de habilidades</h3><button type="button" class="btn btn-ghost" onClick="{{ goTree }}" style="padding-right: 0; font-size: 12px;">Ver árbol <i class="ph ph-arrow-right"></i></button></div>
+            <sc-for list="{{ uBranches }}" as="k" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="{{ k.badge }}"><i class="{{ k.icon }}"></i></div>
+                <div style="flex: 1 1 auto; min-width: 0;"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; margin-bottom: 5px;"><span>{{ k.name }}</span><span style="color: var(--color-neutral-500); white-space: nowrap;">{{ k.meta }}</span></div><div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ k.bar }}"></div></div></div>
+              </div>
             </sc-for>
           </div>
         </div>
@@ -405,7 +414,7 @@
       <sc-if value="{{ uMap }}">
       <div data-screen-label="Empleado · Aventura" style="padding-top: 18px; display: flex; flex-direction: column; gap: 18px;">
         <div>
-          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">Capítulo 2 · Reclamos difíciles</span>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">{{ chapter }}</span>
           <h1 style="font-size: 28px; margin: 6px 0 4px;">Tu aventura</h1>
           <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500);">Completá las misiones del capítulo para desbloquear al jefe final.</p>
         </div>
@@ -422,7 +431,7 @@
                 <text x="{{ z.x }}" y="{{ z.y }}" text-anchor="middle" style="{{ z.labelStyle }}">{{ z.label }}</text>
               </sc-for>
 
-              <sc-for list="{{ trees }}" as="t" hint-placeholder-count="40">
+              <sc-for list="{{ trees }}" as="t" hint-placeholder-count="16">
                 <g>
                   <ellipse cx="{{ t.shadowCx }}" cy="{{ t.shadowCy }}" rx="{{ t.shadowRx }}" ry="{{ t.shadowRy }}" style="{{ t.shadowStyle }}"></ellipse>
                   <rect x="{{ t.trunkX }}" y="{{ t.trunkY }}" width="{{ t.trunkW }}" height="{{ t.trunkH }}" rx="{{ t.trunkRx }}" style="{{ t.trunkStyle }}"></rect>
@@ -458,6 +467,57 @@
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-play-circle" style="color: var(--color-accent-400);"></i>Disponible · tocá para jugar</span>
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph ph-lock-simple" style="color: var(--color-neutral-500);"></i>Bloqueada</span>
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-person-simple-walk" style="color: var(--color-accent-300);"></i>Vos</span>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ uTree }}">
+      <div data-screen-label="Empleado · Árbol de habilidades" style="padding-top: 18px; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent-400);">{{ tree.title }}</span>
+          <h1 style="font-size: 28px; margin: 6px 0 4px;">Árbol de habilidades</h1>
+          <p style="margin: 0; font-size: 13px; color: var(--color-neutral-500); text-wrap: pretty;">Cada misión suma puntos a su rama. Al llegar al puntaje pedido se desbloquea la habilidad siguiente.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 14px; align-items: start;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: radial-gradient(520px 260px at 50% 0%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 70%), var(--color-surface); padding: 24px 12px 26px; display: flex; flex-direction: column; align-items: center;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+              <div style="width: 68px; height: 68px; border-radius: 20px; border: 2px solid var(--color-accent-400); background: color-mix(in srgb, var(--color-accent) 20%, var(--color-surface)); display: flex; flex-direction: column; align-items: center; justify-content: center;"><span style="font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent-300);">Nivel</span><span style="font-family: var(--font-heading); font-size: 28px; line-height: 1;">{{ lvl }}</span></div>
+              <span style="font-size: 12px; color: var(--color-neutral-400);">{{ tree.hero }}</span>
+            </div>
+            <div style="width: 2px; height: 18px; background: var(--color-neutral-700);"></div>
+            <div style="position: relative; width: 100%; height: 2px;"><div style="position: absolute; left: 12.5%; right: 12.5%; top: 0; height: 2px; background: var(--color-neutral-700);"></div></div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%;">
+              <sc-for list="{{ tree.branches }}" as="b" hint-placeholder-count="4">
+                <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 4px;">
+                  <div style="{{ b.stub }}"></div>
+                  <div style="{{ b.badge }}"><i class="{{ b.icon }}"></i></div>
+                  <div style="font-family: var(--font-heading); font-size: 14px; margin-top: 8px; line-height: 1.25; text-wrap: balance;">{{ b.name }}</div>
+                  <div style="{{ b.ptsStyle }}">{{ b.pts }}</div>
+                  <sc-for list="{{ b.nodes }}" as="n" hint-placeholder-count="4">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                      <div style="{{ n.line }}"></div>
+                      <button type="button" onClick="{{ n.onClick }}" style="{{ n.btn }}">
+                        <div style="{{ n.circle }}"><i class="{{ n.icon }}"></i></div>
+                        <span style="font-size: 12px; line-height: 1.3; color: var(--color-text); text-wrap: balance;">{{ n.name }}</span>
+                        <span style="{{ n.reqStyle }}">{{ n.req }}</span>
+                      </button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="border: 1px solid var(--color-accent-800); border-radius: var(--radius-lg); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px; position: sticky; top: 72px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="{{ tn.badge }}"><i class="{{ tn.icon }}"></i></div>
+              <div style="min-width: 0;"><div style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">{{ tn.branch }} · Rango {{ tn.tier }}</div><div style="font-family: var(--font-heading); font-size: 18px;">{{ tn.name }}</div></div>
+            </div>
+            <span class="{{ tn.tagClass }}" style="align-self: flex-start;">{{ tn.status }}</span>
+            <p style="margin: 0; font-size: 13px; line-height: 1.55; color: var(--color-neutral-300); text-wrap: pretty;">{{ tn.desc }}</p>
+            <div><div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px;"><span style="color: var(--color-neutral-400);">Puntos de la rama</span><span>{{ tn.progress }}</span></div><div style="height: 8px; border-radius: 4px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ tn.bar }}"></div></div></div>
+            <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--color-neutral-400);"><i class="{{ tn.engIcon }}" style="{{ tn.engIconStyle }}"></i><span>{{ tn.how }}</span></div>
+            <sc-if value="{{ tn.canPlay }}"><button type="button" class="btn btn-primary btn-block" onClick="{{ tn.onPlay }}" style="white-space: normal;">{{ tn.playLabel }}</button></sc-if>
+          </div>
         </div>
       </div>
       </sc-if>
@@ -534,12 +594,12 @@
         <sc-if value="{{ pDialogo }}">
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 14px;">
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); overflow: hidden; background: radial-gradient(560px 280px at 12% 100%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 70%), var(--color-surface);">
-            <div style="display: flex; justify-content: space-between; padding: 12px 18px; font-size: 12px; color: var(--color-neutral-500); border-bottom: 1px solid var(--color-neutral-800);"><span style="display: flex; align-items: center; gap: 8px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: oklch(0.72 0.16 30); animation: xpPulse 1.2s infinite;"></span>Llamada en curso · Gustavo, cliente hace 5 años</span><span>{{ d.turnLabel }}</span></div>
+            <div style="display: flex; justify-content: space-between; padding: 12px 18px; font-size: 12px; color: var(--color-neutral-500); border-bottom: 1px solid var(--color-neutral-800);"><span style="display: flex; align-items: center; gap: 8px;"><span style="width: 8px; height: 8px; border-radius: 50%; background: oklch(0.72 0.16 30); animation: xpPulse 1.2s infinite;"></span>{{ d.channel }} · {{ d.who }}</span><span>{{ d.turnLabel }}</span></div>
             <div style="padding: 36px 28px 28px; display: flex; gap: 28px; align-items: flex-end; min-height: 240px;">
               <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative;">
                 <div style="{{ d.floatStyle }}">{{ d.floatText }}</div>
                 <div style="{{ d.faceStyle }}"><i class="{{ d.faceIcon }}"></i></div>
-                <span style="font-size: 12px; padding: 3px 12px; border-radius: 999px; background: var(--color-bg); border: 1px solid var(--color-neutral-700);">Gustavo</span>
+                <span style="font-size: 12px; padding: 3px 12px; border-radius: 999px; background: var(--color-bg); border: 1px solid var(--color-neutral-700);">{{ d.name }}</span>
               </div>
               <div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px;">
                 <sc-if value="{{ d.hasYou }}"><div style="align-self: flex-end; max-width: 80%; padding: 10px 14px; border-radius: 14px 14px 4px 14px; background: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface)); border: 1px solid var(--color-accent-700); font-size: 13px; line-height: 1.45; color: var(--color-neutral-200);">Vos: {{ d.you }}</div></sc-if>
@@ -573,17 +633,14 @@
         <sc-if value="{{ pAudScan }}">
         <div style="display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 16px; align-items: start;">
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: var(--color-surface); overflow: hidden;">
-            <div style="padding: 12px 18px; border-bottom: 1px solid var(--color-neutral-800); display: flex; align-items: center; gap: 10px;"><i class="ph-fill ph-chats" style="color: oklch(0.82 0.13 80); font-size: 18px;"></i><span style="font-size: 13px;">Chat #88213 · Agente: Tomás</span><span style="margin-left: auto; font-size: 12px; color: var(--color-neutral-500);">Tocá los mensajes con errores</span></div>
-            <div style="padding: 20px 18px; display: flex; flex-direction: column; gap: 12px; background: var(--color-bg);">
+            <div style="padding: 12px 18px; border-bottom: 1px solid var(--color-neutral-800); display: flex; align-items: center; gap: 10px;"><i class="ph-fill ph-clipboard-text" style="color: oklch(0.82 0.13 80); font-size: 20px;"></i><div style="min-width: 0;"><div style="font-size: 13px;">{{ a.docTitle }}</div><div style="font-size: 11px; color: var(--color-neutral-500);">{{ a.docMeta }}</div></div><span style="margin-left: auto; font-size: 12px; color: var(--color-neutral-500); white-space: nowrap;">Tocá las líneas con errores</span></div>
+            <div style="padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; background: var(--color-bg);">
               <sc-for list="{{ a.lines }}" as="l" hint-placeholder-count="8">
-                <div style="{{ l.row }}">
-                  <button type="button" onClick="{{ l.onClick }}" style="{{ l.bubble }}" style-hover="transform: scale(1.02);">
-                    <span style="{{ l.whoStyle }}">{{ l.who }}</span>
-                    <span style="display: block;">{{ l.text }}</span>
-                    <sc-if value="{{ l.hasNote }}"><span style="{{ l.noteStyle }}">{{ l.note }}</span></sc-if>
-                    <sc-if value="{{ l.stamp }}"><span style="position: absolute; top: -11px; right: -8px; padding: 3px 8px; border: 2px solid oklch(0.82 0.13 80); color: oklch(0.82 0.13 80); background: var(--color-bg); font-family: var(--font-heading); font-size: 11px; letter-spacing: 0.1em; border-radius: 4px; transform: rotate(-8deg); animation: xpStamp 0.35s ease-out;">INFRACCIÓN</span></sc-if>
-                  </button>
-                </div>
+                <button type="button" onClick="{{ l.onClick }}" style="{{ l.row }}">
+                  <span style="flex: 0 0 104px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500); padding-top: 2px;">{{ l.who }}</span>
+                  <span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px;"><span>{{ l.text }}</span><sc-if value="{{ l.hasNote }}"><span style="{{ l.noteStyle }}">{{ l.note }}</span></sc-if></span>
+                  <sc-if value="{{ l.stamp }}"><span style="position: absolute; top: -10px; right: 12px; padding: 2px 8px; border: 2px solid oklch(0.82 0.13 80); color: oklch(0.82 0.13 80); background: var(--color-bg); font-family: var(--font-heading); font-size: 11px; letter-spacing: 0.1em; border-radius: 4px; transform: rotate(-8deg); animation: xpStamp 0.35s ease-out;">ERROR</span></sc-if>
+                </button>
               </sc-for>
             </div>
           </div>
@@ -608,7 +665,7 @@
           <div style="{{ a.betweenIcon }}"><i class="ph-fill ph-magnifying-glass"></i></div>
           <h1 style="font-size: 30px; margin: 0;">{{ a.betweenTitle }}</h1>
           <p style="margin: 0; font-size: 15px; color: var(--color-neutral-400);">{{ a.betweenText }}</p>
-          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px 18px; font-size: 14px; line-height: 1.5; color: var(--color-neutral-300);">Ronda 2: te mostramos 5 situaciones. Decidí rápido si están <b style="color: oklch(0.8 0.11 185);">permitidas</b> o <b style="color: oklch(0.72 0.16 30);">no</b>. Tenés 5 segundos por tarjeta.</div>
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px 18px; font-size: 14px; line-height: 1.5; color: var(--color-neutral-300);">Ronda 2: te mostramos 5 situaciones. Decidí rápido si son <b style="color: oklch(0.8 0.11 185);">correctas</b> o <b style="color: oklch(0.72 0.16 30);">incorrectas</b>. Tenés 5 segundos por tarjeta.</div>
           <button type="button" class="btn btn-primary" onClick="{{ a.toQuick }}" style="font-size: 16px; padding: 11px 28px;">Empezar ronda 2 <i class="ph ph-arrow-right"></i></button>
         </div>
         </sc-if>
@@ -616,15 +673,15 @@
         <!-- AUDITOR · ronda 2 -->
         <sc-if value="{{ pAudQuick }}">
         <div style="max-width: 640px; width: 100%; margin: 6px auto 0; display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-family: var(--font-heading); font-size: 15px;">Ronda 2 · ¿Permitido o no?</span><span style="{{ a.streakStyle }}">{{ a.streakLabel }}</span></div>
+          <div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-family: var(--font-heading); font-size: 15px;">Ronda 2 · ¿Correcto o incorrecto?</span><span style="{{ a.streakStyle }}">{{ a.streakLabel }}</span></div>
           <div style="display: flex; gap: 6px;"><sc-for list="{{ a.pips }}" as="pp" hint-placeholder-count="5"><div style="{{ pp }}"></div></sc-for></div>
           <div style="{{ a.cardStyle }}">
             <div style="height: 6px; background: var(--color-neutral-800);"><div style="{{ a.timerBar }}"></div></div>
             <div style="padding: 48px 34px; text-align: center;"><div style="font-size: 12px; color: var(--color-neutral-500); margin-bottom: 14px;">{{ a.counter }}</div><div style="font-family: var(--font-heading); font-size: 25px; line-height: 1.35; text-wrap: balance;">{{ a.card }}</div></div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <button type="button" onClick="{{ a.onNo }}" style="cursor: pointer; padding: 18px; border-radius: var(--radius-md); border: 1.5px solid oklch(0.72 0.16 30); background: color-mix(in srgb, oklch(0.72 0.16 30) 12%, var(--color-surface)); color: oklch(0.82 0.12 30); font-family: var(--font-heading); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="transform: translateY(-2px);"><i class="ph ph-arrow-left"></i><i class="ph-fill ph-x-circle" style="font-size: 22px;"></i>No permitido</button>
-            <button type="button" onClick="{{ a.onYes }}" style="cursor: pointer; padding: 18px; border-radius: var(--radius-md); border: 1.5px solid oklch(0.8 0.11 185); background: color-mix(in srgb, oklch(0.8 0.11 185) 12%, var(--color-surface)); color: oklch(0.86 0.09 185); font-family: var(--font-heading); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="transform: translateY(-2px);"><i class="ph-fill ph-check-circle" style="font-size: 22px;"></i>Permitido<i class="ph ph-arrow-right"></i></button>
+            <button type="button" onClick="{{ a.onNo }}" style="cursor: pointer; padding: 18px; border-radius: var(--radius-md); border: 1.5px solid oklch(0.72 0.16 30); background: color-mix(in srgb, oklch(0.72 0.16 30) 12%, var(--color-surface)); color: oklch(0.82 0.12 30); font-family: var(--font-heading); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="transform: translateY(-2px);"><i class="ph ph-arrow-left"></i><i class="ph-fill ph-x-circle" style="font-size: 22px;"></i>Incorrecto</button>
+            <button type="button" onClick="{{ a.onYes }}" style="cursor: pointer; padding: 18px; border-radius: var(--radius-md); border: 1.5px solid oklch(0.8 0.11 185); background: color-mix(in srgb, oklch(0.8 0.11 185) 12%, var(--color-surface)); color: oklch(0.86 0.09 185); font-family: var(--font-heading); font-size: 17px; display: flex; align-items: center; justify-content: center; gap: 10px;" style-hover="transform: translateY(-2px);"><i class="ph-fill ph-check-circle" style="font-size: 22px;"></i>Correcto<i class="ph ph-arrow-right"></i></button>
           </div>
           <sc-if value="{{ a.hasLast }}"><div style="{{ a.lastStyle }}"><i class="{{ a.lastIcon }}" style="font-size: 18px;"></i><span>{{ a.lastText }}</span></div></sc-if>
         </div>
@@ -634,8 +691,8 @@
         <sc-if value="{{ pProto }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: var(--color-surface); padding: 16px 20px; display: flex; align-items: center; gap: 24px;">
-            <i class="ph-fill ph-user-circle" style="font-size: 36px; color: var(--color-neutral-500);"></i>
-            <div style="flex: 1 1 auto;"><div style="font-size: 15px; color: var(--color-neutral-200);">«¡Me hackearon la cuenta! Cambiaron mi email y hay compras que no hice.»</div><div style="font-size: 12px; color: var(--color-neutral-500); margin-top: 4px;">Tocá los pasos del protocolo en orden. Cuidado: hay 2 trampas.</div></div>
+            <i class="ph-fill ph-warning-circle" style="font-size: 36px; color: oklch(0.8 0.11 185);"></i>
+            <div style="flex: 1 1 auto;"><div style="font-size: 15px; color: var(--color-neutral-200);">{{ p.situation }}</div><div style="font-size: 12px; color: var(--color-neutral-500); margin-top: 4px;">Tocá los pasos del protocolo en orden. Cuidado: hay 2 trampas.</div></div>
             <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Errores</div><div style="font-family: var(--font-heading); font-size: 28px; line-height: 1.1;">{{ p.mistakes }}</div></div>
             <div style="text-align: center; position: relative; min-width: 76px;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Tiempo</div><div style="{{ p.clockStyle }}">{{ p.clock }}</div><div style="{{ p.floatStyle }}">−5 s</div></div>
           </div>
@@ -659,66 +716,46 @@
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: var(--color-surface); padding: 14px 20px; display: flex; align-items: center; gap: 26px;">
             <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Tiempo</div><div style="{{ c.clockStyle }}">{{ c.clock }}</div></div>
             <div style="flex: 1 1 auto; display: flex; align-items: center; gap: 12px;">
-              <i class="{{ c.satIcon }}" style="{{ c.satIconStyle }}"></i>
+              <i class="ph-fill ph-gauge" style="{{ c.ctlIconStyle }}"></i>
               <div style="flex: 1 1 auto;">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 6px;"><span>Satisfacción de los clientes</span><span style="font-family: var(--font-heading); letter-spacing: 0; font-size: 14px; color: var(--color-text);">{{ c.sat }}</span></div>
-                <div style="height: 12px; border-radius: 6px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ c.satBar }}"></div></div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-bottom: 6px;"><span>Control de la situación</span><span style="font-family: var(--font-heading); letter-spacing: 0; font-size: 14px; color: var(--color-text);">{{ c.ctl }}</span></div>
+                <div style="height: 12px; border-radius: 6px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ c.ctlBar }}"></div></div>
               </div>
             </div>
-            <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Atendidos</div><div style="font-family: var(--font-heading); font-size: 24px;">{{ c.served }}</div></div>
-            <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Se fueron</div><div style="font-family: var(--font-heading); font-size: 24px; color: oklch(0.72 0.16 30);">{{ c.left }}</div></div>
+            <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Bien resueltos</div><div style="font-family: var(--font-heading); font-size: 24px;">{{ c.okLabel }}</div></div>
           </div>
-          <div style="{{ c.msgStyle }}"><i class="ph-fill ph-bell-ringing" style="color: oklch(0.72 0.16 30); font-size: 18px;"></i><span>{{ c.msg }}</span></div>
-          <div style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px; align-items: start;">
-            <div onClick="{{ c.colaAssign }}" style="border: 1.5px solid var(--color-neutral-700); border-radius: var(--radius-lg); background: var(--color-surface); padding: 16px; display: flex; flex-direction: column; gap: 12px; cursor: pointer;" style-hover="border-color: oklch(0.72 0.16 30);">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="ph-fill ph-users-three" style="font-size: 20px; color: oklch(0.72 0.16 30);"></i>
-                <div style="flex: 1 1 auto;"><div style="font-family: var(--font-heading); font-size: 15px;">Clientes esperando · {{ c.queueCount }}</div><div style="font-size: 11px; color: var(--color-neutral-500);">Tocá para sumar a alguien al mostrador · se van a los 12 s</div></div>
-              </div>
-              <div style="display: flex; align-items: center; gap: 12px; min-height: 96px; padding: 12px; border-radius: var(--radius-md); background: var(--color-bg); border: 1px solid var(--color-neutral-800); overflow: hidden;">
-                <div style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px; padding-right: 12px; border-right: 2px dashed var(--color-neutral-700); min-width: 64px;">
-                  <span style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Mostrador</span>
-                  <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <sc-for list="{{ c.colaPeople }}" as="cp" hint-placeholder-count="1"><button type="button" onClick="{{ cp.onClick }}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--color-accent-400); background: var(--color-accent-800); color: var(--color-accent-100); font-size: 10px; cursor: pointer; font-family: var(--font-body);">{{ cp.initials }}</button></sc-for>
-                    <sc-if value="{{ c.colaNobody }}"><span style="font-size: 11px; color: oklch(0.72 0.16 30);">Vacío</span></sc-if>
-                  </div>
-                </div>
-                <div style="display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; align-content: center;">
-                  <sc-for list="{{ c.queue }}" as="q" hint-placeholder-count="3"><div style="{{ q.style }}"><i class="ph-fill ph-user"></i></div></sc-for>
-                  <sc-if value="{{ c.hasMore }}"><span style="align-self: center; font-size: 13px; color: var(--color-neutral-400);">{{ c.more }}</span></sc-if>
-                  <sc-if value="{{ c.empty }}"><span style="align-self: center; font-size: 13px; color: oklch(0.8 0.11 185);">¡Cola vacía!</span></sc-if>
-                </div>
-              </div>
-            </div>
+          <div style="{{ c.msgStyle }}"><i class="{{ c.msgIcon }}" style="font-size: 18px;"></i><span>{{ c.msg }}</span></div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 14px; align-items: start;">
             <div style="display: flex; flex-direction: column; gap: 10px;">
-              <sc-for list="{{ c.events }}" as="ev" hint-placeholder-count="1">
-                <div onClick="{{ ev.onClick }}" style="{{ ev.style }}" style-hover="transform: translateY(-2px);">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="{{ ev.icon }}" style="font-size: 20px; color: oklch(0.72 0.16 30);"></i>
-                    <span style="flex: 1 1 auto; font-family: var(--font-heading); font-size: 14px;">{{ ev.name }}</span>
-                    <span style="{{ ev.statusStyle }}">{{ ev.status }}</span>
-                  </div>
-                  <span style="font-size: 12px; color: var(--color-neutral-400);">{{ ev.desc }}</span>
-                  <sc-if value="{{ ev.hasTimer }}"><div style="height: 4px; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ ev.timer }}"></div></div></sc-if>
-                  <sc-if value="{{ ev.active }}">
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <div style="display: flex; gap: 4px;">
-                      <sc-for list="{{ ev.people }}" as="cp" hint-placeholder-count="1"><button type="button" onClick="{{ cp.onClick }}" style="width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--color-accent-400); background: var(--color-accent-800); color: var(--color-accent-100); font-size: 10px; cursor: pointer; font-family: var(--font-body);">{{ cp.initials }}</button></sc-for>
-                      <sc-if value="{{ ev.nobody }}"><span style="font-size: 12px; color: var(--color-neutral-500);">Nadie · tocá para mandar a alguien</span></sc-if>
-                    </div>
-                    <div style="flex: 1 1 auto; height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ ev.work }}"></div></div>
-                  </div>
-                  </sc-if>
-                </div>
+              <div style="display: flex; justify-content: space-between; gap: 10px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);"><span>Problemas</span><span>{{ c.upcoming }}</span></div>
+              <sc-for list="{{ c.list }}" as="it" hint-placeholder-count="2">
+                <button type="button" onClick="{{ it.onClick }}" style="{{ it.style }}">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;"><span style="{{ it.sevStyle }}">{{ it.sev }}</span><span style="{{ it.statusStyle }}">{{ it.status }}</span></div>
+                  <span style="font-family: var(--font-heading); font-size: 14px; line-height: 1.35;">{{ it.title }}</span>
+                  <sc-if value="{{ it.hasTimer }}"><div style="height: 4px; width: 100%; border-radius: 2px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ it.timer }}"></div></div></sc-if>
+                </button>
               </sc-for>
             </div>
-          </div>
-          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500); margin-right: 4px;">Tu equipo</span>
-            <sc-for list="{{ c.team }}" as="tm" hint-placeholder-count="3">
-              <div style="{{ tm.style }}"><span style="{{ tm.avatar }}">{{ tm.initials }}</span><div><div style="font-size: 13px;">{{ tm.name }}</div><div style="{{ tm.whereStyle }}">{{ tm.where }}</div></div></div>
-            </sc-for>
-            <span style="margin-left: auto; font-size: 12px; color: var(--color-neutral-500);">Tocá una cara para liberar a esa persona</span>
+            <div style="border: 1.5px solid var(--color-neutral-700); border-radius: var(--radius-lg); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 14px; min-height: 320px; position: sticky; top: 72px;">
+              <sc-if value="{{ c.hasOpen }}">
+                <div style="display: flex; align-items: center; gap: 10px;"><span style="{{ c.o.sevStyle }}">{{ c.o.sev }}</span><span style="{{ c.o.leftStyle }}">{{ c.o.left }}</span></div>
+                <h2 style="font-size: 22px; margin: 0; line-height: 1.3; text-wrap: balance;">{{ c.o.title }}</h2>
+                <p style="margin: 0; font-size: 14px; line-height: 1.5; color: var(--color-neutral-300);">{{ c.o.detail }}</p>
+                <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">¿Qué hacés?</span>
+                <sc-for list="{{ c.o.opts }}" as="o" hint-placeholder-count="3">
+                  <button type="button" onClick="{{ o.onClick }}" style="display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 14px; border-radius: var(--radius-md); border: 1px solid var(--color-neutral-700); background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 14px; line-height: 1.4; cursor: pointer; transition: all 0.15s ease;" style-hover="border-color: oklch(0.72 0.16 30); transform: translateX(6px);">
+                    <span style="flex: 0 0 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); background: color-mix(in srgb, oklch(0.72 0.16 30) 22%, var(--color-surface)); color: oklch(0.9 0.06 30);">{{ o.key }}</span>
+                    <span>{{ o.text }}</span>
+                  </button>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ c.hasFb }}">
+                <div style="{{ c.fbStyle }}"><i class="{{ c.fbIcon }}" style="font-size: 22px;"></i><div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-family: var(--font-heading); font-size: 15px;">{{ c.fbTitle }}</span><span style="font-size: 13px; line-height: 1.5; color: var(--color-neutral-300);">{{ c.fbText }}</span></div></div>
+              </sc-if>
+              <sc-if value="{{ c.idle }}">
+                <div style="flex: 1 1 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; color: var(--color-neutral-500); font-size: 14px;"><i class="ph ph-hand-tap" style="font-size: 34px;"></i><span>{{ c.idleText }}</span></div>
+              </sc-if>
+            </div>
           </div>
         </div>
         </sc-if>
@@ -730,16 +767,18 @@
           <div><h1 style="font-size: 34px; margin: 0 0 8px;">{{ r.title }}</h1><span class="{{ r.tagClass }}">Resultado: {{ r.label }}</span></div>
           <div style="font-family: var(--font-heading); font-size: 60px; line-height: 1; color: var(--color-accent-200); animation: xpPop 0.6s 0.2s ease-out backwards;">+{{ r.xp }} <span style="font-size: 22px; color: var(--color-accent-400);">XP</span></div>
           <sc-if value="{{ r.levelUp }}"><div style="align-self: center; display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: color-mix(in srgb, oklch(0.82 0.13 80) 16%, var(--color-surface)); border: 1px solid oklch(0.82 0.13 80); color: oklch(0.88 0.1 80); font-family: var(--font-heading); animation: xpStar 0.6s 0.5s ease-out backwards;"><i class="ph-fill ph-arrow-fat-up"></i>¡Subiste a nivel {{ r.newLevel }}!</div></sc-if>
+          <sc-if value="{{ r.unlocked }}"><div style="align-self: center; display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: color-mix(in srgb, oklch(0.8 0.11 185) 14%, var(--color-surface)); border: 1px solid oklch(0.8 0.11 185); color: oklch(0.88 0.08 185); font-family: var(--font-heading); animation: xpStar 0.6s 0.6s ease-out backwards;"><i class="ph-fill ph-tree-structure"></i>Nueva habilidad desbloqueada: {{ r.unlockedName }}</div></sc-if>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left;">
             <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px; display: flex; flex-direction: column; gap: 8px;"><div style="display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-check-circle" style="color: oklch(0.8 0.11 185); font-size: 18px;"></i><h3 style="font-size: 14px; margin: 0;">Lo que hiciste bien</h3></div><p style="margin: 0; font-size: 13px; line-height: 1.5; color: var(--color-neutral-300);">{{ r.good }}</p></div>
             <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 16px; display: flex; flex-direction: column; gap: 8px;"><div style="display: flex; align-items: center; gap: 8px;"><i class="ph-fill ph-lightbulb" style="color: oklch(0.82 0.13 80); font-size: 18px;"></i><h3 style="font-size: 14px; margin: 0;">Para mejorar</h3></div><p style="margin: 0; font-size: 13px; line-height: 1.5; color: var(--color-neutral-300);">{{ r.bad }}</p></div>
           </div>
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 14px; text-align: left;">
             <div><div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;"><span>{{ r.lvlLabel }}</span><span style="color: var(--color-accent-300);">{{ r.xpLabel }}</span></div><div style="height: 10px; border-radius: 5px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ r.xpBar }}"></div></div></div>
-            <div><div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;"><span>{{ r.skill }}</span><span style="color: oklch(0.8 0.11 185);">{{ r.gain }} · {{ r.skillPct }}</span></div><div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ r.skillBar }}"></div></div></div>
+            <div><div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;"><span>Rama · {{ r.skill }}</span><span style="color: oklch(0.8 0.11 185);">{{ r.gain }} · {{ r.skillPct }}</span></div><div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); overflow: hidden;"><div style="{{ r.skillBar }}"></div></div></div>
             <div><div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;"><span>Objetivo semanal</span><span style="color: var(--color-neutral-400);">{{ weekLabel }}</span></div><div style="display: flex; gap: 6px;"><sc-for list="{{ weekPips }}" as="pp" hint-placeholder-count="5"><div style="{{ pp }}"></div></sc-for></div></div>
           </div>
           <div style="display: flex; gap: 10px; justify-content: center;">
+            <button type="button" class="btn btn-ghost" onClick="{{ goTree }}"><i class="ph ph-tree-structure"></i> Ver árbol</button>
             <button type="button" class="btn btn-ghost" onClick="{{ goMap }}">Volver a la aventura</button>
             <button type="button" class="btn btn-primary" onClick="{{ replay }}" style="font-size: 15px; padding: 10px 22px;">Jugar de nuevo <i class="ph ph-arrow-counter-clockwise"></i></button>
           </div>
@@ -934,59 +973,22 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;startProfile&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;empleado&quot;,&quot;empresa&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;empleado&quot;,&quot;tsType&quot;:&quot;'empleado' | 'empresa' | 'admin'&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;startProfile&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;empleado&quot;,&quot;empresa&quot;,&quot;admin&quot;],&quot;default&quot;:&quot;empleado&quot;,&quot;tsType&quot;:&quot;'empleado' | 'empresa' | 'admin'&quot;},&quot;rubro&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gastronomia&quot;,&quot;salud&quot;,&quot;logistica&quot;],&quot;default&quot;:&quot;gastronomia&quot;,&quot;tsType&quot;:&quot;'gastronomia' | 'salud' | 'logistica'&quot;}}">
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = {
-      role: props.startProfile || 'empleado', toast: '',
-      eScreen: 'dash', selEmp: 0, reviewId: 'm5', nextMid: 7,
-      employees: [
-        { name: 'Martín Reyes', email: 'martin.reyes@nordex.com', area: 'Soporte N2', live: true, docs: [0, 1], goal: null },
-        { name: 'Lucía Ibarra', email: 'lucia.ibarra@nordex.com', area: 'Soporte N1', xp: 4620, week: 5, docs: [0], goal: null },
-        { name: 'Nadia Kuri', email: 'nadia.kuri@nordex.com', area: 'Retención', xp: 5310, week: 2, docs: [0, 2], goal: null },
-        { name: 'Tomás Álvez', email: 'tomas.alvez@nordex.com', area: 'Soporte N1', xp: 3180, week: 1, docs: [0], goal: null },
-        { name: 'Sofía Bran', email: 'sofia.bran@nordex.com', area: 'Calidad', xp: 8450, week: 5, docs: [0, 1], goal: null },
-        { name: 'Carla Domínguez', email: 'carla.dominguez@nordex.com', area: 'Soporte N2', xp: 7290, week: 4, docs: [0, 1], goal: null },
-        { name: 'Diego Rausch', email: 'diego.rausch@nordex.com', area: 'Retención', xp: 5720, week: 3, docs: [0, 2], goal: { m: 4, x: 600 } },
-        { name: 'Iván Pérez', email: 'ivan.perez@nordex.com', area: 'Onboarding', xp: 1240, week: 0, docs: [0], goal: null }
-      ],
-      form: { name: '', email: '', area: 'Soporte N1', docs: { 0: true }, custom: false, m: 5, x: 800 },
-      docs: [
-        { name: 'Manual de atención al cliente.pdf', meta: '38 páginas', status: 'listo', gen: 'done' },
-        { name: 'Protocolo de seguridad de cuentas.pdf', meta: '12 páginas', status: 'listo', gen: 'done' },
-        { name: 'Política de reembolsos.docx', meta: '9 páginas', status: 'listo', gen: 'none' }
-      ],
-      missions: [
-        { id: 'm1', name: 'El cliente del cobro doble', engine: 'dialogo', skill: 'Manejo de reclamos', xp: 150, diff: 'Media', min: 3, doc: 0, status: 'aprobada', desc: 'Gustavo recibió un cobro doble y llama enojado por tercera vez. Calmalo y resolvé el reclamo.' },
-        { id: 'm2', name: 'Inspector de chats', engine: 'auditor', skill: 'Normas de atención', xp: 120, diff: 'Fácil', min: 2, doc: 0, status: 'aprobada', desc: 'Revisá el chat de un agente y cazá las 3 infracciones. Después, ronda rápida de permitido o no.' },
-        { id: 'm3', name: 'Cuenta hackeada', engine: 'protocolo', skill: 'Procedimientos', xp: 120, diff: 'Media', min: 1, doc: 1, status: 'aprobada', desc: 'Un cliente perdió el control de su cuenta. Aplicá el protocolo de seguridad en orden y contra reloj.' },
-        { id: 'm4', name: 'Lunes negro', engine: 'crisis', skill: 'Trabajo bajo presión', xp: 200, diff: 'Difícil', min: 1, doc: 0, status: 'aprobada', desc: 'Se cae el sistema, la cola crece y llegan urgencias. Tenés 3 personas y 60 segundos.' },
-        { id: 'm5', name: 'La clienta que quiere la baja', engine: 'dialogo', skill: 'Retención', xp: 150, diff: 'Media', min: 3, doc: 0, status: 'revision', desc: 'Una clienta de hace 4 años pide la baja por un aumento de precio. Hay que retenerla sin prometer lo que no se puede cumplir.' },
-        { id: 'm6', name: 'Datos a la vista', engine: 'auditor', skill: 'Normas de atención', xp: 120, diff: 'Fácil', min: 2, doc: 1, status: 'revision', desc: 'Transcripción de una llamada donde el agente expuso datos del cliente. Hay que encontrar dónde.' }
-      ],
-      goalM: 5, goalX: 800, goalDraft: { m: 5, x: 800 }, reinforced: {},
+    const rubro = props.rubro || 'gastronomia';
+    this.state = Object.assign({
+      role: props.startProfile || 'empleado', toast: '', rubro,
+      eScreen: 'dash', selEmp: 0,
+      goalM: 5, goalX: 800, goalDraft: { m: 5, x: 800 },
       uScreen: 'home', missionId: null, game: 'dialogo', gPhase: 'intro', g: {}, res: null,
+      xp: 6880, weekDone: 3, treeSel: { b: 0, n: 0 },
       walkAt: null, facing: 1, walking: false,
-      xp: 6880, weekDone: 3, done: {},
-      history: [
-        { name: 'Reset de clave', engine: 'protocolo', result: 'Correcta', xp: 120, date: '22 sep' },
-        { name: 'Datos sensibles', engine: 'auditor', result: 'Regular', xp: 72, date: '19 sep' },
-        { name: 'Primer contacto', engine: 'dialogo', result: 'Correcta', xp: 150, date: '17 sep' },
-        { name: 'Reclamo por demora', engine: 'dialogo', result: 'Incorrecta', xp: 45, date: '15 sep' }
-      ],
-      skills: { 'Manejo de reclamos': 62, 'Normas de atención': 48, 'Procedimientos': 70, 'Trabajo bajo presión': 35, 'Retención': 41 },
+      skills: { 'Comunicación': 6, 'Criterio y normas': 4, 'Procedimientos': 7, 'Decisiones bajo presión': 2 },
       account: { name: 'Martín Reyes', phone: '+54 11 5555-0142' },
       aScreen: 'dash', selCo: 0,
       coForm: { name: '', domain: '', plan: 'Growth', owner: '' },
-      companies: [
-        { name: 'Nordex Soporte', domain: 'nordex.com', plan: 'Scale', emp: 148, docs: 12, status: 'Activa', since: 'mar 2025', owner: 'paula@nordex.com', renew: '12 mar 2027' },
-        { name: 'Grupo Aledaña', domain: 'aledana.com.ar', plan: 'Growth', emp: 62, docs: 8, status: 'Activa', since: 'ene 2025', owner: 'rrhh@aledana.com.ar', renew: '04 ene 2027' },
-        { name: 'Ferro Logística', domain: 'ferrolog.io', plan: 'Scale', emp: 310, docs: 21, status: 'Activa', since: 'oct 2024', owner: 'capacitacion@ferrolog.io', renew: '22 oct 2026' },
-        { name: 'Casa Pilar', domain: 'casapilar.com', plan: 'Starter', emp: 18, docs: 3, status: 'Activa', since: 'sep 2026', owner: 'hola@casapilar.com', renew: '02 sep 2027' },
-        { name: 'Mardel Retail', domain: 'mardel.shop', plan: 'Growth', emp: 74, docs: 6, status: 'Suspendida', since: 'feb 2025', owner: 'ops@mardel.shop', renew: '19 feb 2027' },
-        { name: 'Clínica Ocre', domain: 'ocre.health', plan: 'Growth', emp: 55, docs: 9, status: 'Activa', since: 'abr 2025', owner: 'personas@ocre.health', renew: '30 abr 2027' }
-      ],
       plans: [
         { name: 'Starter', price: 6, emp: 25, docs: 5 },
         { name: 'Growth', price: 11, emp: 100, docs: 15 },
@@ -1000,7 +1002,287 @@ class Component extends DCLogic {
         { name: 'Lía Martel', email: 'lia@xpedia.io', role: 'Soporte', status: 'Suspendido' }
       ],
       uForm: { name: '', email: '', role: 'Soporte' }
+    }, this.packState(rubro));
+  }
+
+  BRANCH() { return { dialogo: 'Comunicación', auditor: 'Criterio y normas', protocolo: 'Procedimientos', crisis: 'Decisiones bajo presión' }; }
+  TREE() {
+    return [
+      { key: 'Comunicación', engine: 'dialogo', icon: 'ph-fill ph-chat-circle-dots', nodes: [
+        ['Escucha activa', 10, 'Dejás hablar a la otra persona y entendés qué necesita antes de responder.', 'ph-fill ph-ear'],
+        ['Empatía', 30, 'Reconocés cómo se siente el otro y se lo hacés saber.', 'ph-fill ph-heart'],
+        ['Manejo de conflictos', 55, 'Bajás la tensión de una conversación difícil sin ceder en lo importante.', 'ph-fill ph-scales'],
+        ['Negociación', 80, 'Encontrás acuerdos que funcionan para las dos partes.', 'ph-fill ph-handshake']] },
+      { key: 'Criterio y normas', engine: 'auditor', icon: 'ph-fill ph-magnifying-glass', nodes: [
+        ['Atención al detalle', 10, 'Notás lo que está fuera de lugar en un registro o una situación.', 'ph-fill ph-eye'],
+        ['Conocimiento de normas', 30, 'Sabés qué dice cada norma y por qué existe.', 'ph-fill ph-book-open'],
+        ['Control de calidad', 55, 'Revisás el trabajo propio y ajeno antes de que cause un problema.', 'ph-fill ph-seal-check'],
+        ['Ojo de auditor', 80, 'Detectás riesgos que otros pasan por alto.', 'ph-fill ph-detective']] },
+      { key: 'Procedimientos', engine: 'protocolo', icon: 'ph-fill ph-list-numbers', nodes: [
+        ['Orden', 10, 'Seguís los pasos en la secuencia correcta.', 'ph-fill ph-list-checks'],
+        ['Precisión', 30, 'No te salteás pasos aunque estés apurado.', 'ph-fill ph-crosshair'],
+        ['Agilidad', 55, 'Aplicás el procedimiento rápido y sin errores.', 'ph-fill ph-gauge'],
+        ['Maestro de protocolos', 80, 'Podés enseñarle el procedimiento a otros.', 'ph-fill ph-graduation-cap']] },
+      { key: 'Decisiones bajo presión', engine: 'crisis', icon: 'ph-fill ph-lightning', nodes: [
+        ['Priorizar', 10, 'Distinguís lo urgente de lo que puede esperar.', 'ph-fill ph-arrows-down-up'],
+        ['Sangre fría', 30, 'Mantenés la calma cuando todo pasa a la vez.', 'ph-fill ph-snowflake'],
+        ['Resolución rápida', 55, 'Elegís una buena acción en pocos segundos.', 'ph-fill ph-timer'],
+        ['Líder en crisis', 80, 'Ordenás al equipo cuando hay un problema grande.', 'ph-fill ph-crown']] }
+    ];
+  }
+
+  PACKS() {
+    return {
+      gastronomia: {
+        label: 'Gastronomía', co: 'Grupo Brasa', domain: 'grupobrasa.com', admin: 'Paula Mansilla', areas: ['Salón', 'Cocina', 'Barra', 'Delivery'], puesto: 'Encargado de salón',
+        chapter: 'Capítulo 2 · Servicio a full', boss: 'Noche de 200 cubiertos',
+        docs: [['Manual de servicio en salón.pdf', '32 páginas'], ['Normas de higiene y seguridad alimentaria.pdf', '18 páginas'], ['Plan de emergencias del local.docx', '9 páginas']],
+        missions: [
+          ['La mesa del plato equivocado', 'dialogo', 0, 'Marta es alérgica y le llegó un plato con nueces. Calmala y resolvé sin poner en riesgo su salud.'],
+          ['Revisión del cierre de cocina', 'auditor', 1, 'Revisá el registro de cierre y encontrá las 3 fallas de higiene. Después, ronda rápida.'],
+          ['Corte de luz en pleno servicio', 'protocolo', 2, 'Se cortó la luz con el salón lleno. Aplicá el plan de emergencia en orden y contra reloj.'],
+          ['Sábado a la noche', 'crisis', 0, 'Llegan problemas todos juntos. Atendé primero los más graves y elegí bien qué hacer.'],
+          ['La reserva que no aparece', 'dialogo', 0, 'Una familia llega con reserva y no figura en el sistema. Hay que ubicarlos sin prometer lo que no hay.'],
+          ['Heladera bajo la lupa', 'auditor', 1, 'Planilla de temperaturas de una semana. Encontrá los registros fuera de norma.']],
+        past: ['Bienvenida al salón', 'Carta y alérgenos', 'Apertura del local'],
+        hist: [['Apertura del local', 'protocolo', 'Correcta', 120, '22 sep'], ['Carta y alérgenos', 'auditor', 'Regular', 72, '19 sep'], ['Bienvenida al salón', 'dialogo', 'Correcta', 150, '17 sep'], ['Mesa con demora', 'dialogo', 'Incorrecta', 45, '15 sep']],
+        dialogo: { name: 'Marta', role: 'comensal de la mesa 12', channel: 'En el salón', start: 60,
+          end: ['Gracias. Así da gusto volver.', 'Bueno, está bien. Que no se repita.', 'No me convence. No sé si vuelvo…', '¡Basta! Nos vamos. (La mesa pidió la cuenta y se fue)'],
+          nodes: {
+            t1: { say: '¡Pedí el risotto sin frutos secos y tiene nueces! Soy alérgica, se lo dije al mozo.', opts: [
+              ['Tiene razón, lo retiro ya. ¿Se siente bien? ¿Necesita algo?', -20, 't2', 'Priorizaste su salud antes que el pedido.', null],
+              ['Qué raro, en cocina siempre revisan. ¿Seguro que lo aclaró?', 25, 't2b', null, 'Poner en duda a alguien con un tema de alergia escala el conflicto.'],
+              ['Se lo cambio, pero va a demorar unos 25 minutos.', 10, 't2', null, 'Hablaste de la demora antes de preguntar cómo estaba.']] },
+            t2b: { say: '¿Me está diciendo mentirosa? Casi me lo como.', opts: [
+              ['Perdón, no fue mi intención. Lo retiro y aviso a cocina ahora.', -15, 't2', 'Corregiste a tiempo y te hiciste cargo.', null],
+              ['Yo solo le digo lo que pasa en cocina.', 25, 't3', null, 'Desligarte frente a un riesgo de salud es lo que más enoja.']] },
+            t2: { say: 'Bueno… ¿y ahora qué? Mis amigos ya están comiendo.', opts: [
+              ['Cocina le prepara uno nuevo con utensilios limpios. Sale primero, en 10 minutos.', -20, 't3', 'Diste una solución concreta y un tiempo real.', null],
+              ['Le traigo otra cosa rápida de la carta, lo que quiera.', 5, 't3', null, 'Ofrecer cualquier plato sin chequear alérgenos repite el riesgo.'],
+              ['Le invito el postre y listo.', 10, 't3', null, 'Compensar no resuelve lo que necesita ahora.']] },
+            t3: { say: '¿Y cómo sé que no va a volver a pasar?', opts: [
+              ['Anoté la alergia en su mesa y el jefe de cocina revisa el plato antes de que salga.', -20, 'end', 'Cerraste con una acción concreta y verificable.', null],
+              ['Fue un error puntual, quédese tranquila.', 5, 'end', null, 'Cerraste sin una garantía. Ofrecé algo que se pueda comprobar.'],
+              ['Eso no se lo puedo asegurar.', 15, 'end', null, 'Una respuesta sin solución deja a la persona insegura.']] } } },
+        auditor: { title: 'Registro de cierre · Cocina', meta: 'Completado por Leo · turno noche',
+          lines: [
+            ['22:10', 'Cámara de frío: 4 °C', null],
+            ['22:15', 'Salsa del día sin etiqueta, se guarda para mañana', 'Todo lo que se guarda lleva etiqueta con fecha.'],
+            ['22:20', 'Tablas rojas para carne, verdes para verduras', null],
+            ['22:25', 'Pollo crudo en el estante de arriba, sobre los postres', 'Lo crudo va siempre debajo de lo cocido o listo para comer.'],
+            ['22:30', 'Freidora apagada y tapada', null],
+            ['22:40', 'Cámara de congelados a −8 °C, se deja así', 'Los congelados van a −18 °C o menos.'],
+            ['22:45', 'Pisos lavados y secos', null],
+            ['22:50', 'Cierre firmado por el encargado', null]],
+          rules: ['Todo lo guardado lleva etiqueta y fecha', 'Lo crudo siempre abajo', 'Frío: 5 °C o menos · congelado: −18 °C o menos', 'El encargado firma el cierre'],
+          cards: [
+            ['Descongelar carne en la heladera de un día para el otro', true, 'Es la forma segura de descongelar.'],
+            ['Usar la misma tabla para pollo crudo y ensalada', false, 'Contaminación cruzada: cada alimento con su tabla.'],
+            ['Probar la salsa con una cuchara y volver a meterla', false, 'Se prueba con una cuchara limpia cada vez.'],
+            ['Tirar un producto vencido aunque se vea bien', true, 'Lo vencido se descarta siempre.'],
+            ['Recalentar una sopa una sola vez', true, 'Recalentar más de una vez no es seguro.']] },
+        protocolo: { situation: '«¡Se cortó la luz en todo el local y hay 30 mesas ocupadas!»',
+          steps: [['Cortar el gas y apagar los equipos', 'ph ph-fire'], ['Avisar al encargado', 'ph ph-megaphone'], ['Encender las luces de emergencia', 'ph ph-lightbulb'], ['Explicarles a las mesas qué pasa', 'ph ph-users-three'], ['Controlar la temperatura de las cámaras', 'ph ph-thermometer-simple'], ['Registrar el incidente', 'ph ph-note-pencil']],
+          traps: [['Seguir cocinando con linternas', 'ph ph-flashlight', '¡Trampa! Sin luz no hay condiciones seguras para cocinar.'], ['Abrir las cámaras para revisar todo', 'ph ph-door-open', '¡Trampa! Abrirlas hace perder el frío: se mira el termómetro de afuera.']] },
+        crisis: { intro: 'Sábado, 21 h. Salón lleno. Atendé primero lo más grave.', inc: [
+          { t: 'La mesa 4 espera hace 40 minutos', d: 'Ya preguntaron dos veces y el plato principal no salió.', sev: 'Media', at: 0, lim: 18, opts: [
+            ['Mandar a otro mozo a decir que ya sale', false, 'Sin chequear con cocina, «ya sale» es una promesa vacía.'],
+            ['Ir a la mesa, disculparte y confirmar el tiempo real con cocina', true, 'Diste la cara y una respuesta real.'],
+            ['Regalarles una bebida sin decir nada', false, 'Compensar sin informar no resuelve la espera.']] },
+          { t: 'Aceite derramado en el pasillo de cocina', d: 'Pasan cocineros con ollas calientes todo el tiempo.', sev: 'Alta', at: 5, lim: 12, opts: [
+            ['Avisar a todos que tengan cuidado y seguir', false, 'Avisar no alcanza: un resbalón con una olla caliente es grave.'],
+            ['Tirarle servilletas encima', false, 'Las servilletas no sacan el aceite: el piso sigue resbaloso.'],
+            ['Cortar el paso, señalizar y limpiar ya', true, 'Primero se elimina el riesgo de accidente.']] },
+          { t: 'Se terminaron los limones en la barra', d: 'Hay 6 tragos pedidos que los llevan.', sev: 'Baja', at: 14, lim: 16, opts: [
+            ['Pedir al depósito y avisar la demora a las mesas', true, 'Resolviste sin dejar tu puesto.'],
+            ['Salir a comprar vos', false, 'Dejar el salón en pleno servicio empeora todo.'],
+            ['Cerrar la barra hasta que lleguen', false, 'Cerrar la barra frena todos los pedidos, no solo 6.']] },
+          { t: 'Un cliente se descompone en el salón', d: 'Está pálido y dice que le falta el aire.', sev: 'Alta', at: 22, lim: 12, opts: [
+            ['Darle algo del botiquín', false, 'No se medica a nadie: eso lo decide un profesional.'],
+            ['Llamar a emergencias y avisar al encargado', true, 'Ante un problema de salud, primero ayuda profesional.'],
+            ['Esperar a ver si se le pasa', false, 'Esperar puede agravar una urgencia.']] },
+          { t: '6 pedidos de delivery atrasados', d: 'Los clientes empiezan a escribir preguntando.', sev: 'Media', at: 32, lim: 15, opts: [
+            ['Cancelarlos para descomprimir la cocina', false, 'Cancelar sin avisar genera reclamos y pérdidas.'],
+            ['Apurar a cocina sin decirles nada', false, 'El silencio genera más reclamos.'],
+            ['Avisarle a cada cliente el nuevo horario', true, 'Informar un horario real baja la ansiedad.']] }] }
+      },
+      salud: {
+        label: 'Salud', co: 'Clínica Alba', domain: 'clinicaalba.com', admin: 'Paula Mansilla', areas: ['Recepción', 'Enfermería', 'Guardia', 'Administración'], puesto: 'Recepcionista de guardia',
+        chapter: 'Capítulo 2 · La guardia', boss: 'Guardia de invierno',
+        docs: [['Manual de atención al paciente.pdf', '40 páginas'], ['Protocolos de seguridad del paciente.pdf', '22 páginas'], ['Normas de confidencialidad.docx', '8 páginas']],
+        missions: [
+          ['El familiar impaciente', 'dialogo', 0, 'Raúl espera hace dos horas con su papá en la guardia. Calmalo y explicale cómo funciona la atención.'],
+          ['Ficha de ingreso con errores', 'auditor', 1, 'Revisá una ficha de ingreso y encontrá las 3 fallas. Después, ronda rápida.'],
+          ['Caída en la habitación 204', 'protocolo', 1, 'Un paciente se cayó. Aplicá el protocolo en orden y contra reloj.'],
+          ['Guardia colapsada', 'crisis', 0, 'Llegan problemas todos juntos. Atendé primero los más graves y elegí bien qué hacer.'],
+          ['El paciente que no quiere esperar', 'dialogo', 0, 'Un paciente con turno programado exige que lo atiendan antes. Sostené el criterio sin romper la relación.'],
+          ['Datos en riesgo', 'auditor', 2, 'Registro de llamadas de recepción. Encontrá dónde se expusieron datos de pacientes.']],
+        past: ['Bienvenida a la clínica', 'Identificar al paciente', 'Lavado de manos'],
+        hist: [['Lavado de manos', 'protocolo', 'Correcta', 120, '22 sep'], ['Identificar al paciente', 'auditor', 'Regular', 72, '19 sep'], ['Bienvenida a la clínica', 'dialogo', 'Correcta', 150, '17 sep'], ['Turno perdido', 'dialogo', 'Incorrecta', 45, '15 sep']],
+        dialogo: { name: 'Raúl', role: 'familiar de un paciente', channel: 'En la sala de espera', start: 60,
+          end: ['Gracias por explicarme. Ahora espero más tranquilo.', 'Bueno, espero. Pero avíseme cualquier cosa.', 'No me convence. Voy a pedir hablar con Dirección…', '¡Basta! Me voy a quejar a donde sea. (Raúl se fue a Dirección)'],
+          nodes: {
+            t1: { say: '¡Hace dos horas que mi papá espera y a los que llegaron después ya los atendieron!', opts: [
+              ['Entiendo, es mucho tiempo. En guardia se atiende por gravedad: ya reviso cómo está su papá.', -20, 't2', 'Validaste lo que siente y explicaste el criterio sin discutir.', null],
+              ['Es por orden de llegada, tiene que esperar.', 20, 't2b', null, 'Es falso: la guardia atiende por gravedad, no por llegada.'],
+              ['No depende de mí, hable con el médico.', 25, 't2b', null, 'Derivar sin resolver enoja todavía más.']] },
+            t2b: { say: '¿Y a quién le reclamo entonces? ¡Esto es una vergüenza!', opts: [
+              ['Tiene razón en querer respuestas. Averiguo ahora cuánto falta y le aviso.', -15, 't2', 'Corregiste a tiempo y te hiciste cargo.', null],
+              ['Si sigue gritando voy a llamar a seguridad.', 25, 't3', null, 'Amenazar antes de escuchar hace explotar la tensión.']] },
+            t2: { say: '¿Y cuánto falta? ¿Él está bien?', opts: [
+              ['Está estable. Es el próximo en su nivel, calculo 20 minutos. Si empeora, avíseme.', -20, 't3', 'Diste información concreta y un canal de alerta.', null],
+              ['Ya lo van a llamar, paciencia.', 10, 't3', null, '«Paciencia» no responde lo que pregunta.'],
+              ['Le paso adelante así no se enoja.', 5, 't3', null, 'Saltear el orden por gravedad pone en riesgo a otros pacientes.']] },
+            t3: { say: '¿Y si se pone peor mientras esperamos?', opts: [
+              ['Enfermería le controla los signos cada 15 minutos. Ya lo dejé anotado.', -20, 'end', 'Cerraste con una acción concreta y verificable.', null],
+              ['No creo que pase.', 5, 'end', null, 'Cerraste sin una garantía. Ofrecé algo que se pueda comprobar.'],
+              ['Eso no se lo puedo asegurar.', 15, 'end', null, 'Una respuesta sin solución deja a la persona insegura.']] } } },
+        auditor: { title: 'Ficha de ingreso · Paciente 2231', meta: 'Completada por Enf. Paula R. · 08:40',
+          lines: [
+            ['Paciente', 'Ana Gómez · DNI verificado', null],
+            ['Alergias', 'Sin completar (no se preguntó)', 'Siempre se pregunta y registra, aunque la respuesta sea «ninguna».'],
+            ['Pulsera', 'Colocada con nombre y fecha de nacimiento', null],
+            ['Consentimiento', 'Firmado por la vecina que la acompañó', 'Lo firma la paciente o su representante legal.'],
+            ['Medicación', 'Ibuprofeno 400 mg cada 8 h, según indicación', null],
+            ['Higiene', 'Lavado de manos antes y después', null],
+            ['Resultados', 'Enviados al WhatsApp de la acompañante', 'Los datos de salud solo se comparten con la paciente o personas autorizadas.'],
+            ['Firma', 'Enf. Paula R. · 08:40', null]],
+          rules: ['Registrar siempre las alergias', 'Consentimiento del paciente o su representante', 'Datos de salud solo al paciente o autorizados', 'Identificar con pulsera'],
+          cards: [
+            ['Confirmar nombre y fecha de nacimiento antes de medicar', true, 'Es la doble identificación: evita errores de paciente.'],
+            ['Dar resultados por teléfono a quien dice ser el hijo', false, 'Sin verificar identidad y autorización, no se dan datos.'],
+            ['Usar guantes nuevos con cada paciente', true, 'Evita contagios entre pacientes.'],
+            ['Anotar la medicación al final del turno, de memoria', false, 'Se registra en el momento en que se administra.'],
+            ['Desechar agujas en el descartador rígido', true, 'Evita pinchazos accidentales.']] },
+        protocolo: { situation: '«¡Un paciente se cayó en la habitación 204!»',
+          steps: [['Evaluar si responde, sin moverlo', 'ph ph-hand'], ['Pedir ayuda al equipo', 'ph ph-bell-ringing'], ['Controlar los signos vitales', 'ph ph-heartbeat'], ['Avisar al médico de guardia', 'ph ph-first-aid'], ['Informar a la familia', 'ph ph-phone'], ['Registrar el incidente', 'ph ph-note-pencil']],
+          traps: [['Levantarlo enseguida a la cama', 'ph ph-arrow-fat-up', '¡Trampa! Primero se evalúa: moverlo puede agravar una lesión.'], ['Darle un calmante para el dolor', 'ph ph-pill', '¡Trampa! Nada de medicación sin indicación médica.']] },
+        crisis: { intro: 'Lunes, 9 h. La guardia está llena. Atendé primero lo más grave.', inc: [
+          { t: 'El sistema de turnos no carga', d: 'Hay 12 personas en la fila de recepción.', sev: 'Media', at: 0, lim: 18, opts: [
+            ['Registrar a mano en planilla y cargar después', true, 'Seguiste atendiendo sin perder datos.'],
+            ['Pedirles que vuelvan más tarde', false, 'Mandar a la gente a su casa desde una guardia es un riesgo.'],
+            ['Esperar a que vuelva el sistema', false, 'La fila crece y nadie avanza.']] },
+          { t: 'Dolor fuerte en el pecho en la sala de espera', d: 'Un hombre de 60 años se agarra el pecho y transpira.', sev: 'Alta', at: 5, lim: 12, opts: [
+            ['Darle un turno prioritario en la fila', false, 'Un posible infarto no espera turno: va directo a evaluación.'],
+            ['Pasarlo a evaluación urgente y avisar al médico', true, 'Los síntomas cardíacos son prioridad máxima.'],
+            ['Ofrecerle agua y que espere sentado', false, 'Esperar puede ser fatal.']] },
+          { t: 'Piden resultados por teléfono', d: 'Dice ser el hijo de una paciente, pero no figura en la ficha.', sev: 'Baja', at: 14, lim: 16, opts: [
+            ['Dárselos, total es familia', false, 'Los datos de salud solo se dan a personas autorizadas.'],
+            ['Cortar sin explicar', false, 'Hay que decirle cómo puede pedirlos.'],
+            ['Explicarle que solo se dan a la paciente o a autorizados', true, 'Cuidaste la confidencialidad y lo orientaste.']] },
+          { t: 'Se derramó una muestra de sangre', d: 'Se cayó un tubo en el pasillo del laboratorio.', sev: 'Alta', at: 22, lim: 12, opts: [
+            ['Aislar la zona y limpiar con equipo de protección', true, 'Material biológico: se aísla y se limpia protegido.'],
+            ['Pasar un trapo rápido', false, 'Sin protección hay riesgo de contagio.'],
+            ['Dejarlo para limpieza del turno tarde', false, 'El riesgo queda ahí para todos los que pasan.']] },
+          { t: 'Faltan gasas en el box 3', d: 'Hay un paciente esperando una curación.', sev: 'Media', at: 32, lim: 15, opts: [
+            ['Suspender la curación', false, 'El paciente queda sin atender.'],
+            ['Pedir a farmacia y usar el box 2 mientras', true, 'Resolviste sin frenar la atención.'],
+            ['Usar las gasas abiertas de otro paciente', false, 'Cada insumo es de un solo uso por paciente.']] }] }
+      },
+      logistica: {
+        label: 'Logística', co: 'Ruta Sur Logística', domain: 'rutasur.com', admin: 'Paula Mansilla', areas: ['Depósito', 'Despacho', 'Transporte', 'Recepción'], puesto: 'Supervisor de depósito',
+        chapter: 'Capítulo 2 · Cierre de mes', boss: 'Black Friday en el depósito',
+        docs: [['Manual operativo del depósito.pdf', '44 páginas'], ['Normas de seguridad e higiene.pdf', '20 páginas'], ['Atención a clientes mayoristas.docx', '10 páginas']],
+        missions: [
+          ['Los pallets que faltan', 'dialogo', 2, 'A Sergio le llegaron 18 pallets en vez de 20, por segunda vez. Calmalo y resolvé sin culpar a nadie.'],
+          ['Checklist del camión 14', 'auditor', 1, 'Revisá el checklist de carga y encontrá las 3 fallas de seguridad. Después, ronda rápida.'],
+          ['Derrame en el pasillo 5', 'protocolo', 1, 'Se volcó un químico. Aplicá el protocolo en orden y contra reloj.'],
+          ['Cierre de mes', 'crisis', 0, 'Llegan problemas todos juntos. Atendé primero los más graves y elegí bien qué hacer.'],
+          ['El chofer que no quiere esperar', 'dialogo', 0, 'Un chofer externo discute porque no le dan dársena. Hay que ordenar sin escalar el conflicto.'],
+          ['Inventario con diferencias', 'auditor', 0, 'Planilla de conteo semanal. Encontrá los registros mal cargados.']],
+        past: ['Bienvenida al depósito', 'Elementos de protección', 'Recepción de mercadería'],
+        hist: [['Recepción de mercadería', 'protocolo', 'Correcta', 120, '22 sep'], ['Elementos de protección', 'auditor', 'Regular', 72, '19 sep'], ['Bienvenida al depósito', 'dialogo', 'Correcta', 150, '17 sep'], ['Entrega demorada', 'dialogo', 'Incorrecta', 45, '15 sep']],
+        dialogo: { name: 'Sergio', role: 'cliente mayorista', channel: 'Llamada en curso', start: 60,
+          end: ['Perfecto. Así da gusto trabajar con ustedes.', 'Bueno, a ver si mañana llega.', 'No me convence. Voy a cotizar con otro proveedor…', '¡Basta! Cancelo la cuenta. (Sergio cortó la llamada)'],
+          nodes: {
+            t1: { say: 'Me llegaron 18 pallets en vez de 20 y tengo la góndola vacía. Es la segunda vez este mes.', opts: [
+              ['Tiene razón, Sergio. Ya veo el remito: faltan 2. Lo resuelvo ahora.', -20, 't2', 'Reconociste el error antes de pedirle nada.', null],
+              ['Mándeme fotos del remito firmado y lo vemos.', 15, 't2b', null, 'Le pediste algo que ya estaba en el sistema.'],
+              ['Eso es tema del transportista, no nuestro.', 25, 't2b', null, 'Culpar a un tercero no resuelve y enoja más.']] },
+            t2b: { say: '¿Otra vez con eso? El remito lo tienen ustedes.', opts: [
+              ['Perdón, tiene razón. Ya lo tengo: faltan 2 pallets.', -15, 't2', 'Corregiste a tiempo y reconociste el error.', null],
+              ['Sin la foto no puedo hacer el reclamo.', 25, 't3', null, 'Aferrarte al trámite con el dato a la vista hace explotar la tensión.']] },
+            t2: { say: '¿Y cuándo me llegan?', opts: [
+              ['Salen en el próximo camión: mañana antes de las 10.', -20, 't3', 'Diste un plazo concreto y real.', null],
+              ['En cuanto podamos.', 10, 't3', null, '«En cuanto podamos» es vago: genera otro llamado.'],
+              ['Le hago una nota de crédito y listo.', 5, 't3', null, 'No responde lo que necesita: la mercadería.']] },
+            t3: { say: '¿Y cómo sé que no se repite?', opts: [
+              ['Sumé un conteo con foto antes de cerrar cada camión suyo.', -20, 'end', 'Cerraste con una acción concreta y verificable.', null],
+              ['Fue un error del turno noche.', 5, 'end', null, 'Culpar a otro turno no le da ninguna garantía.'],
+              ['No se lo puedo garantizar.', 15, 'end', null, 'Una respuesta sin solución deja al cliente inseguro.']] } } },
+        auditor: { title: 'Checklist de carga · Camión 14', meta: 'Completado por Julián · dársena 3',
+          lines: [
+            ['Camión', 'Patente AB 123 CD verificada', null],
+            ['Carga', 'Pallets apilados de a 3, los más pesados arriba', 'Lo pesado va siempre abajo para que no vuelque.'],
+            ['Sujeción', 'Carga amarrada con 4 cinchas', null],
+            ['Operador', 'Autoelevador manejado por Julián (sin carnet vigente)', 'Solo operan autoelevadores personas habilitadas.'],
+            ['Seguridad', 'Casco y chaleco en toda la dársena', null],
+            ['Documentos', 'Remito firmado por el chofer', null],
+            ['Pasillo', 'Salida de emergencia con 2 pallets delante', 'Las salidas de emergencia van siempre libres.'],
+            ['Cierre', 'Precinto colocado · N.º 55821', null]],
+          rules: ['Lo pesado siempre abajo', 'Autoelevador solo con habilitación', 'Salidas de emergencia libres', 'Todo con remito y precinto'],
+          cards: [
+            ['Reportar un pallet roto antes de usarlo', true, 'Un pallet roto puede ceder con la carga.'],
+            ['Subir a alguien en las uñas del autoelevador', false, 'Nunca se transportan personas en las uñas.'],
+            ['Cargar el camión sin calzar las ruedas', false, 'El camión se calza antes de cargar.'],
+            ['Usar casco dentro del depósito', true, 'Es obligatorio en toda la zona operativa.'],
+            ['Firmar un remito sin contar la mercadería', false, 'Se cuenta antes de firmar.']] },
+        protocolo: { situation: '«¡Se volcó un bidón de químico en el pasillo 5!»',
+          steps: [['Alejar a las personas del área', 'ph ph-users'], ['Señalizar y cortar el paso', 'ph ph-warning'], ['Ponerse el equipo de protección', 'ph ph-shield-check'], ['Leer la hoja de seguridad del producto', 'ph ph-file-text'], ['Contener con material absorbente', 'ph ph-drop'], ['Avisar a Seguridad e Higiene y registrar', 'ph ph-note-pencil']],
+          traps: [['Limpiar con agua y trapo', 'ph ph-broom', '¡Trampa! Algunos químicos reaccionan con agua: primero la hoja de seguridad.'], ['Seguir cargando por otro pasillo', 'ph ph-truck', '¡Trampa! Hasta contenerlo, nadie opera en la zona.']] },
+        crisis: { intro: 'Último día del mes, 7 h. Todo sale hoy. Atendé primero lo más grave.', inc: [
+          { t: 'Llegó un camión sin turno', d: 'El chofer quiere descargar ya y bloquea la dársena 2.', sev: 'Baja', at: 0, lim: 18, opts: [
+            ['Dejarlo descargar para sacártelo de encima', false, 'Desordena todos los turnos del día.'],
+            ['Asignarle el próximo turno libre y liberar la dársena', true, 'Mantuviste el orden sin dejarlo sin respuesta.'],
+            ['Mandarlo de vuelta', false, 'Perder la carga tampoco sirve.']] },
+          { t: 'Autoelevador perdiendo aceite', d: 'Deja una mancha a lo largo del pasillo principal.', sev: 'Alta', at: 5, lim: 12, opts: [
+            ['Sacarlo de servicio y señalizar la mancha', true, 'Un equipo con fallas y un piso resbaloso son riesgo de accidente.'],
+            ['Terminar el turno y después revisarlo', false, 'Seguir usándolo puede terminar en un accidente.'],
+            ['Poner cartón arriba de la mancha', false, 'El cartón no elimina el riesgo.']] },
+          { t: 'Pedido urgente de un cliente grande', d: 'Necesita 30 cajas extra para hoy a las 16 h.', sev: 'Media', at: 14, lim: 16, opts: [
+            ['Decirle que sí sin mirar nada', false, 'Prometer sin stock confirmado genera un problema peor.'],
+            ['Decirle que no se puede', false, 'Rechazar sin revisar es perder una venta posible.'],
+            ['Confirmar el stock y darle un horario real', true, 'Respuesta rápida y honesta.']] },
+          { t: 'Un compañero se cortó la mano', d: 'Con el fleje de un pallet. Sangra bastante.', sev: 'Alta', at: 22, lim: 12, opts: [
+            ['Que se lave y siga', false, 'Un corte que sangra mucho necesita atención.'],
+            ['Parar la tarea, botiquín y avisar al responsable', true, 'La persona primero, después la tarea.'],
+            ['Terminar de cargar y después ayudarlo', false, 'Nunca se prioriza la carga sobre una persona herida.']] },
+          { t: 'El stock no coincide con el sistema', d: 'Faltan 12 unidades de un producto que sale hoy.', sev: 'Media', at: 32, lim: 15, opts: [
+            ['Ajustar el sistema para que coincida', false, 'Tapar la diferencia esconde un faltante o un error.'],
+            ['Recontar y reportar la diferencia', true, 'Se verifica antes de despachar y queda registro.'],
+            ['Despachar igual lo que hay', false, 'El cliente recibe menos de lo que pidió.']] }] }
+      }
     };
+  }
+
+  pack() { const A = this.PACKS(); return A[this.state.rubro] || A.gastronomia; }
+  content(engine) { return this.pack()[engine]; }
+  packState(r) {
+    const A = this.PACKS(); const P = A[r] || A.gastronomia; const BR = this.BRANCH();
+    const dflt = { dialogo: [150, 'Media', 3], auditor: [120, 'Fácil', 2], protocolo: [120, 'Media', 1], crisis: [200, 'Difícil', 1] };
+    const EMP = [['Martín Reyes', 'martin.reyes', 0, { live: true, docs: [0, 1] }], ['Lucía Ibarra', 'lucia.ibarra', 1, { xp: 4620, week: 5, docs: [0] }], ['Nadia Kuri', 'nadia.kuri', 2, { xp: 5310, week: 2, docs: [0, 2] }], ['Tomás Álvez', 'tomas.alvez', 1, { xp: 3180, week: 1, docs: [0] }],
+      ['Sofía Bran', 'sofia.bran', 3, { xp: 8450, week: 5, docs: [0, 1] }], ['Carla Domínguez', 'carla.dominguez', 0, { xp: 7290, week: 4, docs: [0, 1] }], ['Diego Rausch', 'diego.rausch', 2, { xp: 5720, week: 3, docs: [0, 2], goal: { m: 4, x: 600 } }], ['Iván Pérez', 'ivan.perez', 3, { xp: 1240, week: 0, docs: [0] }]];
+    return {
+      employees: EMP.map(e => Object.assign({ name: e[0], email: e[1] + '@' + P.domain, area: P.areas[e[2]], goal: null }, e[3])),
+      form: { name: '', email: '', area: P.areas[0], docs: { 0: true }, custom: false, m: 5, x: 800 },
+      docs: P.docs.map((d, i) => ({ name: d[0], meta: d[1], status: 'listo', gen: i < 2 ? 'done' : 'none' })),
+      missions: P.missions.map((x, i) => ({ id: 'm' + (i + 1), name: x[0], engine: x[1], doc: x[2], desc: x[3], skill: BR[x[1]], xp: dflt[x[1]][0], diff: dflt[x[1]][1], min: dflt[x[1]][2], status: i < 4 ? 'aprobada' : 'revision' })),
+      history: P.hist.map(h => ({ name: h[0], engine: h[1], result: h[2], xp: h[3], date: h[4] })),
+      reviewId: 'm5', nextMid: 7, done: {}, reinforced: {},
+      companies: [
+        { name: P.co, domain: P.domain, plan: 'Scale', emp: 148, docs: 12, status: 'Activa', since: 'mar 2025', owner: 'paula@' + P.domain, renew: '12 mar 2027' },
+        { name: 'Grupo Aledaña', domain: 'aledana.com.ar', plan: 'Growth', emp: 62, docs: 8, status: 'Activa', since: 'ene 2025', owner: 'rrhh@aledana.com.ar', renew: '04 ene 2027' },
+        { name: 'Ferro Industrial', domain: 'ferro.io', plan: 'Scale', emp: 310, docs: 21, status: 'Activa', since: 'oct 2024', owner: 'capacitacion@ferro.io', renew: '22 oct 2026' },
+        { name: 'Casa Pilar', domain: 'casapilar.com', plan: 'Starter', emp: 18, docs: 3, status: 'Activa', since: 'sep 2026', owner: 'hola@casapilar.com', renew: '02 sep 2027' },
+        { name: 'Mardel Retail', domain: 'mardel.shop', plan: 'Growth', emp: 74, docs: 6, status: 'Suspendida', since: 'feb 2025', owner: 'ops@mardel.shop', renew: '19 feb 2027' },
+        { name: 'Hotel Costanera', domain: 'costanera.travel', plan: 'Growth', emp: 55, docs: 9, status: 'Activa', since: 'abr 2025', owner: 'personas@costanera.travel', renew: '30 abr 2027' }
+      ]
+    };
+  }
+  setRubro(r) {
+    const A = this.PACKS(); if (!A[r]) return; const s = this.state;
+    this.set(Object.assign({ rubro: r, uScreen: s.uScreen === 'play' ? 'home' : s.uScreen, gPhase: 'intro', res: null, selEmp: 0, selCo: 0, eScreen: s.eScreen === 'emp' || s.eScreen === 'new' ? 'emps' : s.eScreen, aScreen: s.aScreen === 'co' ? 'cos' : s.aScreen }, this.packState(r)));
+    this.toastMsg('Rubro ' + A[r].label + ': mismos motores, otro contenido.');
   }
 
   set(p) { this.setState(p); }
@@ -1016,13 +1298,13 @@ class Component extends DCLogic {
   ENG() {
     return {
       dialogo: { name: 'Diálogo', tagline: 'Lo que digas, importa', icon: 'ph-fill ph-chat-circle-dots', color: 'var(--color-accent-400)',
-        how: [['ph ph-chat-text', 'Leé lo que te dice el cliente'], ['ph ph-hand-pointing', 'Elegí qué responderle'], ['ph ph-thermometer-simple', 'Que la tensión no explote']] },
+        how: [['ph ph-chat-text', 'Leé lo que te dice la otra persona'], ['ph ph-hand-pointing', 'Elegí qué responder'], ['ph ph-thermometer-simple', 'Que la tensión no explote']] },
       auditor: { name: 'Auditor', tagline: 'Encontrá lo que está mal', icon: 'ph-fill ph-magnifying-glass', color: 'oklch(0.82 0.13 80)',
-        how: [['ph ph-eye', 'Leé el chat del agente'], ['ph ph-cursor-click', 'Tocá los mensajes que rompen una regla'], ['ph ph-heart', 'Cada error te cuesta una vida']] },
+        how: [['ph ph-clipboard-text', 'Leé el registro línea por línea'], ['ph ph-cursor-click', 'Tocá las líneas que rompen una regla'], ['ph ph-heart', 'Cada error te cuesta una vida']] },
       protocolo: { name: 'Protocolo', tagline: 'El orden importa', icon: 'ph-fill ph-list-numbers', color: 'oklch(0.8 0.11 185)',
         how: [['ph ph-cards', 'Mirá todas las tarjetas'], ['ph ph-hand-tap', 'Tocalas en el orden correcto'], ['ph ph-timer', 'Equivocarte te resta 5 segundos']] },
-      crisis: { name: 'Crisis', tagline: 'Tenés 60 segundos', icon: 'ph-fill ph-lightning', color: 'oklch(0.72 0.16 30)',
-        how: [['ph ph-users-three', 'Tenés 3 personas en tu equipo'], ['ph ph-hand-tap', 'Tocá un problema para mandar a alguien'], ['ph ph-smiley', 'Que la satisfacción no llegue a cero']] }
+      crisis: { name: 'Crisis', tagline: 'Primero lo urgente', icon: 'ph-fill ph-lightning', color: 'oklch(0.72 0.16 30)',
+        how: [['ph ph-bell-ringing', 'Van llegando problemas, cada uno con su tiempo'], ['ph ph-hand-tap', 'Tocá uno y elegí qué hacer'], ['ph ph-gauge', 'Si se vence o fallás, perdés control']] }
     };
   }
 
@@ -1033,7 +1315,7 @@ class Component extends DCLogic {
     if (!f.name.trim() || !f.email.trim()) return this.toastMsg('Completá nombre y email.');
     const docs = Object.keys(f.docs).filter(k => f.docs[k]).map(Number);
     const emp = { name: f.name.trim(), email: f.email.trim(), area: f.area, xp: 0, week: 0, docs, goal: f.custom ? { m: Number(f.m) || 1, x: Number(f.x) || 0 } : null };
-    this.set({ employees: this.state.employees.concat([emp]), eScreen: 'emps', form: { name: '', email: '', area: 'Soporte N1', docs: { 0: true }, custom: false, m: 5, x: 800 } });
+    this.set({ employees: this.state.employees.concat([emp]), eScreen: 'emps', form: { name: '', email: '', area: this.pack().areas[0], docs: { 0: true }, custom: false, m: 5, x: 800 } });
     this.toastMsg('Empleado creado. Le enviamos la invitación.');
   }
   onFile(e) {
@@ -1047,9 +1329,7 @@ class Component extends DCLogic {
     const docs = this.state.docs.slice(); docs[i] = Object.assign({}, docs[i], { gen: 'generando' }); this.set({ docs });
     setTimeout(() => {
       const s = this.state; const base = s.docs[i].name.replace(/\.[^.]+$/, '');
-      const set = i === 2
-        ? [['dialogo', 'Reembolso fuera de plazo', 'Manejo de reclamos'], ['auditor', '¿Corresponde el reembolso?', 'Normas de atención'], ['protocolo', 'Reembolso paso a paso', 'Procedimientos'], ['crisis', 'Pico de reembolsos', 'Trabajo bajo presión']]
-        : [['dialogo', 'Caso: ' + base, 'Manejo de reclamos'], ['auditor', '¿Qué está mal? · ' + base, 'Normas de atención'], ['protocolo', 'Paso a paso · ' + base, 'Procedimientos'], ['crisis', 'Día pico · ' + base, 'Trabajo bajo presión']];
+      const set = [['dialogo', 'Caso: ' + base, 'Comunicación'], ['auditor', '¿Qué está mal? · ' + base, 'Criterio y normas'], ['protocolo', 'Paso a paso · ' + base, 'Procedimientos'], ['crisis', 'Día pico · ' + base, 'Decisiones bajo presión']];
       let n = s.nextMid;
       const add = set.map(x => ({ id: 'm' + (n++), name: x[1], engine: x[0], skill: x[2], xp: x[0] === 'crisis' ? 200 : (x[0] === 'dialogo' ? 150 : 120), diff: 'Media', min: x[0] === 'dialogo' ? 3 : (x[0] === 'auditor' ? 2 : 1), doc: i, status: 'revision', desc: 'Misión generada a partir de «' + base + '». Revisá que el escenario y las respuestas correctas coincidan con el material.' }));
       const d2 = s.docs.slice(); d2[i] = Object.assign({}, d2[i], { gen: 'done' });
@@ -1064,7 +1344,7 @@ class Component extends DCLogic {
     this.toastMsg('Misión aprobada: ya está disponible para los empleados.');
   }
   reinforce(skill) {
-    const s = this.state; const eng = { 'Normas de atención': 'auditor', 'Trabajo bajo presión': 'crisis', 'Procedimientos': 'protocolo' }[skill] || 'dialogo';
+    const s = this.state; const eng = { 'Criterio y normas': 'auditor', 'Decisiones bajo presión': 'crisis', 'Procedimientos': 'protocolo' }[skill] || 'dialogo';
     const m = { id: 'm' + s.nextMid, name: 'Refuerzo: ' + skill.toLowerCase(), engine: eng, skill, xp: 120, diff: 'Fácil', min: 2, doc: 0, status: 'revision', desc: 'Misión de refuerzo para la habilidad «' + skill + '», con escenarios más guiados.' };
     this.set({ missions: s.missions.concat([m]), nextMid: s.nextMid + 1, reinforced: Object.assign({}, s.reinforced, { [skill]: true }), reviewId: s.reviewId || m.id });
     this.toastMsg('Misión de refuerzo creada. Está en Contenido y misiones para revisar.');
@@ -1103,17 +1383,58 @@ class Component extends DCLogic {
     this.onKey = (e) => {
       const s = this.state;
       if (s.role !== 'empleado' || s.uScreen !== 'play' || s.gPhase !== 'play') return;
-      if (s.game === 'dialogo' && !s.g.ended) { const i = ['1', '2', '3'].indexOf(e.key); if (i >= 0 && this.dlgTree()[s.g.node].opts[i]) this.dlgPick(i); }
+      const i = ['1', '2', '3'].indexOf(e.key);
+      if (s.game === 'dialogo' && !s.g.ended && i >= 0 && this.dlgTree()[s.g.node].opts[i]) this.dlgPick(i);
       if (s.game === 'auditor' && s.g.phase === 2) { if (e.key === 'ArrowLeft') this.audAnswer(false); if (e.key === 'ArrowRight') this.audAnswer(true); }
+      if (s.game === 'crisis' && s.g.open >= 0 && i >= 0) this.crPick(i);
     };
     window.addEventListener('keydown', this.onKey);
   }
+  componentDidUpdate(prev) { if (this.props.rubro && prev.rubro !== this.props.rubro) this.setRubro(this.props.rubro); }
   componentWillUnmount() { clearInterval(this.iv); clearTimeout(this.wt); window.removeEventListener('keydown', this.onKey); }
 
   mission(id) {
-    return this.state.missions.find(m => m.id === id) || { id: 'boss', name: 'Jefe final: Cliente VIP', engine: 'dialogo', skill: 'Manejo de reclamos', xp: 300, diff: 'Difícil', min: 3, desc: 'El cliente más difícil del capítulo. Mismo reclamo, cero paciencia.' };
+    const P = this.pack();
+    return this.state.missions.find(m => m.id === id) || { id: 'boss', boss: true, name: 'Jefe final: ' + P.boss, engine: 'crisis', skill: 'Decisiones bajo presión', xp: 300, diff: 'Difícil', min: 1, desc: 'Todos los problemas del capítulo juntos y con menos tiempo. Es el desafío final.' };
   }
-  startMission(id, direct) { const m = this.mission(id); this.set({ uScreen: 'play', missionId: m.id, game: m.engine, gPhase: direct ? 'play' : 'intro', g: this.fresh(m.engine), res: null }); }
+  startMission(id, direct) { const m = this.mission(id); this.set({ uScreen: 'play', missionId: m.id, game: m.engine, gPhase: direct ? 'play' : 'intro', g: this.fresh(m.engine, !!m.boss), res: null }); }
+  fresh(e, hard) {
+    if (e === 'dialogo') return { node: 't1', tension: this.content('dialogo').start || 60, turn: 1, bump: 0, delta: 0, good: [], bad: [], ended: false, endText: '', you: '' };
+    if (e === 'auditor') return { phase: 1, found: {}, wrong: {}, hearts: 3, t: 40, bump: 0, wrongIdx: -1, idx: 0, ct: 5, streak: 0, picks: [], last: null };
+    if (e === 'protocolo') return { placed: [], t: 45, mistakes: 0, bump: 0, mb: 0, wrongId: null, msg: 'Paso 1: ¿por dónde empezás?', msgOk: true, trap: '' };
+    const C = this.content('crisis');
+    return { t: 60, ctl: hard ? 60 : 70, inc: C.inc.map(() => ({ st: 'pending', age: 0 })), open: -1, fb: null, msg: C.intro, kind: 'info', bump: 0, hard: !!hard, wait: 0 };
+  }
+  upd(patch) { this.set({ g: Object.assign({}, this.state.g, patch) }); }
+
+  finish(stars, good, bad) {
+    const s = this.state; const m = this.mission(s.missionId);
+    const label = stars === 3 ? 'Correcta' : (stars === 2 ? 'Regular' : 'Incorrecta');
+    const xp = Math.round(m.xp * (stars === 3 ? 1 : (stars === 2 ? 0.6 : 0.3)));
+    const gain = stars === 3 ? 8 : (stars === 2 ? 5 : 2);
+    const prev = s.skills[m.skill] || 0; const pts = Math.min(100, prev + gain);
+    const skills = Object.assign({}, s.skills, { [m.skill]: pts });
+    const br = this.TREE().find(b => b.key === m.skill); const un = br ? br.nodes.find(n => prev < n[1] && pts >= n[1]) : null;
+    this.set({ gPhase: 'done', xp: s.xp + xp, weekDone: s.weekDone + 1, skills, done: Object.assign({}, s.done, { [m.id]: true }),
+      history: [{ name: m.name, engine: m.engine, result: label, xp, date: 'Hoy' }].concat(s.history),
+      res: { stars, label, xp, good, bad, prevXp: s.xp, newXp: s.xp + xp, skill: m.skill, gain, skillPct: pts, unlocked: un ? un[0] : '' } });
+  }
+
+  tick() {
+    const s = this.state;
+    if (s.role !== 'empleado' || s.uScreen !== 'play' || s.gPhase !== 'play') return;
+    const g = s.g;
+    if (s.game === 'auditor') {
+      if (g.phase === 1) { const t = g.t - 0.5; this.upd(t <= 0 ? { t: 0, phase: 'between' } : { t }); }
+      else if (g.phase === 2) { const ct = g.ct - 0.5; if (ct <= 0) this.audAnswer(null); else this.upd({ ct }); }
+    } else if (s.game === 'protocolo') {
+      const t = g.t - 0.5; if (t <= 0) { this.upd({ t: 0 }); this.finishProto(Object.assign({}, g, { t: 0 })); } else this.upd({ t });
+    } else if (s.game === 'crisis') {
+      const n = this.crTick(g); if (n.inc.every(x => x.st !== 'pending' && x.st !== 'active')) n.wait += 0.5;
+      this.set({ g: n }); if (n.t <= 0 || n.ctl <= 0 || n.wait >= 2) this.finishCrisis(n);
+    }
+  }
+
   mapLayout(n) {
     const PER_ROW = 4, rows = Math.max(1, Math.ceil(n / PER_ROW));
     const viewH = rows * 32;
@@ -1130,7 +1451,15 @@ class Component extends DCLogic {
     }
     return { pts, rows, viewH };
   }
-  
+  walkTo(pts, fromIdx, toIdx, id) {
+    clearTimeout(this.wt);
+    if (fromIdx === toIdx) { this.set({ walking: false }); this.startMission(id); return; }
+    const dir = toIdx > fromIdx ? 1 : -1;
+    const next = fromIdx + dir;
+    const facing = pts[next][0] >= pts[fromIdx][0] ? 1 : -1;
+    this.set({ walkAt: next, facing, walking: true });
+    this.wt = setTimeout(() => this.walkTo(pts, next, toIdx, id), 340);
+  }
   buildTrees(pts, viewH, n, nodeDensity) {
     let seed = 91177 + n * 977;
     const rand = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return (seed % 10000) / 10000; };
@@ -1254,112 +1583,31 @@ class Component extends DCLogic {
 
     return trees.sort((a, b) => a.y - b.y);
   }
-  walkTo(pts, fromIdx, toIdx, id) {
-    clearTimeout(this.wt);
-    if (fromIdx === toIdx) { this.set({ walking: false }); this.startMission(id); return; }
-    const dir = toIdx > fromIdx ? 1 : -1;
-    const next = fromIdx + dir;
-    const facing = pts[next][0] >= pts[fromIdx][0] ? 1 : -1;
-    this.set({ walkAt: next, facing, walking: true });
-    this.wt = setTimeout(() => this.walkTo(pts, next, toIdx, id), 340);
-  }
-  fresh(e) {
-    if (e === 'dialogo') return { node: 't1', tension: 60, turn: 1, bump: 0, delta: 0, good: [], bad: [], ended: false, endText: '', you: '' };
-    if (e === 'auditor') return { phase: 1, found: {}, wrong: {}, hearts: 3, t: 40, bump: 0, wrongIdx: -1, idx: 0, ct: 5, streak: 0, picks: [], last: null };
-    if (e === 'protocolo') return { placed: [], t: 45, mistakes: 0, bump: 0, mb: 0, wrongId: null, msg: 'Paso 1: ¿por dónde empezás?', msgOk: true, trap: '' };
-    return { t: 60, sat: 70, bump: 0, queue: [{ id: 1, w: 5 }, { id: 2, w: 3 }, { id: 3, w: 1 }], nextId: 4, spawnAcc: 0, serveAcc: 0, assign: { vos: null, carla: 'cola', diego: null },
-      ev: { sistema: { st: 'active', p: 0, age: 0 }, urgente: { st: 'pending', p: 0, age: 0 }, companero: { st: 'pending', p: 0, age: 0 }, vip: { st: 'pending', p: 0, age: 0 } },
-      served: 0, left: 0, msg: '¡Se cayó el sistema de pagos! Entran el doble de clientes.' };
-  }
-  upd(patch) { this.set({ g: Object.assign({}, this.state.g, patch) }); }
-
-  finish(stars, good, bad) {
-    const s = this.state; const m = this.mission(s.missionId);
-    const label = stars === 3 ? 'Correcta' : (stars === 2 ? 'Regular' : 'Incorrecta');
-    const xp = Math.round(m.xp * (stars === 3 ? 1 : (stars === 2 ? 0.6 : 0.3)));
-    const gain = stars === 3 ? 8 : (stars === 2 ? 5 : 2);
-    const skills = Object.assign({}, s.skills); skills[m.skill] = Math.min(100, (skills[m.skill] || 30) + gain);
-    this.set({ gPhase: 'done', xp: s.xp + xp, weekDone: s.weekDone + 1, skills, done: Object.assign({}, s.done, { [m.id]: true }),
-      history: [{ name: m.name, engine: m.engine, result: label, xp, date: 'Hoy' }].concat(s.history),
-      res: { stars, label, xp, good, bad, prevXp: s.xp, newXp: s.xp + xp, skill: m.skill, gain, skillPct: skills[m.skill] } });
-  }
-
-  tick() {
-    const s = this.state;
-    if (s.role !== 'empleado' || s.uScreen !== 'play' || s.gPhase !== 'play') return;
-    const g = s.g;
-    if (s.game === 'auditor') {
-      if (g.phase === 1) { const t = g.t - 0.5; this.upd(t <= 0 ? { t: 0, phase: 'between' } : { t }); }
-      else if (g.phase === 2) { const ct = g.ct - 0.5; if (ct <= 0) this.audAnswer(null); else this.upd({ ct }); }
-    } else if (s.game === 'protocolo') {
-      const t = g.t - 0.5; if (t <= 0) { this.upd({ t: 0 }); this.finishProto(Object.assign({}, g, { t: 0 })); } else this.upd({ t });
-    } else if (s.game === 'crisis') {
-      const n = this.crTick(g); this.set({ g: n }); if (n.t <= 0 || n.sat <= 0) this.finishCrisis(n);
-    }
-  }
 
   // Diálogo
-  dlgTree() {
-    return {
-      t1: { say: '¡Me cobraron dos veces este mes! Es la tercera vez que llamo y nadie me soluciona nada.', opts: [
-        ['Tenés razón, Gustavo. Ya veo los dos cobros. Lo soluciono ahora mismo.', -20, 't2', 'Reconociste el error antes de pedirle nada.', null],
-        ['Mandame el comprobante de los dos cobros y lo reviso.', 15, 't2b', null, 'Le pediste un comprobante que ya estaba en el sistema.'],
-        ['Eso lo maneja Facturación. Te transfiero.', 25, 't2b', null, 'Transferir sin resolver es lo que más enoja a un cliente que ya llamó varias veces.']] },
-      t2b: { say: '¿¡En serio!? Los cobros los tienen ustedes ahí. No voy a buscar nada.', opts: [
-        ['Tenés razón, perdón. Ya los veo: te devuelvo uno ahora.', -15, 't2', 'Corregiste a tiempo y reconociste el error.', null],
-        ['Sin comprobante no puedo hacer nada.', 25, 't3', null, 'Aferrarte al procedimiento con el dato a la vista hace explotar la tensión.']] },
-      t2: { say: 'Bueno… ¿y cuándo me devuelven la plata?', opts: [
-        ['El reembolso ya salió. En 5 a 10 días hábiles lo ves en tu tarjeta.', -20, 't3', 'Diste un plazo concreto y real.', null],
-        ['En unos días, quedate tranquilo.', 10, 't3', null, '«En unos días» es vago: genera otro llamado. Decí el plazo real: 5 a 10 días hábiles.'],
-        ['Te regalo un mes gratis y listo.', 5, 't3', null, 'Compensar no responde la pregunta del cliente.']] },
-      t3: { say: '¿Y cómo sé que no me va a pasar de nuevo?', opts: [
-        ['Te activé una alerta: si aparece un cobro doble, se frena antes.', -20, 'end', 'Cerraste con una acción concreta para que no se repita.', null],
-        ['Fue un error del sistema, no debería repetirse.', 5, 'end', null, 'Cerraste sin una garantía concreta. Ofrecé algo que el cliente pueda comprobar.'],
-        ['Eso no te lo puedo asegurar.', 15, 'end', null, 'Una respuesta sin solución deja al cliente inseguro.']] }
-    };
-  }
+  dlgTree() { return this.content('dialogo').nodes; }
   dlgPick(i) {
-    const g = this.state.g; const o = this.dlgTree()[g.node].opts[i];
+    const g = this.state.g; const C = this.content('dialogo'); const o = C.nodes[g.node].opts[i];
     const tension = Math.max(0, Math.min(100, g.tension + o[1]));
     const ended = o[2] === 'end' || tension >= 100;
-    const endText = tension >= 100 ? '¡Basta! Me doy de baja. (Gustavo cortó la llamada)' : (tension <= 30 ? '¡Gracias! Así sí da gusto. Me quedo tranquilo.' : (tension <= 60 ? 'Bueno, está bien. Espero que no vuelva a pasar.' : 'Mirá, no me convence. Lo voy a pensar…'));
+    const endText = tension >= 100 ? C.end[3] : (tension <= 30 ? C.end[0] : (tension <= 60 ? C.end[1] : C.end[2]));
     this.upd({ node: ended ? g.node : o[2], tension, turn: g.turn + 1, bump: g.bump + 1, delta: o[1], you: o[0], ended, endText,
       good: o[3] ? g.good.concat([o[3]]) : g.good, bad: o[4] ? g.bad.concat([o[4]]) : g.bad });
   }
   finishDialogo() {
     const g = this.state.g; const t = g.tension;
     const stars = t >= 100 ? 1 : (t <= 30 ? 3 : (t <= 60 ? 2 : 1));
-    this.finish(stars, g.good.length ? g.good.join(' ') : 'Llegaste hasta el final de la llamada.', g.bad[0] || '¡Nada! Manejaste la llamada de principio a fin.');
+    this.finish(stars, g.good.length ? g.good.join(' ') : 'Llegaste hasta el final de la conversación.', g.bad[0] || '¡Nada! Manejaste la conversación de principio a fin.');
   }
 
   // Auditor
-  audData() {
-    return {
-      lines: [
-        ['agente', 'Hola, soy Tomás de Nordex. ¿En qué te ayudo?', null],
-        ['cliente', 'Me cobraron algo que no reconozco.', null],
-        ['agente', 'Pasame el número completo de tu tarjeta y el código de atrás.', 'Nunca se piden los datos completos de la tarjeta.'],
-        ['agente', 'Veo un cargo del día 3 por un cambio de plan.', null],
-        ['agente', 'Es culpa de Facturación, siempre se equivocan.', 'No se culpa a otras áreas frente al cliente.'],
-        ['cliente', 'Ah… ¿y me lo pueden devolver?', null],
-        ['agente', 'Te lo devuelvo igual aunque no corresponda, nadie se entera.', 'Un reintegro fuera de política necesita aprobación.'],
-        ['agente', 'Te dejo el número de caso #88213. ¡Buen día!', null]
-      ],
-      rules: ['Cuidar los datos del cliente', 'Hablar bien de la empresa y sus áreas', 'Respetar la política de reintegros', 'Dejar siempre un número de caso'],
-      cards: [
-        ['Pedir los últimos 4 dígitos de la tarjeta para ubicar un cobro', true, 'Los últimos 4 dígitos no exponen la tarjeta.'],
-        ['Prometerle al cliente que mañana tiene la plata', false, 'El reembolso depende del banco: 5 a 10 días hábiles.'],
-        ['Transferir a otra área contando el caso', true, 'Transferir con contexto evita que el cliente repita todo.'],
-        ['Darle el email de un cliente a alguien que dice ser su socio', false, 'Los datos solo se dan al titular de la cuenta.'],
-        ['Cerrar un chat tras 10 minutos sin respuesta, avisando antes', true, 'Está permitido si avisás antes de cerrar.']
-      ]
-    };
-  }
+  audData() { return this.content('auditor'); }
+  audErrs() { return this.audData().lines.filter(l => l[2]).length; }
   audTap(i) {
     const g = this.state.g; if (g.phase !== 1 || g.found[i] || g.wrong[i]) return;
     if (this.audData().lines[i][2]) {
       const found = Object.assign({}, g.found, { [i]: true });
-      this.upd({ found, phase: Object.keys(found).length >= 3 ? 'between' : 1 });
+      this.upd({ found, phase: Object.keys(found).length >= this.audErrs() ? 'between' : 1 });
     } else {
       const hearts = g.hearts - 1;
       this.upd({ wrong: Object.assign({}, g.wrong, { [i]: true }), hearts, bump: g.bump + 1, wrongIdx: i, phase: hearts <= 0 ? 'between' : 1 });
@@ -1369,29 +1617,21 @@ class Component extends DCLogic {
     const g = this.state.g; const D = this.audData(); const c = D.cards[g.idx]; if (!c) return;
     const ok = v === c[1];
     const ng = Object.assign({}, g, { picks: g.picks.concat([ok]), streak: ok ? g.streak + 1 : 0, idx: g.idx + 1, ct: 5, last: { ok, timeout: v === null, why: c[2] } });
-    if (ng.idx >= D.cards.length) {
-      this.set({ g: ng });
-      const found = Object.keys(ng.found).length; const quick = ng.picks.filter(Boolean).length; const total = found + quick;
-      const missed = D.lines.filter((l, k) => l[2] && !ng.found[k]).map(l => l[2]);
-      const stars = total >= 7 ? 3 : (total >= 5 ? 2 : 1);
-      const good = 'Encontraste ' + found + ' de 3 infracciones y acertaste ' + quick + ' de 5 en la ronda rápida.';
-      const bad = missed.length ? 'Se te pasó una: ' + missed[0] : (quick < 5 ? 'Repasá la política de reembolsos: los plazos dependen del banco.' : (Object.keys(ng.wrong).length ? 'Marcaste mensajes que estaban bien: leé la regla antes de tocar.' : '¡Nada! Auditoría perfecta.'));
-      this.finish(stars, good, bad);
-    } else this.set({ g: ng });
+    this.set({ g: ng });
+    if (ng.idx < D.cards.length) return;
+    const errs = this.audErrs(); const found = Object.keys(ng.found).length; const quick = ng.picks.filter(Boolean).length; const total = found + quick;
+    const missed = D.lines.filter((l, k) => l[2] && !ng.found[k]).map(l => l[2]);
+    const firstWrong = ng.picks.indexOf(false);
+    const stars = total >= errs + 4 ? 3 : (total >= errs + 2 ? 2 : 1);
+    const good = 'Encontraste ' + found + ' de ' + errs + ' errores y acertaste ' + quick + ' de ' + D.cards.length + ' en la ronda rápida.';
+    const bad = missed.length ? 'Se te pasó uno: ' + missed[0] : (firstWrong >= 0 ? '«' + D.cards[firstWrong][0] + '»: ' + D.cards[firstWrong][2] : (Object.keys(ng.wrong).length ? 'Marcaste líneas que estaban bien: leé la regla antes de tocar.' : '¡Nada! Auditoría perfecta.'));
+    this.finish(stars, good, bad);
   }
 
   // Protocolo
   proSteps() {
-    return [
-      ['a', 'Verificar la identidad del cliente', 'ph ph-identification-card', 1],
-      ['b', 'Cerrar todas las sesiones abiertas', 'ph ph-sign-out', 2],
-      ['c', 'Cambiar la contraseña y recuperar el email', 'ph ph-password', 3],
-      ['d', 'Revisar las compras de los últimos días', 'ph ph-shopping-cart', 4],
-      ['e', 'Reportar el caso a Seguridad', 'ph ph-shield-warning', 5],
-      ['f', 'Contarle al cliente los próximos pasos', 'ph ph-envelope-simple', 6],
-      ['x', 'Pedirle su contraseña actual', 'ph ph-key', 0, '¡Trampa! Nunca se le pide la contraseña al cliente.'],
-      ['y', 'Devolverle las compras en el momento', 'ph ph-money', 0, '¡Trampa! Primero investiga Seguridad, después se decide el reembolso.']
-    ];
+    const C = this.content('protocolo'); const ids = ['a', 'b', 'c', 'd', 'e', 'f'];
+    return C.steps.map((x, i) => [ids[i], x[0], x[1], i + 1]).concat(C.traps.map((x, i) => [['x', 'y'][i], x[0], x[1], 0, x[2]]));
   }
   proTap(id) {
     const g = this.state.g; if (g.placed.indexOf(id) >= 0 || this.state.gPhase !== 'play') return;
@@ -1409,74 +1649,48 @@ class Component extends DCLogic {
     const all = g.placed.length === 6;
     const stars = all && g.mistakes <= 1 ? 3 : (all && g.mistakes <= 3 ? 2 : 1);
     const good = all ? 'Completaste el protocolo con ' + this.fmt(g.t) + ' de sobra.' : 'Llegaste al paso ' + g.placed.length + ' de 6.';
-    const bad = g.trap || (g.mistakes || !all ? 'El orden es: identidad, cerrar sesiones, contraseña, revisar compras, Seguridad y avisar al cliente.' : '¡Nada! Protocolo impecable.');
+    const order = this.content('protocolo').steps.map((x, i) => (i + 1) + '. ' + x[0].toLowerCase()).join(' · ');
+    const bad = g.trap || (g.mistakes || !all ? 'El orden correcto es: ' + order + '.' : '¡Nada! Protocolo impecable.');
     this.finish(stars, good, bad);
   }
 
   // Crisis
-  crDefs() {
-    return {
-      sistema: { name: 'Se cayó el sistema de pagos', icon: 'ph-fill ph-plugs', desc: 'Mientras siga caído, llegan el doble de clientes.', at: 0, work: 10, win: 10, winMsg: '¡Volvió el sistema! Entran 3 consultas por pagos. +10' },
-      urgente: { name: 'Pedido urgente de Vento Seguros', icon: 'ph-fill ph-briefcase', desc: 'Necesitan 40 licencias activas ya.', at: 8, work: 6, deadline: 20, win: 12, lose: 15, appear: '¡Vento Seguros necesita 40 licencias urgentes!', winMsg: 'Vento Seguros recibió sus licencias. +12', loseMsg: 'Vento Seguros se quedó esperando. −15' },
-      companero: { name: 'Nadia necesita ayuda', icon: 'ph-fill ph-hand-waving', desc: 'No sabe cómo seguir con un reembolso.', at: 20, work: 3, deadline: 14, win: 8, lose: 10, appear: 'Nadia no sabe cómo seguir con un reembolso. ¡Ayudala!', winMsg: 'Nadia resolvió su caso. +8', loseMsg: 'Nadia derivó mal: 3 clientes vuelven a la cola. −10' },
-      vip: { name: 'Cliente VIP furioso en redes', icon: 'ph-fill ph-megaphone', desc: 'Se enteró de la caída y lo publicó.', at: 32, work: 6, deadline: 16, win: 10, lose: 20, appear: 'Un cliente VIP publicó la caída en redes. ¡Respondele!', winMsg: 'Respondiste al VIP a tiempo. +10', loseMsg: 'El posteo del VIP se viralizó. −20' }
-    };
-  }
   crTick(g0) {
-    const D = this.crDefs(); const dt = 0.5;
-    const g = Object.assign({}, g0, { assign: Object.assign({}, g0.assign), ev: {}, queue: g0.queue.map(q => ({ id: q.id, w: q.w + dt })) });
-    Object.keys(g0.ev).forEach(k => { g.ev[k] = Object.assign({}, g0.ev[k]); });
+    const C = this.content('crisis'); const dt = 0.5; const loss = { Alta: 20, Media: 12, Baja: 6 };
+    const g = Object.assign({}, g0, { inc: g0.inc.map(x => Object.assign({}, x)) });
     const el = 60 - g.t;
-    const say = (m) => { g.msg = m; g.bump = g.bump + 1; };
-    const free = (k) => Object.keys(g.assign).forEach(p => { if (g.assign[p] === k) g.assign[p] = null; });
-    const cnt = {}; Object.keys(g.assign).forEach(p => { const v = g.assign[p]; if (v) cnt[v] = (cnt[v] || 0) + 1; });
-    const clamp = (v) => Math.max(0, Math.min(100, v));
-    Object.keys(D).forEach(k => {
-      const e = g.ev[k]; const d = D[k];
-      if (e.st === 'pending' && el >= d.at) {
-        if (k === 'vip' && g.ev.sistema.st === 'done') { e.st = 'skipped'; g.sat = clamp(g.sat + 5); say('Todo funciona y los clientes lo notan. +5'); }
-        else { e.st = 'active'; say(d.appear); }
-      }
-      if (e.st !== 'active') return;
-      e.age += dt;
-      if (cnt[k]) e.p = Math.min(d.work, e.p + dt * cnt[k]);
-      if (e.p >= d.work) {
-        e.st = 'done'; free(k); g.sat = clamp(g.sat + d.win); say(d.winMsg);
-        if (k === 'sistema') for (let i = 0; i < 3; i++) g.queue.push({ id: g.nextId++, w: 0 });
-      } else if (d.deadline && e.age >= d.deadline) {
-        e.st = 'failed'; free(k); g.sat = clamp(g.sat - d.lose); say(d.loseMsg);
-        if (k === 'companero') for (let i = 0; i < 3; i++) g.queue.push({ id: g.nextId++, w: 0 });
+    C.inc.forEach((d, i) => {
+      const x = g.inc[i];
+      if (x.st === 'pending' && el >= d.at) { x.st = 'active'; g.msg = 'Nuevo problema: ' + d.t; g.kind = 'new'; g.bump++; }
+      if (x.st !== 'active') return;
+      x.age += dt;
+      if (d.sev === 'Alta') g.ctl -= dt * 0.8;
+      if (x.age >= d.lim * (g.hard ? 0.75 : 1)) {
+        x.st = 'late'; g.ctl -= loss[d.sev]; g.msg = 'Se venció: ' + d.t + ' · −' + loss[d.sev] + ' de control'; g.kind = 'bad'; g.bump++;
+        if (g.open === i) { g.open = -1; g.fb = { ok: false, title: d.t, text: 'Se terminó el tiempo antes de que eligieras.' }; }
       }
     });
-    g.spawnAcc += dt / (g.ev.sistema.st === 'active' ? 1.6 : 3.2);
-    while (g.spawnAcc >= 1) { g.queue.push({ id: g.nextId++, w: 0 }); g.spawnAcc -= 1; }
-    const gone = g.queue.filter(q => q.w >= 12).length;
-    if (gone) { g.queue = g.queue.filter(q => q.w < 12); g.left += gone; g.sat = clamp(g.sat - 6 * gone); say(gone === 1 ? 'Un cliente se cansó de esperar y se fue. −6' : gone + ' clientes se fueron. −' + 6 * gone); }
-    g.serveAcc += dt * (cnt.cola || 0) / 2.5;
-    while (g.serveAcc >= 1 && g.queue.length) { g.queue.shift(); g.served++; g.sat = clamp(g.sat + 2); g.serveAcc -= 1; }
-    if (!g.queue.length) g.serveAcc = 0;
-    g.t = Math.max(0, g.t - dt);
+    g.ctl = Math.max(0, Math.min(100, g.ctl)); g.t = Math.max(0, g.t - dt);
     return g;
   }
-  crAssign(k) {
-    const g = this.state.g; if (this.state.gPhase !== 'play') return;
-    if (k !== 'cola' && (!g.ev[k] || g.ev[k].st !== 'active')) return;
-    const on = Object.keys(g.assign).filter(p => g.assign[p] === k).length;
-    if (on >= (k === 'cola' ? 3 : 2)) return this.upd({ msg: 'Ya hay suficiente gente en esa tarea.', bump: g.bump + 1 });
-    const p = ['vos', 'carla', 'diego'].find(x => !g.assign[x]);
-    if (!p) return this.upd({ msg: '¡No queda nadie libre! Tocá una cara para liberar a alguien.', bump: g.bump + 1 });
-    this.upd({ assign: Object.assign({}, g.assign, { [p]: k }) });
+  crOpen(i) { const g = this.state.g; if (this.state.gPhase !== 'play' || !g.inc[i] || g.inc[i].st !== 'active') return; this.upd({ open: i, fb: null }); }
+  crPick(j) {
+    const g = this.state.g; const i = g.open; if (i < 0 || this.state.gPhase !== 'play') return;
+    const d = this.content('crisis').inc[i]; const o = d.opts[j]; if (!o) return;
+    const gain = { Alta: 12, Media: 8, Baja: 5 }[d.sev];
+    const inc = g.inc.map((x, k) => k === i ? Object.assign({}, x, { st: o[1] ? 'ok' : 'bad' }) : x);
+    const ctl = Math.max(0, Math.min(100, g.ctl + (o[1] ? gain : -10)));
+    this.upd({ inc, ctl, open: -1, fb: { ok: o[1], title: d.t, text: o[2] }, msg: o[1] ? 'Bien resuelto: ' + d.t + ' · +' + gain + ' de control' : 'Mal resuelto: ' + d.t + ' · −10 de control', kind: o[1] ? 'ok' : 'bad', bump: g.bump + 1 });
   }
-  crFree(p) { this.upd({ assign: Object.assign({}, this.state.g.assign, { [p]: null }) }); }
   finishCrisis(g) {
     if (this.state.gPhase !== 'play') return;
-    const shown = Object.keys(g.ev).filter(k => ['done', 'failed', 'active'].indexOf(g.ev[k].st) >= 0);
-    const done = shown.filter(k => g.ev[k].st === 'done').length;
-    const stars = g.sat <= 0 ? 1 : (g.sat >= 70 ? 3 : (g.sat >= 40 ? 2 : 1));
-    const good = 'Resolviste ' + done + ' de ' + shown.length + ' problemas y atendiste a ' + g.served + ' clientes.';
-    const bad = g.ev.sistema.st !== 'done' ? 'Con el sistema caído entran el doble de clientes: mandá gente a arreglarlo primero.'
-      : (g.ev.companero.st === 'failed' ? 'Ayudar a Nadia llevaba 3 segundos y evitaba 3 llamados más.'
-      : (g.left >= 3 ? 'Se fueron ' + g.left + ' clientes: dejá siempre a alguien en el mostrador.' : '¡Nada! Repartiste muy bien al equipo.'));
+    const C = this.content('crisis'); const N = C.inc.length;
+    const okN = g.inc.filter(x => x.st === 'ok').length;
+    const stars = g.ctl <= 0 ? 1 : (okN >= N - 1 && g.ctl >= 55 ? 3 : (okN >= Math.ceil(N / 2) ? 2 : 1));
+    const good = 'Resolviste bien ' + okN + ' de ' + N + ' problemas y terminaste con ' + Math.round(g.ctl) + ' de control.';
+    const bi = g.inc.findIndex(x => x.st === 'bad'); const li = g.inc.findIndex(x => x.st === 'late' || x.st === 'active');
+    const bad = bi >= 0 ? '«' + C.inc[bi].t + '»: lo correcto era ' + C.inc[bi].opts.find(o => o[1])[0].toLowerCase() + '.'
+      : (li >= 0 ? '«' + C.inc[li].t + '» se venció: atendé primero los de gravedad alta y no te quedes mucho en uno solo.' : '¡Nada! Manejaste la crisis de punta a punta.');
     this.finish(stars, good, bad);
   }
 
@@ -1488,11 +1702,13 @@ class Component extends DCLogic {
     const par = (n) => (n % 2 ? 'A' : 'B');
 
     // Diálogo
+    const DC = this.content('dialogo');
     const gd = s.game === 'dialogo' && s.g.node ? s.g : this.fresh('dialogo');
-    const T = this.dlgTree(); const node = T[gd.node];
+    const node = DC.nodes[gd.node] || DC.nodes.t1;
     const tCol = gd.tension < 35 ? TEAL : (gd.tension < 65 ? AMBER : CORAL);
     const d = {
-      turnLabel: gd.ended ? 'Fin de la llamada' : 'Turno ' + gd.turn,
+      channel: DC.channel, who: DC.name + ', ' + DC.role, name: DC.name,
+      turnLabel: gd.ended ? 'Fin de la conversación' : 'Turno ' + gd.turn,
       say: gd.ended ? gd.endText : node.say, hasYou: !!gd.you, you: gd.you, tension: gd.tension,
       faceIcon: gd.tension < 35 ? 'ph-fill ph-smiley' : (gd.tension < 55 ? 'ph-fill ph-smiley-meh' : (gd.tension < 80 ? 'ph-fill ph-smiley-sad' : 'ph-fill ph-smiley-angry')),
       faceStyle: 'width: 124px; height: 124px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 86px; transition: color 0.4s, border-color 0.4s, background 0.4s; color: ' + tCol + '; border: 3px solid ' + tCol + '; background: color-mix(in srgb, ' + tCol + ' 14%, var(--color-bg));' + (gd.bump ? ' animation: ' + (gd.delta > 0 ? 'xpShake' : 'xpBounce') + par(gd.bump) + ' 0.55s ease;' : ''),
@@ -1507,27 +1723,25 @@ class Component extends DCLogic {
 
     // Auditor
     const ga = s.game === 'auditor' && s.g.phase ? s.g : this.fresh('auditor');
-    const AD = this.audData(); const foundN = Object.keys(ga.found).length; const ci = Math.min(ga.idx, AD.cards.length - 1);
+    const AD = this.audData(); const errs = this.audErrs(); const foundN = Object.keys(ga.found).length; const ci = Math.min(ga.idx, AD.cards.length - 1);
     const a = {
+      docTitle: AD.title, docMeta: AD.meta,
       lines: AD.lines.map((l, i) => {
-        const agent = l[0] === 'agente'; const f = ga.found[i]; const w = ga.wrong[i]; const miss = ga.phase !== 1 && l[2] && !f;
-        const border = f ? AMBER : (miss ? CORAL : (agent ? 'var(--color-accent-700)' : 'var(--color-neutral-700)'));
+        const f = ga.found[i]; const w = ga.wrong[i]; const miss = ga.phase !== 1 && l[2] && !f;
+        const border = f ? AMBER : (miss ? CORAL : 'var(--color-neutral-800)');
         return {
-          row: 'display: flex; justify-content: ' + (agent ? 'flex-end' : 'flex-start') + ';',
-          bubble: 'position: relative; max-width: 78%; text-align: left; padding: 11px 14px; font-family: var(--font-body); font-size: 14px; line-height: 1.45; color: var(--color-text); cursor: ' + (ga.phase === 1 && !f && !w ? 'pointer' : 'default') + '; border-radius: ' + (agent ? '14px 14px 4px 14px' : '14px 14px 14px 4px') + '; border: 1.5px solid ' + border + '; background: ' + (f ? 'color-mix(in srgb, ' + AMBER + ' 14%, var(--color-surface))' : (agent ? 'color-mix(in srgb, var(--color-accent) 12%, var(--color-surface))' : 'var(--color-surface)')) + '; transition: transform 0.15s ease, border-color 0.2s;' + (w && ga.wrongIdx === i ? ' animation: xpShake' + par(ga.bump) + ' 0.45s ease;' : '') + (w ? ' opacity: 0.6;' : ''),
-          who: agent ? 'Tomás · agente' : 'Cliente',
-          whoStyle: 'display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; color: ' + (agent ? 'var(--color-accent-300)' : 'var(--color-neutral-500)') + ';',
-          text: l[1], stamp: !!f,
-          hasNote: !!(f || w || miss), note: f ? l[2] : (miss ? 'Se te pasó: ' + l[2] : 'Este mensaje está bien. −1 vida'),
-          noteStyle: 'display: block; margin-top: 6px; font-size: 12px; color: ' + (f ? AMBER : (miss ? CORAL : 'var(--color-neutral-400)')) + ';',
+          row: 'position: relative; display: flex; align-items: flex-start; gap: 14px; width: 100%; text-align: left; padding: 12px 14px; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 14px; line-height: 1.45; color: var(--color-text); cursor: ' + (ga.phase === 1 && !f && !w ? 'pointer' : 'default') + '; border: 1.5px solid ' + border + '; background: ' + (f ? 'color-mix(in srgb, ' + AMBER + ' 12%, var(--color-surface))' : 'var(--color-surface)') + '; transition: border-color 0.2s;' + (w && ga.wrongIdx === i ? ' animation: xpShake' + par(ga.bump) + ' 0.45s ease;' : '') + (w ? ' opacity: 0.6;' : ''),
+          who: l[0], text: l[1], stamp: !!f,
+          hasNote: !!(f || w || miss), note: f ? l[2] : (miss ? 'Se te pasó: ' + l[2] : 'Esta línea está bien. −1 vida'),
+          noteStyle: 'font-size: 12px; color: ' + (f ? AMBER : (miss ? CORAL : 'var(--color-neutral-400)')) + ';',
           onClick: () => this.audTap(i)
         };
       }),
       rules: AD.rules, clock: this.fmt(ga.t), clockStyle: 'font-family: var(--font-heading); font-size: 24px; color: ' + (ga.t <= 10 ? CORAL : 'var(--color-text)') + ';',
       hearts: [0, 1, 2].map(k => ({ icon: k < ga.hearts ? 'ph-fill ph-heart' : 'ph ph-heart-break', style: 'font-size: 24px; color: ' + (k < ga.hearts ? CORAL : 'var(--color-neutral-700)') + ';' })),
-      foundLabel: foundN + ' / 3',
-      betweenTitle: foundN === 3 ? '¡Las encontraste todas!' : (ga.hearts <= 0 ? 'Te quedaste sin vidas' : 'Se acabó el tiempo'),
-      betweenText: 'Encontraste ' + foundN + ' de 3 infracciones.', betweenIcon: this.badge(AMBER, 84),
+      foundLabel: foundN + ' / ' + errs,
+      betweenTitle: foundN === errs ? '¡Los encontraste todos!' : (ga.hearts <= 0 ? 'Te quedaste sin vidas' : 'Se acabó el tiempo'),
+      betweenText: 'Encontraste ' + foundN + ' de ' + errs + ' errores.', betweenIcon: this.badge(AMBER, 84),
       toQuick: () => this.upd({ phase: 2, idx: 0, ct: 5 }),
       card: AD.cards[ci][0], counter: 'Situación ' + (ci + 1) + ' de ' + AD.cards.length,
       cardStyle: 'border-radius: var(--radius-lg); overflow: hidden; background: var(--color-surface); border: 1px solid var(--color-neutral-700); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35); animation: xpIn' + par(ga.idx) + ' 0.35s ease-out;',
@@ -1545,6 +1759,7 @@ class Component extends DCLogic {
     const gp = s.game === 'protocolo' && s.g.placed ? s.g : this.fresh('protocolo');
     const PS = this.proSteps(); const byId = {}; PS.forEach(x => { byId[x[0]] = x; });
     const p = {
+      situation: this.content('protocolo').situation,
       clock: this.fmt(gp.t), clockStyle: 'font-family: var(--font-heading); font-size: 30px; line-height: 1.1; color: ' + (gp.t <= 10 ? CORAL : 'var(--color-text)') + ';',
       floatStyle: gp.bump ? 'position: absolute; left: 0; right: 0; top: 18px; font-family: var(--font-heading); font-size: 16px; color: ' + CORAL + '; opacity: 0; pointer-events: none; animation: xpFloat' + par(gp.bump) + ' 1.2s ease-out forwards;' : 'display: none;',
       mistakes: gp.mistakes,
@@ -1557,73 +1772,79 @@ class Component extends DCLogic {
     };
 
     // Crisis
-    const gc = s.game === 'crisis' && s.g.ev ? s.g : this.fresh('crisis');
-    const CD = this.crDefs();
-    const team = [['vos', 'Vos', 'MR'], ['carla', 'Carla', 'CD'], ['diego', 'Diego', 'DR']];
-    const whereLbl = { cola: 'En el mostrador', sistema: 'Arreglando el sistema', urgente: 'Pedido urgente', companero: 'Ayudando a Nadia', vip: 'Respondiendo al VIP' };
-    const chip = (pid) => ({ initials: team.find(x => x[0] === pid)[2], onClick: (e) => { e.stopPropagation(); this.crFree(pid); } });
-    const satCol = gc.sat >= 70 ? TEAL : (gc.sat >= 40 ? AMBER : CORAL);
-    const evKeys = ['sistema', 'urgente', 'companero', 'vip'].filter(k => ['active', 'done', 'failed'].indexOf(gc.ev[k].st) >= 0).sort((x, y) => (gc.ev[x].st === 'active' ? 0 : 1) - (gc.ev[y].st === 'active' ? 0 : 1));
-    const colaPeople = team.filter(t => gc.assign[t[0]] === 'cola').map(t => chip(t[0]));
+    const CC = this.content('crisis');
+    const gc = s.game === 'crisis' && s.g.inc ? s.g : this.fresh('crisis');
+    const sevCol = { Alta: CORAL, Media: AMBER, Baja: TEAL };
+    const sevStyle = (sv) => 'display: inline-flex; align-items: center; padding: 2px 9px; border-radius: 999px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; color: ' + sevCol[sv] + '; background: color-mix(in srgb, ' + sevCol[sv] + ' 14%, transparent); border: 1px solid color-mix(in srgb, ' + sevCol[sv] + ' 45%, transparent);';
+    const limOf = (i) => CC.inc[i].lim * (gc.hard ? 0.75 : 1);
+    const leftOf = (i) => Math.max(0, Math.ceil(limOf(i) - gc.inc[i].age));
+    const shown = gc.inc.map((x, i) => i).filter(i => gc.inc[i].st !== 'pending')
+      .sort((x, y) => { const ax = gc.inc[x].st === 'active' ? 0 : 1, ay = gc.inc[y].st === 'active' ? 0 : 1; return ax !== ay ? ax - ay : (ax === 0 ? leftOf(x) - leftOf(y) : y - x); });
+    const okN = gc.inc.filter(x => x.st === 'ok').length; const pendN = gc.inc.filter(x => x.st === 'pending').length; const actN = gc.inc.filter(x => x.st === 'active').length;
+    const ctlCol = gc.ctl >= 60 ? TEAL : (gc.ctl >= 35 ? AMBER : CORAL);
+    const kindCol = { bad: CORAL, ok: TEAL, new: AMBER, info: 'var(--color-neutral-500)' }[gc.kind] || 'var(--color-neutral-500)';
+    const oi = gc.open; const od = oi >= 0 ? CC.inc[oi] : null;
     const c = {
       clock: this.fmt(gc.t), clockStyle: 'font-family: var(--font-heading); font-size: 32px; line-height: 1.1; color: ' + (gc.t <= 10 ? CORAL : 'var(--color-text)') + ';',
-      sat: Math.round(gc.sat), satBar: this.bar(gc.sat, satCol, 'transition: width 0.5s ease, background 0.5s;'),
-      satIcon: gc.sat >= 70 ? 'ph-fill ph-smiley' : (gc.sat >= 40 ? 'ph-fill ph-smiley-meh' : 'ph-fill ph-smiley-sad'), satIconStyle: 'font-size: 34px; color: ' + satCol + ';',
-      served: gc.served, left: gc.left, msg: gc.msg,
-      msgStyle: 'display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-md); font-size: 14px; background: color-mix(in srgb, ' + CORAL + ' 10%, var(--color-surface)); border: 1px solid color-mix(in srgb, ' + CORAL + ' 35%, transparent); animation: xpIn' + par(gc.bump) + ' 0.35s ease-out;',
-      queue: gc.queue.slice(0, 16).map(q => { const qc = q.w < 5 ? TEAL : (q.w < 9 ? AMBER : CORAL); return { style: 'width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: ' + qc + '; background: color-mix(in srgb, ' + qc + ' 16%, transparent); border: 1.5px solid ' + qc + '; transition: color 0.4s, border-color 0.4s, background 0.4s; animation: xpWalk 0.5s ease-out' + (q.w >= 9 ? ', xpPulse 0.8s infinite' : '') + ';' }; }),
-      queueCount: gc.queue.length, hasMore: gc.queue.length > 16, more: '+' + (gc.queue.length - 16), empty: gc.queue.length === 0,
-      colaPeople, colaNobody: colaPeople.length === 0, colaAssign: () => this.crAssign('cola'),
-      events: evKeys.map(k => {
-        const e = gc.ev[k]; const D = CD[k]; const active = e.st === 'active';
-        const left = D.deadline ? Math.max(0, Math.ceil(D.deadline - e.age)) : null; const urgent = active && left !== null && left <= 5;
-        const people = team.filter(t => gc.assign[t[0]] === k).map(t => chip(t[0]));
-        return { name: D.name, icon: D.icon, desc: D.desc, active, people, nobody: active && people.length === 0,
-          status: e.st === 'done' ? 'Resuelto' : (e.st === 'failed' ? 'Fallido' : (left !== null ? left + ' s' : 'Sin límite')),
-          statusStyle: 'font-family: var(--font-heading); font-size: 14px; white-space: nowrap; color: ' + (e.st === 'done' ? TEAL : (e.st === 'failed' || urgent ? CORAL : 'var(--color-neutral-300)')) + ';' + (urgent ? ' animation: xpPulse 0.7s infinite;' : ''),
-          hasTimer: active && left !== null, timer: this.bar(left !== null ? left / D.deadline * 100 : 0, urgent ? CORAL : AMBER, 'transition: width 0.5s linear;'),
-          work: this.bar(e.p / D.work * 100, TEAL, 'transition: width 0.5s linear;'),
-          onClick: () => this.crAssign(k),
-          style: 'display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: var(--radius-lg); background: var(--color-surface); cursor: ' + (active ? 'pointer' : 'default') + '; transition: transform 0.15s, border-color 0.2s; animation: xpPop 0.35s ease-out; border: 1.5px solid ' + (urgent ? CORAL : (e.st === 'done' ? TEAL : (active ? 'var(--color-neutral-600)' : 'var(--color-neutral-800)'))) + '; opacity: ' + (active ? '1' : '0.5') + ';' };
+      ctl: Math.round(gc.ctl), ctlBar: this.bar(gc.ctl, ctlCol, 'transition: width 0.5s ease, background 0.5s;'), ctlIconStyle: 'font-size: 32px; color: ' + ctlCol + ';',
+      okLabel: okN + ' / ' + CC.inc.length, msg: gc.msg,
+      msgIcon: gc.kind === 'bad' ? 'ph-fill ph-x-circle' : (gc.kind === 'ok' ? 'ph-fill ph-check-circle' : 'ph-fill ph-bell-ringing'),
+      msgStyle: 'display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-md); font-size: 14px; color: var(--color-text); background: color-mix(in srgb, ' + kindCol + ' 10%, var(--color-surface)); border: 1px solid color-mix(in srgb, ' + kindCol + ' 40%, transparent); animation: xpIn' + par(gc.bump) + ' 0.35s ease-out;',
+      upcoming: pendN ? 'Faltan llegar ' + pendN : 'Llegaron todos',
+      list: shown.map(i => {
+        const x = gc.inc[i]; const dd = CC.inc[i]; const active = x.st === 'active'; const left = leftOf(i); const urgent = active && left <= 4; const isOpen = oi === i;
+        return { sev: dd.sev, sevStyle: sevStyle(dd.sev), title: dd.t, hasTimer: active,
+          status: active ? left + ' s' : ({ ok: 'Bien resuelto', bad: 'Mal resuelto', late: 'Se venció' }[x.st]),
+          statusStyle: 'font-family: var(--font-heading); font-size: 13px; white-space: nowrap; color: ' + (x.st === 'ok' ? TEAL : (x.st === 'bad' || x.st === 'late' || urgent ? CORAL : 'var(--color-neutral-300)')) + ';' + (urgent ? ' animation: xpPulse 0.7s infinite;' : ''),
+          timer: this.bar(left / limOf(i) * 100, urgent ? CORAL : AMBER, 'transition: width 0.5s linear;'),
+          onClick: () => this.crOpen(i),
+          style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 8px; width: 100%; text-align: left; padding: 12px 14px; border-radius: var(--radius-md); background: ' + (isOpen ? 'color-mix(in srgb, ' + CORAL + ' 8%, var(--color-surface))' : 'var(--color-surface)') + '; color: var(--color-text); font-family: var(--font-body); cursor: ' + (active ? 'pointer' : 'default') + '; transition: transform 0.15s, border-color 0.2s; animation: xpPop 0.35s ease-out; border: 1.5px solid ' + (isOpen ? CORAL : (urgent ? CORAL : (active ? 'var(--color-neutral-600)' : 'var(--color-neutral-800)'))) + '; opacity: ' + (active ? '1' : '0.55') + ';' + (isOpen ? ' transform: translateX(6px);' : '') };
       }),
-      team: team.map(t => { const w = gc.assign[t[0]]; return { initials: t[2], name: t[1], where: w ? whereLbl[w] : 'Libre',
-        style: 'display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 999px; background: var(--color-surface); border: 1px solid ' + (w ? 'var(--color-accent-700)' : TEAL) + ';',
-        avatar: 'width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; background: ' + (w ? 'var(--color-accent-800)' : 'color-mix(in srgb, ' + TEAL + ' 20%, transparent)') + '; color: ' + (w ? 'var(--color-accent-100)' : TEAL) + ';',
-        whereStyle: 'font-size: 11px; color: ' + (w ? 'var(--color-neutral-400)' : TEAL) + ';' }; })
+      hasOpen: !!od,
+      o: od ? { sev: 'Gravedad ' + od.sev.toLowerCase(), sevStyle: sevStyle(od.sev), title: od.t, detail: od.d, left: 'Quedan ' + leftOf(oi) + ' s',
+        leftStyle: 'margin-left: auto; font-family: var(--font-heading); font-size: 15px; color: ' + (leftOf(oi) <= 4 ? CORAL : 'var(--color-neutral-300)') + ';',
+        opts: od.opts.map((x, j) => ({ key: String(j + 1), text: x[0], onClick: () => this.crPick(j) })) } : { sev: '', sevStyle: '', title: '', detail: '', left: '', leftStyle: '', opts: [] },
+      hasFb: !od && !!gc.fb,
+      fbStyle: 'display: flex; gap: 12px; padding: 14px 16px; border-radius: var(--radius-md); animation: xpPop 0.3s ease-out; color: ' + (gc.fb && gc.fb.ok ? TEAL : CORAL) + '; border: 1px solid color-mix(in srgb, ' + (gc.fb && gc.fb.ok ? TEAL : CORAL) + ' 50%, transparent); background: color-mix(in srgb, ' + (gc.fb && gc.fb.ok ? TEAL : CORAL) + ' 10%, var(--color-bg));',
+      fbIcon: gc.fb && gc.fb.ok ? 'ph-fill ph-check-circle' : 'ph-fill ph-x-circle',
+      fbTitle: gc.fb ? (gc.fb.ok ? '¡Bien! ' : 'No era eso. ') + gc.fb.title : '', fbText: gc.fb ? gc.fb.text : '',
+      idle: !od, idleText: actN ? 'Tocá un problema de la lista. Empezá por los de gravedad alta.' : (pendN ? 'Esperando el próximo problema…' : 'No quedan problemas abiertos.')
     };
 
     // Resultado
-    const R = s.res || { stars: 0, label: '', xp: 0, good: '', bad: '', prevXp: s.xp, newXp: s.xp, skill: '', gain: 0, skillPct: 0 };
+    const R = s.res || { stars: 0, label: '', xp: 0, good: '', bad: '', prevXp: s.xp, newXp: s.xp, skill: '', gain: 0, skillPct: 0, unlocked: '' };
     const r = {
       stars: [1, 2, 3].map(k => ({ icon: k <= R.stars ? 'ph-fill ph-star' : 'ph ph-star', style: 'font-size: ' + (k === 2 ? 72 : 54) + 'px; color: ' + (k <= R.stars ? AMBER : 'var(--color-neutral-700)') + '; animation: xpStar 0.5s ' + (0.15 * k) + 's ease-out backwards;' })),
       title: R.stars === 3 ? '¡Excelente!' : (R.stars === 2 ? '¡Bien hecho!' : 'Podés mejorar'),
       label: R.label, tagClass: this.resTag(R.label), xp: R.xp, levelUp: this.lvl(R.newXp) > this.lvl(R.prevXp), newLevel: this.lvl(R.newXp),
       good: R.good, bad: R.bad, lvlLabel: 'Nivel ' + this.lvl(R.newXp), xpLabel: (R.newXp % 1000).toLocaleString('es-AR') + ' / 1.000 XP',
       xpBar: this.bar((R.newXp % 1000) / 10, 'linear-gradient(90deg, var(--color-accent-600), var(--color-accent-300))', 'animation: xpFill 1.2s 0.3s ease-out backwards;'),
-      skill: R.skill, gain: '+' + R.gain, skillPct: R.skillPct + '%', skillBar: this.bar(R.skillPct, TEAL, 'animation: xpFill 1s 0.4s ease-out backwards;')
+      skill: R.skill, gain: '+' + R.gain, skillPct: R.skillPct + ' pts', skillBar: this.bar(R.skillPct, TEAL, 'animation: xpFill 1s 0.4s ease-out backwards;'),
+      unlocked: !!R.unlocked, unlockedName: R.unlocked
     };
 
     return {
       uPlay: s.uScreen === 'play', gEng: eng, gMission: m,
       gTag: 'display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font-size: 12px; white-space: nowrap; color: ' + col + '; background: color-mix(in srgb, ' + col + ' 14%, transparent); border: 1px solid color-mix(in srgb, ' + col + ' 40%, transparent);',
       gIntro: s.uScreen === 'play' && s.gPhase === 'intro',
-      gIntroIcon: this.badge(col, 104).replace('border-radius: 26px', 'border-radius: 30px'),
+      gIntroIcon: this.badge(col, 104),
       gTaglineStyle: 'font-size: 15px; font-family: var(--font-heading); color: ' + col + ';',
       gHow: eng.how.map((h, i) => ({ n: i + 1, icon: h[0], text: h[1], numStyle: 'width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: var(--font-heading); background: ' + col + '; color: var(--color-bg);' })),
       startPlay: () => this.set({ gPhase: 'play' }),
-      exitGame: () => this.set({ uScreen: 'map', gPhase: 'intro' }),
+      // Leaving without finishing: snap the hero back to the last completed node, don't strand it forward.
+      exitGame: () => this.set({ uScreen: 'map', gPhase: 'intro', walkAt: null }),
       pDialogo: play && s.game === 'dialogo', pAudScan: play && s.game === 'auditor' && ga.phase === 1, pAudBetween: play && s.game === 'auditor' && ga.phase === 'between', pAudQuick: play && s.game === 'auditor' && ga.phase === 2,
       pProto: play && s.game === 'protocolo', pCrisis: play && s.game === 'crisis',
       gDone: s.uScreen === 'play' && s.gPhase === 'done',
       d, a, p, c, r,
-      goMap: () => this.set({ uScreen: 'map', gPhase: 'intro' }), replay: () => this.startMission(s.missionId, true)
+      goMap: () => this.set({ uScreen: 'map', gPhase: 'intro', walkAt: null }), replay: () => this.startMission(s.missionId, true)
     };
   }
 
   renderVals() {
     const s = this.state; const E = this.ENG();
     const TEAL = 'oklch(0.8 0.11 185)';
-    const lv = this.lvl(s.xp);
+    const lv = this.lvl(s.xp); const P = this.pack(); const PA = this.PACKS();
     const val = (fn) => (e) => fn(e.target.value);
 
     const roles = [['empresa', 'Empresa', 'ph ph-buildings'], ['empleado', 'Empleado', 'ph ph-game-controller'], ['admin', 'Admin Xpedia', 'ph ph-shield-check']].map(r => ({
@@ -1631,7 +1852,7 @@ class Component extends DCLogic {
       style: 'display: flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 6px; border: 0; cursor: pointer; font-family: var(--font-body); font-size: 12px; white-space: nowrap; background: ' + (s.role === r[0] ? 'var(--color-accent-700)' : 'transparent') + '; color: ' + (s.role === r[0] ? 'var(--color-accent-100)' : 'var(--color-neutral-400)') + ';',
       onClick: () => this.set({ role: r[0] })
     }));
-    const user = { empresa: ['Paula Mansilla · Nordex Soporte', 'PM'], empleado: [s.account.name, 'MR'], admin: ['Renata Solís · Xpedia', 'RS'] }[s.role];
+    const user = { empresa: [P.admin + ' · ' + P.co, 'PM'], empleado: [s.account.name, 'MR'], admin: ['Renata Solís · Xpedia', 'RS'] }[s.role];
 
     // ── EMPRESA
     const eNav = [['dash', 'Dashboard', 'ph ph-squares-four'], ['emps', 'Empleados', 'ph ph-users-three'], ['content', 'Contenido y misiones', 'ph ph-books'], ['metrics', 'Métricas', 'ph ph-chart-line-up'], ['config', 'Configuración', 'ph ph-gear-six']].map(n => ({
@@ -1665,14 +1886,14 @@ class Component extends DCLogic {
       onClick: () => this.setForm('custom', g[0]) }));
 
     const se = empData[s.selEmp] || empData[0];
-    const baseSk = [['Manejo de reclamos', 62], ['Normas de atención', 48], ['Procedimientos', 70], ['Trabajo bajo presión', 35], ['Retención', 41]];
+    const baseSk = [['Comunicación', 62], ['Criterio y normas', 48], ['Procedimientos', 70], ['Decisiones bajo presión', 35]];
     const skRows = (list) => list.map(k => ({ name: k[0], dom: 'Dominio ' + Math.min(5, Math.floor(k[1] / 20) + 1), bar: this.bar(k[1], k[1] < 45 ? 'var(--color-accent-600)' : 'var(--color-accent)') }));
     const seSkills = se.live ? Object.keys(s.skills).map(k => [k, s.skills[k]]) : baseSk.map((k, j) => [k[0], se.xp === 0 ? 0 : Math.max(12, Math.min(96, k[1] + ((se.i * 17 + j * 23) % 40) - 18))]);
     const histRow = (h) => ({ name: h.name, engine: E[h.engine].name, icon: E[h.engine].icon, iconStyle: 'color: ' + E[h.engine].color + ';', result: h.result, tagClass: this.resTag(h.result), xp: '+' + h.xp, date: h.date });
     const seHist = se.live ? s.history : (se.week > 0 ? [
-      { name: 'Inspector de chats', engine: 'auditor', result: se.i % 2 ? 'Correcta' : 'Regular', xp: se.i % 2 ? 120 : 72, date: '23 sep' },
-      { name: 'El cliente del cobro doble', engine: 'dialogo', result: 'Correcta', xp: 150, date: '21 sep' },
-      { name: 'Cuenta hackeada', engine: 'protocolo', result: se.i % 3 ? 'Regular' : 'Incorrecta', xp: se.i % 3 ? 72 : 36, date: '18 sep' }] : []);
+      { name: s.missions[1].name, engine: 'auditor', result: se.i % 2 ? 'Correcta' : 'Regular', xp: se.i % 2 ? 120 : 72, date: '23 sep' },
+      { name: s.missions[0].name, engine: 'dialogo', result: 'Correcta', xp: 150, date: '21 sep' },
+      { name: s.missions[2].name, engine: 'protocolo', result: se.i % 3 ? 'Regular' : 'Incorrecta', xp: se.i % 3 ? 72 : 36, date: '18 sep' }] : []);
     const pe = {
       name: se.name, initials: this.initials(se.name), meta: se.area + ' · ' + se.email,
       stats: [['Nivel', se.level], ['XP', se.xp.toLocaleString('es-AR')], ['Misiones', se.live ? 58 + s.history.length : Math.round(se.xp / 110)], ['Semana', Math.min(se.week, se.gm) + ' / ' + se.gm]].map(k => ({ label: k[0], value: k[1] })),
@@ -1700,12 +1921,12 @@ class Component extends DCLogic {
     const mKpis = [['Progreso promedio', 'Nivel ' + avgLv.toFixed(1).replace('.', ','), 'de todo el equipo'], ['Cumplimiento semanal', pctMet + '%', met + ' de ' + n + ' personas'], ['Tasa de resolución', '78%', 'misiones con resultado correcto'], ['Misiones completadas', 138 + s.history.length, 'en el último mes']].map(k => ({ label: k[0], value: k[1], meta: k[2] }));
     const mVals = [52, 58, 55, 61, 64, 60, 68, pctMet];
     const mBars = mVals.map((v, i) => ({ value: v + '%', label: 'S' + (31 + i), style: 'width: 100%; max-width: 34px; border-radius: 4px 4px 0 0; height: ' + Math.round(v * 1.2) + 'px; background: ' + (i === mVals.length - 1 ? 'var(--color-accent)' : 'var(--color-accent-700)') + ';' }));
-    const mSkills = [['Manejo de reclamos', 61], ['Normas de atención', 44], ['Procedimientos', 72], ['Trabajo bajo presión', 38], ['Retención', 57]].map(k => ({
+    const mSkills = [['Comunicación', 61], ['Criterio y normas', 44], ['Procedimientos', 72], ['Decisiones bajo presión', 38]].map(k => ({
       name: k[0], pct: k[1] + '%', weak: k[1] < 50, bar: this.bar(k[1], k[1] < 50 ? 'oklch(0.82 0.13 80)' : 'var(--color-accent)'),
       canReinforce: k[1] < 50 && !s.reinforced[k[0]], reinforced: !!s.reinforced[k[0]], onReinforce: () => this.reinforce(k[0]) }));
 
     // ── EMPLEADO (no juego)
-    const uNav = [['home', 'Inicio', 'ph ph-house'], ['map', 'Aventura', 'ph ph-map-trifold'], ['hist', 'Historial', 'ph ph-clock-counter-clockwise'], ['account', 'Cuenta', 'ph ph-user']].map(x => ({
+    const uNav = [['home', 'Inicio', 'ph ph-house'], ['map', 'Aventura', 'ph ph-map-trifold'], ['tree', 'Habilidades', 'ph ph-tree-structure'], ['hist', 'Historial', 'ph ph-clock-counter-clockwise'], ['account', 'Cuenta', 'ph ph-user']].map(x => ({
       label: x[1], icon: x[2], onClick: () => this.set({ uScreen: x[0] }),
       style: 'display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; cursor: pointer; font-family: var(--font-body); font-size: 13px; white-space: nowrap; border: 1px solid ' + (s.uScreen === x[0] ? 'var(--color-accent-700)' : 'transparent') + '; background: ' + (s.uScreen === x[0] ? 'color-mix(in srgb, var(--color-accent) 14%, transparent)' : 'transparent') + '; color: ' + (s.uScreen === x[0] ? 'var(--color-accent-200)' : 'var(--color-neutral-400)') + ';'
     }));
@@ -1713,11 +1934,11 @@ class Component extends DCLogic {
     const uMissions = approved.map(m => { const done = !!s.done[m.id]; return { name: m.name, icon: E[m.engine].icon, badge: this.badge(E[m.engine].color, 44), meta: E[m.engine].name + ' · ' + m.diff + ' · ' + m.skill, xp: m.xp, min: m.min, done, btn: done ? 'Repetir' : 'Jugar', btnClass: done ? 'btn btn-ghost' : 'btn btn-primary', onClick: () => this.startMission(m.id) }; });
     const prec = Math.round(s.history.reduce((a, h) => a + (h.result === 'Correcta' ? 1 : (h.result === 'Regular' ? 0.5 : 0)), 0) / Math.max(1, s.history.length) * 100);
     const wd = Math.min(s.weekDone, s.goalM);
-    const past = [['Primer contacto', 'dialogo'], ['Datos sensibles', 'auditor'], ['Reset de clave', 'protocolo']];
+    const past = P.past.map((x, i) => [x, ['dialogo', 'auditor', 'protocolo'][i % 3]]);
     const allDone = approved.every(m => s.done[m.id]);
     const nodes = past.map(x => ({ name: x[0], engine: x[1], st: 'done' }))
       .concat(approved.map(m => ({ name: m.name, engine: m.engine, st: s.done[m.id] ? 'done' : 'open', xp: m.xp, id: m.id })))
-      .concat([{ name: 'Jefe final: Cliente VIP', engine: 'dialogo', st: allDone ? 'open' : 'locked', xp: 300, id: 'boss', boss: true }]);
+      .concat([{ name: 'Jefe final: ' + P.boss, engine: 'crisis', st: allDone ? 'open' : 'locked', xp: 300, id: 'boss', boss: true }]);
     const N = nodes.length;
     let lastDone = 0; nodes.forEach((x, i) => { if (x.st === 'done') lastDone = i; });
     const { pts, viewH } = this.mapLayout(N);
@@ -1754,7 +1975,8 @@ class Component extends DCLogic {
     };
     const trailD = curveThrough(pts);
     const trailDoneD = curveThrough(pts.slice(0, lastDone + 1));
-    const walkAt = s.walkAt != null ? s.walkAt : (nodes.findIndex(x => x.st === 'open'));
+    // Hero rests on the last completed node until it walks — never spawns ahead on an open one.
+    const walkAt = s.walkAt != null ? s.walkAt : lastDone;
     const heroIdx = walkAt >= 0 ? walkAt : 0;
     const heroPt = pts[heroIdx] || pts[0];
     const mapNodes = nodes.map((x, i) => {
@@ -1765,10 +1987,37 @@ class Component extends DCLogic {
         state: x.st === 'done' ? 'Completada' : (x.st === 'open' ? E[x.engine].name + ' · +' + x.xp + ' XP' : 'Bloqueada'),
         stateStyle: 'font-size: 10px; color: ' + (x.st === 'open' ? c : 'var(--color-neutral-500)') + '; background: color-mix(in srgb, var(--color-surface) 85%, transparent); padding: 1px 5px; border-radius: 999px;',
         nameStyle: 'font-family: var(--font-heading); font-size: 12px; line-height: 1.3; max-width: 92px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); padding: 1px 6px; border-radius: var(--radius-sm);',
-        wrap: 'position: absolute; left: ' + pts[i][0] + '%; top: ' + (pts[i][1] / viewH * 100) + '%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: ' + (x.st === 'open' ? 'pointer' : 'default') + '; opacity: ' + (x.st === 'locked' ? '0.65' : '1') + ';',
-        onClick: (x.st === 'open' && !s.walking) ? () => this.walkTo(pts, heroIdx, i, x.id) : () => {}
+        wrap: 'position: absolute; left: ' + pts[i][0] + '%; top: ' + (pts[i][1] / viewH * 100) + '%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; cursor: ' + (x.st === 'open' && i === heroIdx + 1 ? 'pointer' : 'default') + '; opacity: ' + (x.st === 'locked' ? '0.65' : '1') + ';',
+        // Hero can only advance to the very next node on the trail — never skip ahead, even to an already-open one.
+        onClick: (x.st === 'open' && i === heroIdx + 1 && !s.walking) ? () => this.walkTo(pts, heroIdx, i, x.id) : () => {}
       };
     });
+
+    // árbol de habilidades
+    const TR = this.TREE(); let unl = 0;
+    const branchData = TR.map((b, bi) => { const pts = s.skills[b.key] || 0; const rank = b.nodes.filter(n => pts >= n[1]).length; unl += rank;
+      return { b, bi, pts, rank, col: E[b.engine].color, nextIdx: b.nodes.findIndex(n => pts < n[1]) }; });
+    const tsel = s.treeSel || { b: 0, n: 0 };
+    const tree = {
+      title: unl + ' de ' + TR.length * 4 + ' habilidades desbloqueadas', hero: s.account.name,
+      branches: branchData.map(x => ({ name: x.b.key, icon: x.b.icon, badge: this.badge(x.col, 44), pts: x.pts + ' pts · Rango ' + x.rank, ptsStyle: 'font-size: 11px; margin-top: 2px; color: ' + x.col + ';',
+        stub: 'width: 2px; height: 18px; background: var(--color-neutral-700);',
+        nodes: x.b.nodes.map((n, ni) => { const on = x.pts >= n[1]; const nx = ni === x.nextIdx; const sel = tsel.b === x.bi && tsel.n === ni;
+          return { name: n[0], req: on ? 'Desbloqueada' : n[1] + ' pts', icon: on || nx ? n[3] : 'ph ph-lock-simple',
+            reqStyle: 'font-size: 11px; color: ' + (on ? x.col : (nx ? 'var(--color-neutral-300)' : 'var(--color-neutral-600)')) + ';',
+            line: 'width: 2px; height: 22px; background: ' + (on ? x.col : 'var(--color-neutral-700)') + ';',
+            btn: 'display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px 4px; border: 0; background: transparent; cursor: pointer; font-family: var(--font-body); max-width: 130px;',
+            circle: 'width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.15s ease, box-shadow 0.2s; ' + (on ? 'background: color-mix(in srgb, ' + x.col + ' 24%, var(--color-surface)); border: 2px solid ' + x.col + '; color: ' + x.col + ';' : (nx ? 'background: var(--color-surface); border: 2px dashed ' + x.col + '; color: ' + x.col + ';' : 'background: var(--color-neutral-900); border: 2px dashed var(--color-neutral-700); color: var(--color-neutral-600);')) + (sel ? ' box-shadow: 0 0 0 5px color-mix(in srgb, ' + x.col + ' 28%, transparent), 0 0 22px color-mix(in srgb, ' + x.col + ' 40%, transparent); transform: scale(1.08);' : ''),
+            onClick: () => this.set({ treeSel: { b: x.bi, n: ni } }) }; }) }))
+    };
+    const sx = branchData[tsel.b] || branchData[0]; const sn = sx.b.nodes[tsel.n] || sx.b.nodes[0]; const sOn = sx.pts >= sn[1]; const sNext = tsel.n === sx.nextIdx;
+    const playM = approved.find(mm => mm.engine === sx.b.engine && !s.done[mm.id]) || approved.find(mm => mm.engine === sx.b.engine);
+    const tn = { name: sn[0], branch: sx.b.key, tier: tsel.n + 1, icon: sOn || sNext ? sn[3] : 'ph ph-lock-simple', badge: this.badge(sOn || sNext ? sx.col : 'var(--color-neutral-500)', 48), desc: sn[2],
+      status: sOn ? 'Desbloqueada' : (sNext ? 'Es la siguiente' : 'Bloqueada'), tagClass: sOn ? 'tag tag-accent' : (sNext ? 'tag tag-outline' : 'tag tag-neutral'),
+      progress: Math.min(sx.pts, sn[1]) + ' / ' + sn[1] + ' pts', bar: this.bar(Math.min(100, sx.pts / sn[1] * 100), sx.col),
+      how: 'Suman puntos las misiones de ' + E[sx.b.engine].name + '.', engIcon: E[sx.b.engine].icon, engIconStyle: 'font-size: 16px; color: ' + sx.col + ';',
+      canPlay: !sOn && !!playM, playLabel: playM ? 'Jugar «' + playM.name + '»' : '', onPlay: () => { if (playM) this.startMission(playM.id); } };
+    const uBranches = branchData.map(x => ({ name: x.b.key, icon: x.b.icon, badge: this.badge(x.col, 32), meta: 'Rango ' + x.rank + ' · ' + x.pts + ' pts', bar: this.bar(x.pts, x.col) }));
 
     // ── ADMIN
     const aNav = [['dash', 'Dashboard', 'ph ph-squares-four'], ['cos', 'Empresas', 'ph ph-buildings'], ['plans', 'Planes', 'ph ph-stack'], ['subs', 'Suscripciones', 'ph ph-credit-card'], ['users', 'Usuarios internos', 'ph ph-users']].map(x => ({
@@ -1780,14 +2029,14 @@ class Component extends DCLogic {
     const cc = s.companies[s.selCo] || s.companies[0]; const cp = planOf(cc.plan);
 
     const base = {
-      roles, userName: user[0], userInitials: user[1], hasToast: !!s.toast, toast: s.toast,
+      roles, coName: P.co, rubro: s.rubro, rubroOpts: Object.keys(PA).map(k => ({ id: k, label: PA[k].label })), onRubro: val(v => this.setRubro(v)), userName: user[0], userInitials: user[1], hasToast: !!s.toast, toast: s.toast,
       isEmpresa: s.role === 'empresa', isEmpleado: s.role === 'empleado', isAdmin: s.role === 'admin',
 
       eNav, eDash: s.eScreen === 'dash', eEmps: s.eScreen === 'emps', eNew: s.eScreen === 'new', eEmp: s.eScreen === 'emp', eContent: s.eScreen === 'content', eMetrics: s.eScreen === 'metrics', eConfig: s.eScreen === 'config',
       eKpis, empRows, goalLabel: 'Mínimo: ' + s.goalM + ' misiones', empCount: n + ' personas en capacitación',
       goNewEmp: () => this.set({ eScreen: 'new' }), goEmps: () => this.set({ eScreen: 'emps' }),
       form: f, fName: val(v => this.setForm('name', v)), fEmail: val(v => this.setForm('email', v)), fArea: val(v => this.setForm('area', v)), fM: val(v => this.setForm('m', v)), fX: val(v => this.setForm('x', v)),
-      areas: ['Soporte N1', 'Soporte N2', 'Retención', 'Calidad', 'Onboarding'], formDocs, goalOpts, formCustom: f.custom, createEmp: () => this.createEmp(),
+      areas: P.areas, formDocs, goalOpts, formCustom: f.custom, createEmp: () => this.createEmp(),
       pe, onFile: (e) => this.onFile(e), docRows, missionRows, reviewCount: pending.length + ' en revisión', hasReview: !!rm, noReview: !rm, rv,
       mKpis, mBars, mSkills,
       goalDraft: s.goalDraft, gdM: val(v => this.set({ goalDraft: Object.assign({}, s.goalDraft, { m: v }) })), gdX: val(v => this.set({ goalDraft: Object.assign({}, s.goalDraft, { x: v }) })),
@@ -1801,7 +2050,7 @@ class Component extends DCLogic {
       weekPips: pips(wd, s.goalM, 10, s.weekDone >= s.goalM ? TEAL : null), weekLabel: wd + ' de ' + s.goalM + ' misiones',
       weekMeta: s.weekDone >= s.goalM ? '¡Objetivo cumplido esta semana!' : 'Te faltan ' + (s.goalM - s.weekDone) + ' · se reinicia el lunes',
       uStats: [['ph-fill ph-lightning', 'XP total', s.xp.toLocaleString('es-AR')], ['ph-fill ph-flag-checkered', 'Misiones', 58 + s.history.length], ['ph-fill ph-target', 'Precisión', prec + '%']].map(k => ({ icon: k[0], label: k[1], value: k[2] })),
-      uMissions, uSkills: skRows(Object.keys(s.skills).map(k => [k, s.skills[k]])),
+      uMissions, uBranches, tree, tn, uTree: s.uScreen === 'tree', goTree: () => this.set({ uScreen: 'tree', gPhase: 'intro' }), chapter: P.chapter,
       mapNodes,
       mapWrap: 'position: relative; width: 100%; aspect-ratio: 100 / ' + viewH + ';',
       mapViewBox: '0 0 100 ' + viewH, mapViewH: viewH,
@@ -1814,7 +2063,7 @@ class Component extends DCLogic {
       histRows: s.history.map(histRow),
       account: s.account, acName: val(v => this.set({ account: Object.assign({}, s.account, { name: v }) })), acPhone: val(v => this.set({ account: Object.assign({}, s.account, { phone: v }) })),
       saveAccount: () => this.toastMsg('Datos guardados.'),
-      workInfo: [['Email', 'martin.reyes@nordex.com'], ['Área', 'Soporte N2'], ['Puesto', 'Especialista de soporte'], ['Objetivo semanal', s.goalM + ' misiones · ' + s.goalX + ' XP']].map(x => ({ label: x[0], value: x[1] })),
+      workInfo: [['Email', 'martin.reyes@' + P.domain], ['Área', P.areas[0]], ['Puesto', P.puesto], ['Objetivo semanal', s.goalM + ' misiones · ' + s.goalX + ' XP']].map(x => ({ label: x[0], value: x[1] })),
 
       aNav, aDash: s.aScreen === 'dash', aCos: s.aScreen === 'cos', aNewCo: s.aScreen === 'newCo', aCo: s.aScreen === 'co', aPlans: s.aScreen === 'plans', aSubs: s.aScreen === 'subs', aUsers: s.aScreen === 'users',
       aKpis: [['Empresas activas', actCos.length + ' / ' + s.companies.length], ['Empleados totales', s.companies.reduce((a, c) => a + c.emp, 0).toLocaleString('es-AR')], ['Misiones esta semana', '4.620'], ['Suscripciones activas', actCos.length]].map(k => ({ label: k[0], value: k[1] })),
