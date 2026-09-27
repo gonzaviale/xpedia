@@ -9,7 +9,11 @@ Base: v9 (la v10 se trabaja en paralelo). Todo sigue siendo un único `index.htm
 - La generación de misiones muestra pasos («Leyendo la documentación…», «Armando escenarios…», etc.) con barra de progreso.
 
 ## Tópicos y misiones
-- **Porcentaje de «Roles e importancia» explicado**: el % es relativo (peso del tópico sobre la suma de pesos del rol; Baja = 1, Media = 2, Alta = 3). Ahora cada rol muestra el reparto completo en una barra, «X de cada Y misiones», con qué otros tópicos lo comparte, y al pasar el mouse por Baja/Media/Alta se ve cuánto quedaría.
+- **Se simplificó: sin importancia manual ni dificultad manual.** Antes había tres conceptos parecidos (importancia del tópico por rol, nivel de habilidad esperado por rol, dificultad de la misión) que se pisaban entre sí y confundían. Ahora quedan solo dos:
+  - **Qué necesita cada rol y en qué nivel**: se define una sola vez en **Roles y objetivos** (sin cambios ahí).
+  - **Qué tan lejos está cada persona de eso**: lo calcula Xpedia solo y con eso arma todo lo demás.
+  - En un tópico ya no se elige Baja/Media/Alta por rol ni se ve el % de reparto: el rol simplemente está o no está asignado (toggle). Xpedia reparte las misiones entre los tópicos de un rol priorizando, para cada persona, el tópico donde tiene más brecha respecto al nivel de su rol.
+  - Al generar, la **dificultad ya no se elige a mano**: se calcula sola por motor según qué tan lejos está el equipo del nivel esperado (más brecha → misiones más guiadas; equipo al nivel o por encima → más exigentes). Queda un botón «Fijar manualmente» para el caso puntual de querer forzarla.
 - **Generador**: modo *Automático* o *Elegir por motor* con contador por motor (se pueden pedir varias del mismo motor, máx. 20 por tanda). Panel de resumen con el botón principal, documentos de origen, roles destino y cupo mensual del plan.
 - **Botón «Generar misiones» en la cabecera del tópico** (visible desde cualquier pestaña) + pasos guiados (Subir documentación → Asignar roles → Publicar misiones) + botones «Siguiente» + tooltips.
 - «Orden respecto a otros tópicos» pasó a la pestaña **Roles y calendario** (era una propiedad del tópico, no de la tanda).
@@ -28,7 +32,7 @@ Base: v9 (la v10 se trabaja en paralelo). Todo sigue siendo un único `index.htm
 - **Inicio centrado en qué hacer hoy**: arriba, la próxima misión recomendada (la que más ayuda a llegar al nivel que pide el rol) con el motivo y «Jugar ahora»; al lado, el objetivo semanal. Abajo, 3 misiones más con enlace a Aventura y un resumen de habilidades. Las estadísticas (XP total, misiones, precisión) pasaron a Historial.
 - **Habilidades simples y por rol**: se reemplazó el árbol de 16 nodos. El empleado ve solo las habilidades de su rol, en la misma escala (0-100) y con los mismos niveles que ve la empresa (Básico 30 · Intermedio 55 · Avanzado 80). Cada una muestra su nivel, el que pide el rol, una frase con lo que falta y un botón para practicar.
 - **Resultado de misión**: muestra el avance de la habilidad en esa misma escala y festeja cuando se sube de nivel o se alcanza el que pide el rol.
-- **Arreglos**: el jefe final cuenta solo las misiones del capítulo actual; el «−20» de tensión aparece junto al medidor (antes quedaba cortado); textos del resultado sin espacios de más o de menos; nombres del mapa más anchos.
+- **Arreglos**: el jefe final cuenta solo las misiones del capítulo actual; el «−20» de tensión aparece junto al medidor (antes quedaba cortado); textos del resultado sin espacios de más o de menos; nombres del mapa más anchos; los nodos de misión completada pasaron de morado a verde en el mapa (se confundían con el nodo pendiente del motor Diálogo, que también es morado).
 
 - **Capítulos**: cada mes se abre un capítulo con las misiones que la empresa publica para el rol. El mapa muestra solo el capítulo actual; el anterior queda resumido arriba («Capítulo 1 · completado»). El jefe final cuenta las misiones del capítulo actual.
 - **Datos coherentes**: esta semana Martín jugó 2 misiones del capítulo actual → objetivo semanal 2 de 5 y capítulo 2 de 5. Las del capítulo 1 son de semanas anteriores.

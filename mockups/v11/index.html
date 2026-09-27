@@ -38,7 +38,7 @@
   .map-line { position: absolute; height: 0; margin-top: -1px; transform-origin: 0 50%; transition: border-color 0.4s ease; }
   .map-node { position: absolute; top: var(--ny); left: var(--nx); transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; width: 130px; z-index: 1; }
   .map-label { background: var(--color-surface); border-radius: 8px; padding: 3px 8px 5px; max-width: 100%; box-sizing: border-box; }
-  .map-check { position: absolute; top: -4px; right: -4px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: var(--color-accent-500); color: var(--color-bg); border: 2px solid var(--color-surface); animation: xpStamp 0.35s ease-out backwards; }
+  .map-check { position: absolute; top: -4px; right: -4px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: oklch(0.78 0.15 150); color: var(--color-bg); border: 2px solid var(--color-surface); animation: xpStamp 0.35s ease-out backwards; }
   .map-hero { position: absolute; z-index: 2; left: var(--hx); top: var(--hy); transform: translate(calc(-50% - 54px), calc(-50% - 30px)); transition: left 0.7s ease-in-out, top 0.7s ease-in-out; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
   .map-hero::after { content: ''; width: 26px; height: 6px; margin-top: 2px; border-radius: 50%; background: color-mix(in srgb, var(--color-bg) 70%, transparent); }
   @keyframes xpBob { 0%,100% { translate: 0 0; } 50% { translate: 0 -6px; } }
@@ -217,7 +217,7 @@
         <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 10px;">
           <div><h3 style="font-size: 15px; margin: 0 0 3px;">Tópicos de este rol</h3><p style="margin: 0; font-size: 12px; color: var(--color-neutral-500);">Se asignan solos según el rol. Para cambiarlos, andá a Tópicos y misiones.</p></div>
           <sc-for list="{{ formTopics }}" as="tt" hint-placeholder-count="2">
-            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-800); font-size: 13px;"><div style="{{ tt.dot }}"></div><span style="flex: 1 1 auto;">{{ tt.name }}</span><span style="font-size: 12px; color: var(--color-neutral-500);">{{ tt.share }}</span><span style="{{ tt.impStyle }}">{{ tt.imp }}</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-800); font-size: 13px;"><div style="{{ tt.dot }}"></div><span style="flex: 1 1 auto;">{{ tt.name }}</span></div>
           </sc-for>
           <sc-if value="{{ noFormTopics }}"><span style="font-size: 13px; color: var(--color-neutral-500);">Este rol todavía no tiene tópicos asignados.</span></sc-if>
           <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; margin-top: 4px; border-top: 1px solid var(--color-neutral-800);">
@@ -269,7 +269,7 @@
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 18px; display: flex; flex-direction: column; gap: 10px;">
             <h3 style="font-size: 15px; margin: 0;">Tópicos de su rol</h3>
             <sc-for list="{{ pe.topics }}" as="tt" hint-placeholder-count="2">
-              <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><div style="{{ tt.dot }}"></div><span style="flex: 1 1 auto;">{{ tt.name }}</span><span style="{{ tt.impStyle }}">{{ tt.imp }}</span></div>
+              <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><div style="{{ tt.dot }}"></div><span style="flex: 1 1 auto;">{{ tt.name }}</span></div>
             </sc-for>
             <h3 style="font-size: 15px; margin: 10px 0 0;">Objetivo semanal</h3>
             <span style="font-size: 13px; color: var(--color-neutral-300);">{{ pe.goal }}</span>
@@ -381,7 +381,7 @@
           </sc-for>
         </div>
         <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: var(--color-surface); padding: 20px; display: flex; flex-direction: column; gap: 16px;">
-          <div><h3 style="font-size: 15px; margin: 0 0 3px;">Carga de misiones por rol</h3><p style="margin: 0; font-size: 12px; line-height: 1.5; color: var(--color-neutral-500); text-wrap: pretty;">Cómo se reparten las misiones de cada rol entre sus tópicos. Pesan según la importancia: baja 1 parte, media 2, alta 3.</p></div>
+          <div><h3 style="font-size: 15px; margin: 0 0 3px;">Tópicos por rol</h3><p style="margin: 0; font-size: 12px; line-height: 1.5; color: var(--color-neutral-500); text-wrap: pretty;">Qué tópicos trabaja cada rol. Xpedia reparte las misiones entre ellos solo, según la brecha de cada persona.</p></div>
           <sc-for list="{{ roleLoad }}" as="r" hint-placeholder-count="4">
             <div style="display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 16px; align-items: center;">
               <div><div style="font-size: 13px;">{{ r.name }}</div><div style="font-size: 11px; color: var(--color-neutral-500);">{{ r.meta }}</div></div>
@@ -452,13 +452,9 @@
 
         <sc-if value="{{ tabRoles }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap;">
-            <p style="flex: 1 1 380px; margin: 0; font-size: 13px; line-height: 1.55; color: var(--color-neutral-400); max-width: 620px; text-wrap: pretty;">Elegí qué roles trabajan este tópico y qué tan importante es para cada uno. Cada rol reparte sus misiones entre <strong style="color: var(--color-neutral-200); font-weight: 500;">todos</strong> los tópicos que tiene asignados: la importancia define cuánto pesa este frente a los demás.</p>
-            <div style="flex: 0 1 330px; display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-800); background: var(--color-neutral-900);">
-              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-neutral-300);"><i class="ph ph-info" style="color: var(--color-accent-300); font-size: 15px;"></i>¿Cómo se calcula el porcentaje?</div>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag tag-outline">Baja = 1 parte</span><span class="tag tag-outline">Media = 2 partes</span><span class="tag tag-outline">Alta = 3 partes</span></div>
-              <div style="font-size: 12px; line-height: 1.5; color: var(--color-neutral-500); text-wrap: pretty;">El % es la parte de este tópico sobre el total del rol. Por eso «Alta» no da siempre lo mismo: depende de cuántos otros tópicos tenga ese rol.</div>
-            </div>
+          <div style="display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-800); background: var(--color-neutral-900);">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-neutral-300); white-space: nowrap;"><i class="ph ph-info" style="color: var(--color-accent-300); font-size: 15px;"></i>Cómo se reparten las misiones</div>
+            <div style="flex: 1 1 300px; font-size: 12px; line-height: 1.5; color: var(--color-neutral-500); text-wrap: pretty;">Elegí qué roles trabajan este tópico. Xpedia decide solo cuántas misiones de cada tópico le tocan a cada persona y qué tan difíciles son, según qué tan lejos está del nivel que definiste para su rol en <strong style="color: var(--color-neutral-300); font-weight: 500;">Roles y objetivos</strong>.</div>
           </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
             <sc-for list="{{ tpRoles }}" as="r" hint-placeholder-count="4">
@@ -469,21 +465,11 @@
                 </div>
                 <sc-if value="{{ r.on }}">
                   <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Importancia</span>
-                    <div style="display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--color-bg); border: 1px solid var(--color-neutral-800);">
-                      <sc-for list="{{ r.levels }}" as="l" hint-placeholder-count="3"><button type="button" onClick="{{ l.onClick }}" data-tip="{{ l.tip }}" style="{{ l.style }}">{{ l.label }}</button></sc-for>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 7px;">
-                      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;"><span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Misiones de {{ r.name }}</span><span style="font-family: var(--font-heading); font-size: 18px; color: var(--color-text);">{{ r.share }}</span></div>
-                      <div style="display: flex; height: 10px; gap: 2px; border-radius: 5px; overflow: hidden; background: var(--color-neutral-900);">
-                        <sc-for list="{{ r.segs }}" as="sg" hint-placeholder-count="3"><div data-tip="{{ sg.tip }}" style="{{ sg.style }}"></div></sc-for>
-                      </div>
-                      <span style="font-size: 12px; line-height: 1.45; color: var(--color-neutral-300);">{{ r.impact }}</span>
-                    </div>
+                    <span style="font-size: 12px; line-height: 1.45; color: var(--color-neutral-300);">{{ r.impact }}</span>
                     <sc-if value="{{ r.hasOthers }}">
                       <div style="display: flex; flex-direction: column; gap: 5px; padding-top: 10px; border-top: 1px solid var(--color-neutral-800);">
-                        <span style="font-size: 11px; color: var(--color-neutral-500);">El resto se reparte entre:</span>
-                        <sc-for list="{{ r.others }}" as="o" hint-placeholder-count="2"><div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-neutral-400);"><div style="{{ o.dot }}"></div><span style="flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ o.name }}</span><span style="color: var(--color-neutral-500);">{{ o.imp }}</span><span style="width: 34px; text-align: right;">{{ o.pct }}</span></div></sc-for>
+                        <span style="font-size: 11px; color: var(--color-neutral-500);">También trabaja:</span>
+                        <sc-for list="{{ r.others }}" as="o" hint-placeholder-count="2"><div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-neutral-400);"><div style="{{ o.dot }}"></div><span style="flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ o.name }}</span></div></sc-for>
                       </div>
                     </sc-if>
                   </div>
@@ -563,8 +549,12 @@
                   <span style="font-size: 12px; color: var(--color-neutral-500);">{{ genMixHint }}</span>
                 </sc-if>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
-                  <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Dificultad <span class="xp-info" data-tip="Fácil: escenarios guiados y más tiempo. Media: el nivel estándar. Difícil: menos pistas, más trampas y menos tiempo.">?</span></span>
-                  <div style="display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--color-bg); border: 1px solid var(--color-neutral-800);"><sc-for list="{{ genDiffs }}" as="dd" hint-placeholder-count="3"><button type="button" onClick="{{ dd.onClick }}" style="{{ dd.style }}">{{ dd.label }}</button></sc-for></div>
+                  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px;">
+                    <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Dificultad <span class="xp-info" data-tip="Se calcula sola según qué tan lejos está el equipo del nivel que pide su rol: más brecha, misiones más guiadas.">?</span></span>
+                    <button type="button" onClick="{{ genDiffModeToggle }}" style="border: 0; background: transparent; padding: 0; cursor: pointer; font-family: var(--font-body); font-size: 11px; color: var(--color-accent-300);">{{ genDiffModeLabel }}</button>
+                  </div>
+                  <sc-if value="{{ genDiffAuto }}"><div style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-800); background: var(--color-neutral-900);"><i class="ph ph-sparkle" style="color: var(--color-accent-300);"></i><span style="font-size: 13px;">{{ genAutoDiffLabel }}</span></div></sc-if>
+                  <sc-if value="{{ genDiffManual }}"><div style="display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--color-bg); border: 1px solid var(--color-neutral-800);"><sc-for list="{{ genDiffs }}" as="dd" hint-placeholder-count="3"><button type="button" onClick="{{ dd.onClick }}" style="{{ dd.style }}">{{ dd.label }}</button></sc-for></div></sc-if>
                 </div>
                 <label style="display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Indicaciones para el motor · opcional</span><textarea value="{{ genCfg.instr }}" onChange="{{ genInstr }}" rows="2" placeholder="Ej. enfocá en clientes que llegan enojados" style="width: 100%; min-width: 0; box-sizing: border-box; padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--color-neutral-700); background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 13px; line-height: 1.45; resize: vertical;"></textarea></label>
               </div>
@@ -814,7 +804,7 @@
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch;">
           <div style="flex: 1 1 320px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--color-neutral-800); background: var(--color-surface); opacity: 0.8;">
-            <i class="ph-fill ph-check-circle" style="font-size: 20px; color: var(--color-accent-500);"></i>
+            <i class="ph-fill ph-check-circle" style="font-size: 20px; color: oklch(0.78 0.15 150);"></i>
             <div style="min-width: 0;"><div style="font-size: 13px;">{{ pastChapter }}</div><div style="font-size: 11px; color: var(--color-neutral-500); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ pastChapterMeta }}</div></div>
           </div>
           <div style="flex: 1 1 260px; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--color-accent-800); background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));">
@@ -841,7 +831,7 @@
         </div>
         <div style="display: flex; gap: 20px; font-size: 12px; color: var(--color-neutral-400); flex-wrap: wrap;">
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-person-simple-walk" style="color: var(--color-accent-300);"></i>Tu personaje · camina a la misión que elijas</span>
-          <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-check-circle" style="color: var(--color-accent-500);"></i>Completada · tocá para repetir</span>
+          <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-check-circle" style="color: oklch(0.78 0.15 150);"></i>Completada · tocá para repetir</span>
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph-fill ph-play-circle" style="color: var(--color-accent-400);"></i>Disponible · tocá para jugar</span>
           <span style="display: flex; align-items: center; gap: 6px;"><i class="ph ph-lock-simple" style="color: var(--color-neutral-500);"></i>Jefe final · bloqueado hasta completar todo</span>
         </div>
@@ -1702,8 +1692,8 @@ class Component extends DCLogic {
     return {
       employees: EMP.map(e => Object.assign({ name: e[0], email: e[1] + '@' + P.domain, area: P.areas[e[2]], goal: null }, e[3])),
       form: { name: '', email: '', area: P.areas[0], docs: { 0: true }, custom: false, m: 5, x: 800 },
-      topics: TOPN.map((t, i) => ({ id: 't' + (i + 1), name: t[0], desc: t[1], color: TC[i], docs: [{ name: P.docs[i][0], meta: P.docs[i][1], status: 'lista' }], roles: P.areas.reduce((o, a, j) => { if (IMP[i][j]) o[a] = IMP[i][j]; return o; }, {}), order: i === 2 ? 'cronologico' : 'paralelo', after: i === 2 ? 't2' : null, review: ['3m', '6m', '12m'][i] || '0' })),
-      nextTid: 4, selTopic: 't1', topicTab: 'missions', genCfg: { mode: 'auto', count: 4, mix: { dialogo: 2, auditor: 0, protocolo: 2, crisis: 0 }, diff: 'Media', instr: '' }, genUsed: 112, genQuota: 300, genGlow: false, genStep: 0, misFilter: 'all', drawerId: null, iterNote: '', genBusy: false, iterBusy: null,
+      topics: TOPN.map((t, i) => ({ id: 't' + (i + 1), name: t[0], desc: t[1], color: TC[i], docs: [{ name: P.docs[i][0], meta: P.docs[i][1], status: 'lista' }], roles: P.areas.reduce((o, a, j) => { if (IMP[i][j]) o[a] = true; return o; }, {}), order: i === 2 ? 'cronologico' : 'paralelo', after: i === 2 ? 't2' : null, review: ['3m', '6m', '12m'][i] || '0' })),
+      nextTid: 4, selTopic: 't1', topicTab: 'missions', genCfg: { mode: 'auto', count: 4, mix: { dialogo: 2, auditor: 0, protocolo: 2, crisis: 0 }, diffMode: 'auto', diffOverride: 'Media', instr: '' }, genUsed: 112, genQuota: 300, genGlow: false, genStep: 0, misFilter: 'all', drawerId: null, iterNote: '', genBusy: false, iterBusy: null,
       missions: P.missions.map((x, i) => ({ id: 'm' + (i + 1), name: x[0], engine: x[1], doc: x[2], topic: 't' + (x[2] + 1), v: 1, versions: [{ v: 1, note: 'Generada a partir de «' + P.docs[x[2]][0] + '»', when: '12 sep' }], desc: x[3], skill: BR[x[1]], xp: dflt[x[1]][0], diff: dflt[x[1]][1], min: dflt[x[1]][2], status: i < 4 ? 'aprobada' : 'revision' })).concat([{ id: 'm7', repaso: true, name: P.past[1], engine: 'auditor', doc: 1, topic: 't2', v: 1, versions: [{ v: 1, note: 'Repaso periódico del tópico', when: '25 sep' }], desc: 'Escenarios nuevos sobre lo que practicaste hace dos meses, para confirmar que lo seguís sabiendo.', skill: BR.auditor, xp: 100, diff: 'Media', min: 2, status: 'aprobada' }]),
       // v11 · Datos coherentes: esta semana (lun 21 – dom 27 sep) Martín jugó 2 misiones del capítulo actual;
       // las del capítulo 1 son de semanas anteriores. Cada entrada guarda su feedback para reabrirlo en «Mi progreso».
@@ -1798,7 +1788,16 @@ class Component extends DCLogic {
     e.target.value = '';
   }
   removeDoc(i) { const tp = this.topicById(this.state.selTopic); if (!tp) return; this.updTopic(tp.id, { docs: tp.docs.filter((d, k) => k !== i) }); }
-  setRole(role, lvl) { const tp = this.topicById(this.state.selTopic); if (!tp) return; const roles = Object.assign({}, tp.roles); if (lvl) roles[role] = lvl; else delete roles[role]; this.updTopic(tp.id, { roles }); }
+  toggleRole(role) { const tp = this.topicById(this.state.selTopic); if (!tp) return; const roles = Object.assign({}, tp.roles); if (roles[role]) delete roles[role]; else roles[role] = true; this.updTopic(tp.id, { roles }); }
+  // v11 · Dificultad automática: mientras más lejos esté el equipo del nivel que pide su rol, más guiada arranca la misión.
+  autoDiff(tp, eng) {
+    const s = this.state; const BR = this.BRANCH(); const skill = BR[eng]; const SK = this.SKILLS(); const j = SK.indexOf(skill); const LV = this.LVL();
+    const roles = Object.keys(tp.roles || {}); if (j < 0 || !roles.length) return 'Media';
+    let gapSum = 0, n = 0;
+    roles.forEach(a => { const req = (s.skillReq[a] || [])[j] || 0; if (!req) return; s.employees.filter(e => e.area === a).forEach(e => { gapSum += LV[req][1] - this.empSkill(e, j); n++; }); });
+    if (!n) return 'Media'; const avg = gapSum / n;
+    if (avg > 25) return 'Fácil'; if (avg < -10) return 'Difícil'; return 'Media';
+  }
   // v11 · Lista de motores a generar según el modo: automático (Xpedia reparte) o cantidad por motor.
   genPlan(cfg) {
     const ALL = ['dialogo', 'auditor', 'protocolo', 'crisis'];
@@ -1827,7 +1826,8 @@ class Component extends DCLogic {
       const s2 = this.state; let n = s2.nextMid; const used = {};
       const doc = ready[0].name.replace(/\.[^.]+$/, '');
       const add = plan.map(eng => { const rep = used[eng] = (used[eng] || 0) + 1; const base = s2.missions.filter(m => m.engine === eng && m.topic === tp.id).length;
-        return { id: 'm' + (n++), name: NM[eng][(base + rep - 1) % NM[eng].length] + ' · ' + tp.name, engine: eng, skill: BR[eng], topic: tp.id, xp: XP[eng], diff: cfg.diff, min: MIN[eng], status: 'revision', v: 1,
+        const diff = cfg.diffMode === 'manual' ? cfg.diffOverride : this.autoDiff(tp, eng);
+        return { id: 'm' + (n++), name: NM[eng][(base + rep - 1) % NM[eng].length] + ' · ' + tp.name, engine: eng, skill: BR[eng], topic: tp.id, xp: XP[eng], diff, min: MIN[eng], status: 'revision', v: 1,
           versions: [{ v: 1, note: 'Generada a partir de «' + doc + '»' + (cfg.instr ? ' · Indicaciones: ' + cfg.instr : ''), when: 'recién' }], desc: DS[eng] }; });
       this.set({ missions: s2.missions.concat(add), nextMid: n, genBusy: false, genStep: 0, misFilter: 'rev', genUsed: s2.genUsed + add.length });
       this.toastMsg(add.length + (add.length === 1 ? ' misión generada' : ' misiones generadas') + '. Revisalas antes de publicar.');
@@ -2327,11 +2327,9 @@ class Component extends DCLogic {
         onClick: () => r[0] === 'gap' ? this.reinforce(this.SKILLS()[gapTxt.j], gapTxt.a) : this.doReco(r[0]) }; });
 
     const f = s.form;
-    const W = { alta: 3, media: 2, baja: 1 }; const IMPL = { alta: 'Alta', media: 'Media', baja: 'Baja' };
-    const roleShare = (role, tid) => { const tot = s.topics.reduce((a, t) => a + (t.roles[role] ? W[t.roles[role]] : 0), 0); const t = s.topics.find(x => x.id === tid); return tot && t && t.roles[role] ? Math.round(W[t.roles[role]] / tot * 100) : 0; };
-    const impChip = (lvl) => 'display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 11px; white-space: nowrap; ' + (lvl === 'alta' ? 'background: var(--color-accent-800); color: var(--color-accent-100); border: 1px solid var(--color-accent-600);' : (lvl === 'media' ? 'color: var(--color-accent-200); border: 1px solid var(--color-accent-700);' : 'color: var(--color-neutral-400); border: 1px solid var(--color-neutral-700);'));
     const dotS = (c) => 'width: 10px; height: 10px; flex: 0 0 10px; border-radius: 3px; background: ' + c + ';';
-    const topicsFor = (role) => s.topics.filter(t => t.roles[role]).map(t => ({ name: t.name, imp: 'Importancia ' + IMPL[t.roles[role]].toLowerCase(), impStyle: impChip(t.roles[role]), share: roleShare(role, t.id) + '% de sus misiones', dot: dotS(t.color) }));
+    // v11 · Se quitó la importancia manual por tópico: un tópico simplemente está o no asignado a un rol.
+    const topicsFor = (role) => s.topics.filter(t => t.roles[role]).map(t => ({ name: t.name, dot: dotS(t.color) }));
     const formTopics = topicsFor(f.area);
     const goalOpts = [[false, 'Objetivo del rol', this.goalOf(f.area).m + ' misiones y ' + this.goalOf(f.area).x + ' XP por semana'], [true, 'Personalizado', 'Solo para esta persona']].map(g => ({ label: g[1], meta: g[2],
       style: 'flex: 1 1 0; text-align: left; cursor: pointer; padding: 13px 14px; border-radius: var(--radius-sm); font-family: var(--font-body); color: var(--color-text); border: 1px solid ' + (f.custom === g[0] ? 'var(--color-accent)' : 'var(--color-neutral-800)') + '; background: ' + (f.custom === g[0] ? 'color-mix(in srgb, var(--color-accent) 12%, transparent)' : 'transparent') + ';',
@@ -2376,11 +2374,14 @@ class Component extends DCLogic {
     const orderLabel = (t) => { if (t.order !== 'cronologico') return 'En paralelo con los otros tópicos'; const a = s.topics.find(x => x.id === t.after); return a ? 'Después de «' + a.name + '»' : 'Cronológico'; };
     const topicCards = s.topics.map(t => { const ms = s.missions.filter(m => m.topic === t.id); const pend = ms.filter(m => m.status === 'revision').length; const apr = ms.filter(m => m.status === 'aprobada').length; const rk = P.areas.filter(a => t.roles[a]);
       const RV = { '3m': 'repaso cada 3 meses', '6m': 'repaso cada 6 meses', '12m': 'repaso anual' };
+      const roleChip = 'display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 11px; white-space: nowrap; color: var(--color-neutral-300); border: 1px solid var(--color-neutral-700);';
       return { name: t.name, desc: t.desc || 'Sin descripción', icon: this.badge(t.color, 40), hasPending: pend > 0, pending: pend + ' por revisar', docs: t.docs.length + (t.docs.length === 1 ? ' documento' : ' documentos'), missions: apr + (apr === 1 ? ' publicada' : ' publicadas'),
-        roles: rk.map(a => ({ label: a + ' · ' + IMPL[t.roles[a]], style: impChip(t.roles[a]) })), noRoles: rk.length === 0, order: orderLabel(t) + (RV[t.review] ? ' · ' + RV[t.review] : ''), orderIcon: t.order === 'cronologico' ? 'ph ph-arrow-bend-down-right' : 'ph ph-equals', onClick: () => this.go(() => this.openTopic(t.id), 0, 'Abriendo «' + t.name + '»…') }; });
-    const roleLoad = P.areas.map(a => { const list = s.topics.filter(t => t.roles[a]); const tot = list.reduce((x, t) => x + W[t.roles[a]], 0);
+        roles: rk.map(a => ({ label: a, style: roleChip })), noRoles: rk.length === 0, order: orderLabel(t) + (RV[t.review] ? ' · ' + RV[t.review] : ''), orderIcon: t.order === 'cronologico' ? 'ph ph-arrow-bend-down-right' : 'ph ph-equals', onClick: () => this.go(() => this.openTopic(t.id), 0, 'Abriendo «' + t.name + '»…') }; });
+    // v11 · Sin pesos manuales: se reparten en partes iguales entre los tópicos del rol; el sistema prioriza
+    // solo, misión a misión, el tópico donde cada persona tiene más brecha respecto al nivel de su rol.
+    const roleLoad = P.areas.map(a => { const list = s.topics.filter(t => t.roles[a]);
       return { name: a, meta: s.employees.filter(e => e.area === a).length + ' personas · ' + list.length + (list.length === 1 ? ' tópico' : ' tópicos'),
-        segs: list.length ? list.map(t => { const p = Math.round(W[t.roles[a]] / tot * 100); return { label: p + '%', style: 'flex: ' + W[t.roles[a]] + ' 1 0; min-width: 0; overflow: hidden; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: var(--color-bg); background: ' + t.color + ';' }; }) : [{ label: 'Sin tópicos', style: 'flex: 1 1 0; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: var(--color-neutral-500);' }] }; });
+        segs: list.length ? list.map(t => ({ label: t.name, style: 'flex: 1 1 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; align-items: center; padding: 0 8px; font-size: 11px; color: var(--color-bg); background: ' + t.color + ';' })) : [{ label: 'Sin tópicos', style: 'flex: 1 1 0; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: var(--color-neutral-500);' }] }; });
     const topicLegend = s.topics.map(t => ({ name: t.name, dot: dotS(t.color) }));
 
     const tp = s.topics.find(t => t.id === s.selTopic) || s.topics[0] || { id: '', name: '', desc: '', color: 'var(--color-accent)', docs: [], roles: {}, order: 'paralelo', after: null };
@@ -2398,26 +2399,19 @@ class Component extends DCLogic {
     const tpTabs = [['docs', 'Documentación', 'ph ph-files', tp.docs.length], ['roles', 'Roles y calendario', 'ph ph-users-three', Object.keys(tp.roles).length], ['missions', 'Misiones', 'ph ph-flag-checkered', tms.length]].map(x => ({ label: x[1], icon: x[2], count: x[3], tip: TABTIP[x[0]], style: tabBtn(s.topicTab === x[0]), onClick: () => { if (s.topicTab !== x[0]) this.goTab({ topicTab: x[0] }); } }));
     const tpDocs = tp.docs.map((d, i) => ({ name: d.name, meta: d.meta, status: d.status === 'lista' ? 'Lista' : 'Procesando…', tagClass: d.status === 'lista' ? 'tag tag-accent' : 'tag tag-outline', onRemove: () => this.removeDoc(i) }));
     const seg = (on) => 'flex: 1 1 0; padding: 6px 12px; border-radius: 6px; border: 0; cursor: pointer; font-family: var(--font-body); font-size: 12px; white-space: nowrap; background: ' + (on ? 'var(--color-accent-700)' : 'transparent') + '; color: ' + (on ? 'var(--color-accent-100)' : 'var(--color-neutral-400)') + ';';
-    // v11 · El % es relativo: el peso del tópico (Baja 1, Media 2, Alta 3) sobre la suma de pesos de
-    // todos los tópicos del rol. Se muestra el reparto completo para que se entienda por qué cambia.
-    const gcd = (a, b) => b ? gcd(b, a % b) : a;
-    const tpRoles = P.areas.map(a => { const lvl = tp.roles[a]; const list = s.topics.filter(t => t.roles[a]); const tot = list.reduce((x, t) => x + W[t.roles[a]], 0);
-      const w = lvl ? W[lvl] : 0; const sh = tot ? Math.round(w / tot * 100) : 0; const g = gcd(w, tot) || 1;
+    // v11 · Sin importancia manual: el tópico está o no está asignado al rol. El reparto entre los
+    // tópicos de un rol y la dificultad de cada misión los calcula Xpedia solo, según la brecha de cada persona.
+    const tpRoles = P.areas.map(a => { const on = !!tp.roles[a]; const list = s.topics.filter(t => t.roles[a]);
       const others = list.filter(t => t.id !== tp.id);
-      return { name: a, people: s.employees.filter(e => e.area === a).length + ' personas con este rol', on: !!lvl, off: !lvl,
-        toggleTip: lvl ? 'Quitar este tópico a ' + a : 'Asignar este tópico a ' + a,
-        card: 'display: flex; flex-direction: column; gap: 14px; padding: 16px 18px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid ' + (lvl ? 'var(--color-accent-800)' : 'var(--color-neutral-800)') + ';',
-        track: 'position: relative; width: 38px; height: 22px; flex: 0 0 38px; border-radius: 999px; border: 0; cursor: pointer; padding: 0; background: ' + (lvl ? 'var(--color-accent)' : 'var(--color-neutral-700)') + ';',
-        knob: 'position: absolute; top: 3px; left: ' + (lvl ? '19px' : '3px') + '; width: 16px; height: 16px; border-radius: 50%; background: var(--color-text); transition: left 0.15s ease;',
-        onToggle: () => this.setRole(a, lvl ? null : 'media'),
-        levels: ['baja', 'media', 'alta'].map(l => { const t2 = tot - w + W[l]; const p2 = Math.round(W[l] / t2 * 100);
-          return { label: IMPL[l], style: seg(lvl === l), onClick: () => this.setRole(a, l), tip: lvl === l ? 'Importancia actual: ' + p2 + '% de las misiones de ' + a : 'Si la pasás a ' + IMPL[l].toLowerCase() + ': ' + p2 + '% de las misiones de ' + a }; }),
-        share: sh + '%',
-        segs: list.map(t => { const p = Math.round(W[t.roles[a]] / tot * 100); const me = t.id === tp.id;
-          return { tip: (me ? 'Este tópico' : t.name) + ' · ' + IMPL[t.roles[a]] + ' · ' + p + '%', style: 'flex: ' + W[t.roles[a]] + ' 1 0; min-width: 6px; background: ' + (me ? t.color : 'color-mix(in srgb, ' + t.color + ' 30%, var(--color-neutral-800))') + '; transition: flex 0.3s ease;' }; }),
-        impact: !others.length ? 'Es el único tópico de ' + a + ': todas sus misiones salen de acá.' : (w / g) + ' de cada ' + (tot / g) + ' misiones de ' + a + ' salen de este tópico.',
-        hasOthers: others.length > 0,
-        others: others.map(t => ({ name: t.name, imp: IMPL[t.roles[a]], pct: Math.round(W[t.roles[a]] / tot * 100) + '%', dot: dotS(t.color) })) }; });
+      return { name: a, people: s.employees.filter(e => e.area === a).length + ' personas con este rol', on, off: !on,
+        toggleTip: on ? 'Quitar este tópico a ' + a : 'Asignar este tópico a ' + a,
+        card: 'display: flex; flex-direction: column; gap: 14px; padding: 16px 18px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid ' + (on ? 'var(--color-accent-800)' : 'var(--color-neutral-800)') + ';',
+        track: 'position: relative; width: 38px; height: 22px; flex: 0 0 38px; border-radius: 999px; border: 0; cursor: pointer; padding: 0; background: ' + (on ? 'var(--color-accent)' : 'var(--color-neutral-700)') + ';',
+        knob: 'position: absolute; top: 3px; left: ' + (on ? '19px' : '3px') + '; width: 16px; height: 16px; border-radius: 50%; background: var(--color-text); transition: left 0.15s ease;',
+        onToggle: () => this.toggleRole(a),
+        impact: !on ? '' : (!others.length ? 'Es el único tópico de ' + a + ': todas sus misiones salen de acá.' : 'Comparte el rol con ' + others.length + (others.length === 1 ? ' tópico más' : ' tópicos más') + '. Xpedia reparte las misiones solo, priorizando donde cada persona tenga más brecha.'),
+        hasOthers: on && others.length > 0,
+        others: others.map(t => ({ name: t.name, dot: dotS(t.color) })) }; });
     const REV = [['0', 'Nunca'], ['3m', 'Cada 3 meses'], ['6m', 'Cada 6 meses'], ['12m', 'Anual']];
     const revNext = { '3m': 'diciembre', '6m': 'marzo de 2027', '12m': 'septiembre de 2027' };
     const reviewOpts = REV.map(r => ({ label: r[1], style: seg((tp.review || '0') === r[0]), onClick: () => { this.updTopic(tp.id, { review: r[0] }); if (r[0] !== '0') this.toastMsg('Repaso programado: ' + r[1].toLowerCase() + '.'); } }));
@@ -2544,12 +2538,12 @@ class Component extends DCLogic {
     const mapLines = ring.map(n => {
       const done = n.st === 'done';
       const dx = (50 - n.x).toFixed(2), dy = (50 - n.y).toFixed(2);
-      const col = done ? 'var(--color-accent-500)' : 'var(--color-neutral-700)';
+      const col = done ? 'oklch(0.78 0.15 150)' : 'var(--color-neutral-700)';
       return { style: 'z-index: ' + (done ? 1 : 0) + '; left: ' + n.x + 'cqw; top: calc(' + n.y + 'cqh - 34px); width: calc(hypot(' + dx + 'cqw, ' + dy + 'cqh) - 37px); transform: rotate(atan2(' + dy + 'cqh, ' + dx + 'cqw)); border-top: 2px dashed ' + col + ';' };
     });
     const mapNodes = nodes.map(x => {
       const c = E[x.engine].color; const size = x.boss ? 72 : 60; const lockPct = x.boss && need > 0 ? Math.round(have / need * 100) : 0;
-      const circle = 'position: relative; width: ' + size + 'px; height: ' + size + 'px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: ' + Math.round(size * 0.42) + 'px; transition: transform 0.15s ease; ' + (x.st === 'done' ? 'background: var(--color-accent-800); border: 2px solid var(--color-accent-500); color: var(--color-accent-100);' : (x.st === 'open' ? 'background: color-mix(in srgb, ' + c + ' 20%, var(--color-surface)); border: 2px solid ' + c + '; color: ' + c + '; box-shadow: 0 0 0 6px color-mix(in srgb, ' + c + ' 14%, transparent), 0 0 24px color-mix(in srgb, ' + c + ' 35%, transparent);' : (x.boss ? 'background: conic-gradient(var(--color-accent-500) ' + lockPct + '%, var(--color-neutral-900) 0); border: 2px dashed var(--color-neutral-600); color: var(--color-neutral-400); animation: xpPulse 2.2s ease-in-out infinite;' : 'background: var(--color-neutral-900); border: 2px dashed var(--color-neutral-700); color: var(--color-neutral-600);')));
+      const circle = 'position: relative; width: ' + size + 'px; height: ' + size + 'px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: ' + Math.round(size * 0.42) + 'px; transition: transform 0.15s ease; ' + (x.st === 'done' ? 'background: var(--color-neutral-800); border: 2px solid color-mix(in srgb, oklch(0.78 0.15 150) 55%, var(--color-neutral-700)); color: var(--color-neutral-400);' : (x.st === 'open' ? 'background: color-mix(in srgb, ' + c + ' 20%, var(--color-surface)); border: 2px solid ' + c + '; color: ' + c + '; box-shadow: 0 0 0 6px color-mix(in srgb, ' + c + ' 14%, transparent), 0 0 24px color-mix(in srgb, ' + c + ' 35%, transparent);' : (x.boss ? 'background: conic-gradient(var(--color-accent-500) ' + lockPct + '%, var(--color-neutral-900) 0); border: 2px dashed var(--color-neutral-600); color: var(--color-neutral-400); animation: xpPulse 2.2s ease-in-out infinite;' : 'background: var(--color-neutral-900); border: 2px dashed var(--color-neutral-700); color: var(--color-neutral-600);')));
       return { name: x.name, label: x.boss ? 'Jefe final' : x.name, circle, done: x.st === 'done', icon: x.st === 'locked' ? 'ph ph-lock-simple' : (x.boss ? 'ph-fill ph-crown' : E[x.engine].icon),
         state: x.st === 'done' ? (x.boss ? 'Derrotado' : 'Completada') : (x.st === 'open' ? (x.boss ? 'Jefe final · +' + x.xp + ' XP' : (x.repaso ? 'Repaso' : E[x.engine].name) + ' · +' + x.xp + ' XP') : (x.boss ? have + '/' + need + ' misiones completadas' : 'Bloqueada')),
         stateStyle: 'font-size: 11px; color: ' + (x.st === 'open' ? c : 'var(--color-neutral-500)') + ';',
@@ -2678,7 +2672,11 @@ class Component extends DCLogic {
       genBusyMsg: GSTEPS[s.genStep] || GSTEPS[0], genBusyBar: this.bar((s.genStep + 1) / GSTEPS.length * 100, 'var(--color-accent)', 'transition: width 0.6s ease;'),
       genDisabled: total === 0 || readyDocs.length === 0, genBtnTip: readyDocs.length === 0 ? 'Primero subí documentación.' : (total === 0 ? 'Elegí cuántas misiones querés generar.' : ''),
       genGlowClass: s.genGlow ? 'xp-glow' : '',
-      genDiffs: ['Fácil', 'Media', 'Difícil'].map(d => ({ label: d, style: seg(gc.diff === d), onClick: () => setGc({ diff: d }) })), genInstr: val(v => setGc({ instr: v })),
+      genDiffs: ['Fácil', 'Media', 'Difícil'].map(d => ({ label: d, style: seg((gc.diffOverride || 'Media') === d), onClick: () => setGc({ diffOverride: d }) })), genInstr: val(v => setGc({ instr: v })),
+      genDiffAuto: (gc.diffMode || 'auto') !== 'manual', genDiffManual: gc.diffMode === 'manual',
+      genDiffModeLabel: gc.diffMode === 'manual' ? 'Usar automática' : 'Fijar manualmente',
+      genDiffModeToggle: () => setGc({ diffMode: gc.diffMode === 'manual' ? 'auto' : 'manual' }),
+      genAutoDiffLabel: (() => { const uq = Array.from(new Set(plan)); if (!uq.length) return 'Se calcula al generar, según la brecha del equipo.'; return uq.map(eng => E[eng].name + ': ' + this.autoDiff(tp, eng)).join(' · '); })(),
       genOrders, genIsChrono: tp.order === 'cronologico', genAfter: tp.after || '', genAfterChange: val(v => this.updTopic(tp.id, { after: v })), afterOpts: others.map(t => ({ id: t.id, label: t.name })),
       genBusy: s.genBusy, genIdle: !s.genBusy, generate: () => this.generate(), genBtnLabel: total ? 'Generar ' + total + (total === 1 ? ' misión' : ' misiones') : 'Generar misiones',
       genBlocked: readyDocs.length === 0, goDocsTab: () => this.goTab({ topicTab: 'docs' }), tpNoRoles: Object.keys(tp.roles).length === 0, goRolesTab: () => this.goTab({ topicTab: 'roles' }),
