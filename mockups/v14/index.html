@@ -1167,8 +1167,31 @@
         </div>
         </sc-if>
 
-        <!-- PROTOCOLO -->
+        <!-- PROTOCOLO · entrenamiento (mecánica simple: tocar los pasos en orden contra reloj) -->
         <sc-if value="{{ pProto }}">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: var(--color-surface); padding: 16px 20px; display: flex; align-items: center; gap: 24px;">
+            <i class="ph-fill ph-warning-circle" style="font-size: 36px; color: oklch(0.8 0.11 185);"></i>
+            <div style="flex: 1 1 auto;"><div style="font-size: 15px; color: var(--color-neutral-200);">{{ p9.situation }}</div><div style="font-size: 12px; color: var(--color-neutral-500); margin-top: 4px;">Tocá los pasos del protocolo en orden. Cuidado: hay 2 trampas.</div></div>
+            <div style="text-align: center;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Errores</div><div style="font-family: var(--font-heading); font-size: 28px; line-height: 1.1;">{{ p9.mistakes }}</div></div>
+            <div style="text-align: center; position: relative; min-width: 76px;"><div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-500);">Tiempo</div><div style="{{ p9.clockStyle }}">{{ p9.clock }}</div><div style="{{ p9.floatStyle }}">−5 s</div></div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px;">
+            <sc-for list="{{ p9.slots }}" as="sl" hint-placeholder-count="6">
+              <div style="{{ sl.style }}"><span style="{{ sl.num }}">{{ sl.n }}</span><span style="font-size: 12px; line-height: 1.3;">{{ sl.text }}</span></div>
+            </sc-for>
+          </div>
+          <div style="{{ p9.msgStyle }}">{{ p9.msg }}</div>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px;">
+            <sc-for list="{{ p9.cards }}" as="cd" hint-placeholder-count="8">
+              <button type="button" onClick="{{ cd.onClick }}" style="{{ cd.style }}" style-hover="border-color: oklch(0.8 0.11 185); transform: translateY(-3px);"><i class="{{ cd.icon }}" style="font-size: 30px; color: oklch(0.8 0.11 185);"></i><span style="font-size: 14px; line-height: 1.35;">{{ cd.text }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- PROTOCOLO · jefe final (tablero: el caos te persigue) -->
+        <sc-if value="{{ pProtoBoss }}">
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="border: 1px solid var(--color-neutral-800); border-radius: var(--radius-lg); background: var(--color-surface); padding: 16px 20px; display: flex; align-items: center; gap: 24px;">
             <i class="ph-fill ph-warning-circle" style="font-size: 36px; color: oklch(0.8 0.11 185);"></i>
@@ -2129,9 +2152,9 @@ class Component extends DCLogic {
       auditor: { name: 'Auditor', tagline: 'Encontrá lo que está mal', icon: 'ph-fill ph-magnifying-glass', color: 'oklch(0.82 0.13 80)',
         how: [['ph ph-clipboard-text', 'Leé el registro línea por línea'], ['ph ph-cursor-click', 'Tocá las líneas que rompen una regla'], ['ph ph-heart', 'Cada error te cuesta una vida']] },
       protocolo: { name: 'Protocolo', tagline: 'El orden importa', icon: 'ph-fill ph-list-numbers', color: 'oklch(0.8 0.11 185)',
-        how: [['ph ph-map-pin', 'Movete con las flechas o WASD hasta el punto marcado'], ['ph ph-list-numbers', 'Al llegar, elegí qué paso del protocolo va ahora'], ['ph-fill ph-virus', 'El caos te persigue: si elegís mal acelera, si te alcanza perdés un intento']] },
+        how: [['ph ph-hand-pointing', 'Tocá los pasos del protocolo en el orden correcto'], ['ph ph-warning', 'Cuidado: hay 2 trampas mezcladas entre las tarjetas'], ['ph ph-timer', 'Cada error resta 5 segundos del reloj']] },
       pboss: { name: 'Jefe · Validación', tagline: 'Demostrá que lo sabés', icon: 'ph-fill ph-crown', color: 'oklch(0.82 0.13 80)',
-        how: [['ph ph-map-pin', 'Llegá a cada punto escapando del caos, como en el entrenamiento'], ['ph ph-hand-pointing', 'Una sola chance: elegí el paso y decí qué tan seguro estás'], ['ph ph-eye-slash', 'No te decimos si acertaste hasta el final. Para aprobar: 6 de 6']] },
+        how: [['ph ph-map-pin', 'Llegá a cada punto del tablero escapando del caos'], ['ph ph-hand-pointing', 'Una sola chance: elegí el paso y decí qué tan seguro estás'], ['ph ph-eye-slash', 'No te decimos si acertaste hasta el final. Para aprobar: 6 de 6']] },
       crisis: { name: 'Crisis', tagline: 'Primero lo urgente', icon: 'ph-fill ph-lightning', color: 'oklch(0.72 0.16 30)',
         how: [['ph ph-bell-ringing', 'Van llegando problemas, cada uno con su tiempo'], ['ph ph-hand-tap', 'Tocá uno y elegí qué hacer'], ['ph ph-gauge', 'Si se vence o fallás, perdés control']] }
     };
@@ -2542,16 +2565,10 @@ class Component extends DCLogic {
   componentDidUpdate(prev) { if (this.props.rubro && prev.rubro !== this.props.rubro) this.setRubro(this.props.rubro); }
   componentWillUnmount() { clearInterval(this.iv); clearInterval(this.hkIv); window.removeEventListener('keydown', this.onKey); }
 
-  // Jefe del protocolo: la validación que se desbloquea después de entrenar el protocolo
+  // El jefe final reutiliza el contenido (pasos y trampas) de la misión de Protocolo ya publicada.
   protoMission() { return this.state.missions.find(m => m.engine === 'protocolo' && m.status === 'aprobada'); }
-  pbossMission() {
-    const pm = this.protoMission() || { name: 'Protocolo' };
-    return { id: 'pboss', boss: true, pboss: true, name: 'Jefe: ' + pm.name, engine: 'protocolo', content: pm.pubContent || pm.content, skill: 'Procedimientos', xp: 250, diff: 'Difícil', min: 3,
-      desc: 'La validación del protocolo. Un escenario distinto, más opciones y una sola chance por paso. El juego no te dice si acertaste hasta el final.' };
-  }
   mission(id) {
     const P = this.pack();
-    if (id === 'pboss') return this.pbossMission();
     // v14 · El jefe final es el escape del virus en modo validación, sobre el protocolo publicado
     const pm = this.protoMission();
     return this.state.missions.find(m => m.id === id) || { id: 'boss', boss: true, pboss: true, name: 'Jefe final: ' + P.boss, engine: 'protocolo', content: pm ? (pm.pubContent || pm.content) : undefined, skill: 'Procedimientos', xp: 300, diff: 'Difícil', min: 3,
@@ -2568,10 +2585,12 @@ class Component extends DCLogic {
     if (e === 'dialogo') return { node: 't1', tension: this.content('dialogo').start || 60, turn: 1, bump: 0, delta: 0, good: [], bad: [], ended: false, endText: '', you: '', seed: String(Math.random()), path: [] };
     if (e === 'auditor') return { phase: 1, found: {}, wrong: {}, hearts: 3, t: 60, bump: 0, wrongIdx: -1, idx: 0, ct: 5, streak: 0, picks: [], last: null, manual: false };
     if (e === 'protocolo') {
+      // Entrenamiento normal: mecánica simple (tocar los pasos del protocolo en orden, contra reloj, sin pisar las trampas).
+      if (!hard) return { chase: false, placed: [], t: 45, mistakes: 0, bump: 0, mb: 0, wrongId: null, log: [], msg: 'Paso 1: ¿por dónde empezás?', msgOk: true, trap: '' };
+      // Jefe final: validación sobre un tablero donde el caos te persigue (una sola chance por paso, sin feedback hasta el final).
       const S = this.hkFind('S'), V = this.hkFind('V');
-      // hard = jefe: validación (una sola chance, más opciones, sin feedback hasta el final)
-      return { val: !!hard, answers: [], placed: [], route: [], cur: this.hkNextSpot([], S[0], S[1], V[0], V[1]), dec: null, t: hard ? 120 : 100, lives: 3, mistakes: 0, caught: 0, over: false, px: S[0], py: S[1], vx: V[0], vy: V[1], trail: [],
-        speed: hard ? 480 : 520, wakeAt: 0, nextAt: 0, bump: 0, mb: 0, cf: 0, msg: 'Llegá al punto A antes de que el caos te alcance.', msgOk: true, trap: '' };
+      return { chase: true, val: true, answers: [], placed: [], route: [], cur: this.hkNextSpot([], S[0], S[1], V[0], V[1]), dec: null, t: 120, lives: 3, mistakes: 0, caught: 0, over: false, px: S[0], py: S[1], vx: V[0], vy: V[1], trail: [],
+        speed: 480, wakeAt: 0, nextAt: 0, bump: 0, mb: 0, cf: 0, msg: 'Llegá al punto A antes de que el caos te alcance.', msgOk: true, trap: '' };
     }
     const C = this.content('crisis');
     return { t: 90, t0: 90, skip: 0, ctl: hard ? 60 : 70, inc: C.inc.map(() => ({ st: 'pending', age: 0 })), open: -1, fb: null, msg: C.intro, kind: 'info', bump: 0, hard: !!hard, wait: 0 };
@@ -2619,7 +2638,7 @@ class Component extends DCLogic {
       if (g.phase === 1) { const t = g.t - 0.5; if (t <= 0) { this.upd({ t: 0 }); this.audEnd('Se acabó el tiempo'); } else this.upd({ t }); }
       else if (g.phase === 2) { const ct = g.ct - 0.5; if (ct <= 0) this.audAnswer(null); else this.upd({ ct }); }
     } else if (s.game === 'protocolo') {
-      if (g.over || g.dec) return; // el reloj también se frena mientras leés
+      if (g.chase && (g.over || g.dec)) return; // en el tablero del jefe, el reloj también se frena mientras leés
       const t = g.t - 0.5; if (t <= 0) { this.upd({ t: 0, over: true }); this.finishProto(Object.assign({}, g, { t: 0 })); } else this.upd({ t });
     } else if (s.game === 'crisis') {
       const n = this.crTick(g); if (n.inc.every(x => x.st !== 'pending' && x.st !== 'active')) n.wait += 0.5;
@@ -2684,6 +2703,23 @@ class Component extends DCLogic {
   proSteps() {
     const C = this.content('protocolo'); const ids = ['a', 'b', 'c', 'd', 'e', 'f'];
     return C.steps.map((x, i) => [ids[i], x[0], x[1], i + 1]).concat(C.traps.map((x, i) => [['x', 'y'][i], x[0], x[1], 0, x[2]]));
+  }
+  // Entrenamiento normal: tocás las 8 tarjetas (6 pasos + 2 trampas) en el orden correcto.
+  proTap(id) {
+    const g = this.state.g; if (g.placed.indexOf(id) >= 0 || this.state.gPhase !== 'play') return;
+    const st = this.proSteps().find(x => x[0] === id); const next = g.placed.length + 1;
+    const pn = (this.content('protocolo').name || 'Procedimiento') + ': ' + this.content('protocolo').steps.length + ' pasos en orden';
+    if (st[3] === next) {
+      const placed = g.placed.concat([id]);
+      const ng = Object.assign({}, g, { placed, wrongId: null, mb: g.mb + 1, msgOk: true,
+        log: (g.log || []).concat([{ q: 'Paso ' + next, a: st[1], ok: true, why: 'Va en el paso ' + next + ' del procedimiento.', rule: pn }]),
+        msg: placed.length === 6 ? '¡Protocolo completo!' : '¡Bien! Paso ' + next + ' listo. ¿Qué sigue?' });
+      this.set({ g: ng }); if (placed.length === 6) setTimeout(() => this.finishProto(ng), 700);
+    } else {
+      this.upd({ mistakes: g.mistakes + 1, t: Math.max(0, g.t - 5), bump: g.bump + 1, mb: g.mb + 1, wrongId: id, msgOk: false,
+        log: (g.log || []).concat([{ q: 'Paso ' + next, a: st[1], ok: false, why: st[4] || '«' + st[1] + '» va en el paso ' + st[3] + '.', rule: st[4] ? st[4].replace(/^¡Trampa!\s*/, '') : pn }]),
+        msg: st[4] || 'Todavía no. ¿Qué tiene que pasar antes?', trap: st[4] || g.trap });
+    }
   }
   // Tablero: # pared · S vos · V el caos · 1-8 lugares donde puede aparecer el próximo punto
   HK() { return ['1...#...#...2', '.##...#...##.', '...#.###.#...', '.#.3.....4.#.', 'S..#.#.#.#..V', '.#.5.....6.#.', '...#.###.#...', '.##...#...##.', '7...#...#...8']; }
@@ -2791,9 +2827,10 @@ class Component extends DCLogic {
   finishProto(g) {
     if (this.state.gPhase !== 'play') return;
     if (g.val) return this.finishVal(g);
-    const all = g.placed.length === 6; const slips = g.mistakes + g.caught;
-    const stars = all && slips <= 1 ? 3 : (all && slips <= 3 ? 2 : 1);
-    const good = all ? 'Completaste el protocolo con ' + this.fmt(g.t) + ' de sobra' + (g.caught ? ', aunque el caos te alcanzó ' + (g.caught === 1 ? 'una vez.' : g.caught + ' veces.') : ' y sin que el caos te alcance.') : 'Llegaste al paso ' + g.placed.length + ' de 6.';
+    // Entrenamiento normal (mecánica simple, sin tablero ni caos).
+    const all = g.placed.length === 6;
+    const stars = all && g.mistakes <= 1 ? 3 : (all && g.mistakes <= 3 ? 2 : 1);
+    const good = all ? 'Completaste el protocolo con ' + this.fmt(g.t) + ' de sobra.' : 'Llegaste al paso ' + g.placed.length + ' de 6.';
     const order = this.content('protocolo').steps.map((x, i) => (i + 1) + '. ' + x[0].toLowerCase()).join(' · ');
     const bad = g.trap || (g.mistakes || !all ? 'El orden correcto es: ' + order + '.' : '¡Nada! Protocolo impecable.');
     this.finish(stars, good, bad);
@@ -2926,8 +2963,8 @@ class Component extends DCLogic {
       lastStyle: 'display: flex; align-items: center; gap: 10px; justify-content: center; font-size: 14px; color: ' + (ga.last && ga.last.ok ? TEAL : CORAL) + '; animation: xpIn' + par(ga.idx) + ' 0.3s ease-out;'
     };
 
-    // Protocolo
-    const gp = s.game === 'protocolo' && s.g.route ? s.g : this.fresh('protocolo');
+    // Protocolo · jefe final (tablero con el caos)
+    const gp = s.game === 'protocolo' && s.g.chase ? s.g : this.fresh('protocolo', true);
     const PS = this.proSteps(); const byId = {}; PS.forEach(x => { byId[x[0]] = x; });
     const HM = this.HK(); const HW = HM[0].length, HH = HM.length; const now = Date.now();
     const at = (x, y) => 'position: absolute; left: ' + (x * 100 / HW) + '%; top: ' + (y * 100 / HH) + '%; width: ' + (100 / HW) + '%; height: ' + (100 / HH) + '%; display: flex; align-items: center; justify-content: center;';
@@ -2984,6 +3021,21 @@ class Component extends DCLogic {
         style: 'display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; min-height: 64px; border-radius: var(--radius-md); ' + (st ? 'border: 1.5px solid ' + col + '; background: color-mix(in srgb, ' + col + ' 12%, var(--color-surface)); animation: xpPop 0.35s ease-out;' : 'border: 1.5px dashed ' + (next ? col : 'var(--color-neutral-700)') + '; color: var(--color-neutral-500);'),
         num: 'width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 12px; ' + (st ? 'background: ' + col + '; color: var(--color-bg);' : 'border: 1px solid var(--color-neutral-700); color: var(--color-neutral-500);') }; }),
       msg: gp.msg, msgStyle: 'text-align: center; font-family: var(--font-heading); font-size: 16px; min-height: 22px; color: ' + (gp.msgOk ? (gp.val ? AMBER : TEAL) : CORAL) + '; animation: xpIn' + par(gp.mb) + ' 0.3s ease-out;'
+    };
+
+    // Protocolo · entrenamiento normal (mecánica simple de v9: tocar los pasos en orden contra reloj)
+    const gs = s.game === 'protocolo' && !s.g.chase ? s.g : this.fresh('protocolo');
+    const p9 = {
+      situation: this.content('protocolo').situation,
+      clock: this.fmt(gs.t), clockStyle: 'font-family: var(--font-heading); font-size: 30px; line-height: 1.1; color: ' + (gs.t <= 10 ? CORAL : 'var(--color-text)') + ';',
+      floatStyle: gs.bump ? 'position: absolute; left: 0; right: 0; top: 18px; font-family: var(--font-heading); font-size: 16px; color: ' + CORAL + '; opacity: 0; pointer-events: none; animation: xpFloat' + par(gs.bump) + ' 1.2s ease-out forwards;' : 'display: none;',
+      mistakes: gs.mistakes,
+      slots: [0, 1, 2, 3, 4, 5].map(i => { const st = byId[gs.placed[i]]; const next = i === gs.placed.length; return { n: i + 1, text: st ? st[1] : (next ? '¿Cuál va acá?' : ''),
+        style: 'display: flex; flex-direction: column; gap: 8px; padding: 12px; min-height: 92px; border-radius: var(--radius-md); ' + (st ? 'border: 1.5px solid ' + TEAL + '; background: color-mix(in srgb, ' + TEAL + ' 12%, var(--color-surface)); animation: xpPop 0.35s ease-out;' : 'border: 1.5px dashed ' + (next ? TEAL : 'var(--color-neutral-700)') + '; color: var(--color-neutral-500);'),
+        num: 'width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 12px; ' + (st ? 'background: ' + TEAL + '; color: var(--color-bg);' : 'border: 1px solid var(--color-neutral-700); color: var(--color-neutral-500);') }; }),
+      cards: ['c', 'x', 'a', 'e', 'f', 'b', 'y', 'd'].map(id => { const st = byId[id]; const used = gs.placed.indexOf(id) >= 0; const wrong = gs.wrongId === id; return { icon: st[2], text: st[1], onClick: () => this.proTap(id),
+        style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px 16px; min-height: 118px; text-align: left; border-radius: var(--radius-md); border: 1.5px solid ' + (wrong ? CORAL : 'var(--color-neutral-700)') + '; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); cursor: pointer; transition: transform 0.15s ease, border-color 0.15s, opacity 0.3s;' + (used ? ' opacity: 0.12; pointer-events: none;' : '') + (wrong ? ' animation: xpShake' + par(gs.bump) + ' 0.45s ease;' : '') }; }),
+      msg: gs.msg, msgStyle: 'text-align: center; font-family: var(--font-heading); font-size: 16px; min-height: 22px; color: ' + (gs.msgOk ? TEAL : CORAL) + '; animation: xpIn' + par(gs.mb) + ' 0.3s ease-out;'
     };
 
     // Crisis
@@ -3070,9 +3122,9 @@ class Component extends DCLogic {
       startPlay: () => this.set({ gPhase: 'play' }),
       exitGame: () => (s.testMode ? this.endTest() : this.set({ uScreen: 'map', gPhase: 'intro' })),
       pDialogo: play && s.game === 'dialogo', pAudScan: play && s.game === 'auditor' && (ga.phase === 1 || ga.phase === 'reveal'), audReveal: play && s.game === 'auditor' && ga.phase === 'reveal', audNoReveal: ga.phase !== 'reveal', audRevealMsg: ga.revealMsg || '', audRevealStyle: 'display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: var(--radius-md); font-family: var(--font-heading); font-size: 14px; animation: xpPop 0.3s ease-out; color: var(--color-text); background: color-mix(in srgb, ' + (ga.revealOk ? 'oklch(0.8 0.11 185)' : 'oklch(0.72 0.16 30)') + ' 14%, var(--color-surface)); border: 1px solid color-mix(in srgb, ' + (ga.revealOk ? 'oklch(0.8 0.11 185)' : 'oklch(0.72 0.16 30)') + ' 45%, transparent);', audRevealIcon: ga.revealOk ? 'ph-fill ph-check-circle' : 'ph-fill ph-hourglass-simple-low', pAudBetween: play && s.game === 'auditor' && ga.phase === 'between', pAudQuick: play && s.game === 'auditor' && (ga.phase === 2 || ga.phase === 'quickEnd'), audQuickEnd: play && s.game === 'auditor' && ga.phase === 'quickEnd',
-      pProto: play && s.game === 'protocolo', pCrisis: play && s.game === 'crisis',
+      pProto: play && s.game === 'protocolo' && !s.g.chase, pProtoBoss: play && s.game === 'protocolo' && !!s.g.chase, pCrisis: play && s.game === 'crisis',
       gDone: s.uScreen === 'play' && s.gPhase === 'done',
-      d, a, p, c, r,
+      d, a, p, p9, c, r,
       goMap: () => (s.testMode ? this.endTest() : this.set({ uScreen: 'map', gPhase: 'intro' })), replay: () => this.startMission(s.missionId, true)
     };
   }
@@ -3175,8 +3227,7 @@ class Component extends DCLogic {
       hist: seHist.map(histRow), noHist: seHist.length === 0
     };
     // Validaciones (jefes): qué sabe de verdad, no solo cuánto jugó. Martín es el empleado «en vivo»; el resto trae un ejemplo.
-    const pmName = (this.protoMission() || { name: 'Protocolo' }).name;
-    const seVals = se.live ? (s.validations || []) : (se.i % 3 === 1 ? [{ name: 'Jefe: ' + pmName, date: '20 sep', verdict: 'Casi: a repasar', okN: 4, danger: 1, lucky: 1, avgMs: 3400, fails: [4, 5] }] : []);
+    const seVals = se.live ? (s.validations || []) : (se.i % 3 === 1 ? [{ name: 'Jefe final: ' + P.boss, date: '20 sep', verdict: 'Casi: a repasar', okN: 4, danger: 1, lucky: 1, avgMs: 3400, fails: [4, 5] }] : []);
     Object.assign(pe, {
       vals: seVals.map(v => { const col = v.verdict === 'Aprobado' ? 'oklch(0.8 0.11 185)' : (v.okN >= 4 ? 'oklch(0.82 0.13 80)' : 'oklch(0.72 0.16 30)');
         return { name: v.name, date: v.date, verdict: v.verdict, score: v.okN + ' / 6 a la primera', time: (v.avgMs / 1000).toFixed(1).replace('.', ',') + ' s por paso',
@@ -3491,8 +3542,6 @@ class Component extends DCLogic {
     const pastNodes = P.past.map((name, i) => ({ name, engine: pastEngines[i % pastEngines.length], st: 'done', xp: null, id: 'past' + i, past: true }));
     // v11 · El anillo muestra solo el capítulo actual; el capítulo anterior queda resumido arriba del mapa.
     const ring = missionNodes.slice();
-    // Jefe del protocolo: al lado de su misión de entrenamiento. Se abre al completarla y no cuenta para el jefe final.
-    const pmMap = this.protoMission(); const pbI = pmMap ? ring.findIndex(n => n.id === pmMap.id) : -1;
     ring.forEach((n, i) => {
       const ang = -Math.PI / 2 + (i / Math.max(1, ring.length)) * Math.PI * 2;
       n.x = 50 + Math.cos(ang) * 34; n.y = 50 + Math.sin(ang) * 32;
@@ -3575,7 +3624,7 @@ class Component extends DCLogic {
     const myArea = P.areas[0]; const me = { live: true, i: 0, area: myArea, xp: s.xp }; const myReq = reqOf(myArea);
     const lvlName = (v) => v >= 80 ? 'Avanzado' : (v >= 55 ? 'Intermedio' : (v >= 30 ? 'Básico' : 'Inicial'));
     const approvedOpen = approved.filter(m => !s.done[m.id]);
-    const pmHome = this.protoMission(); const homeOpen = approvedOpen;
+    const homeOpen = approvedOpen;
     const EM = (m) => m.pboss ? E.pboss : E[m.engine];
     const mySk = SK.map((k, j) => { const l = myReq[j] || 0; const v = this.empSkill(me, j); const t = LV[l][1]; const eng = ENG4[j]; const col = E[eng].color;
       const nextT = [30, 55, 80].find(x => v < x); const practice = approvedOpen.find(m => m.engine === eng) || approved.find(m => m.engine === eng);
@@ -3693,7 +3742,7 @@ class Component extends DCLogic {
       uStats: [['ph-fill ph-lightning', 'XP total', s.xp.toLocaleString('es-AR'), 'Toda la experiencia que sumaste. Cada 1.000 XP subís de nivel (hoy: nivel ' + lv + ').'], ['ph-fill ph-flag-checkered', 'Misiones', 58 + s.history.length, 'Misiones jugadas, contando repeticiones.'], ['ph-fill ph-target', 'Precisión', prec + '%', 'Qué porcentaje de tus misiones resolviste bien (las regulares cuentan la mitad).'], ['ph-fill ph-fire', 'Racha', streakN + (streakN === 1 ? ' semana' : ' semanas'), 'Semanas seguidas cumpliendo tu objetivo semanal. No hace falta jugar todos los días.']].map((k, ki) => ({ icon: k[0], label: k[1], value: k[2], tip: k[3], iconStyle: 'font-size: 22px; color: ' + (ki === 3 ? 'oklch(0.72 0.16 30)' : 'var(--color-accent-300)') + ';' })),
       uProgress: s.uScreen === 'progress', uTree: s.uScreen === 'progress' && (s.progTab || 'skills') === 'skills', uHist: s.uScreen === 'progress' && s.progTab === 'hist',
       progTabs: [['skills', 'Árbol de habilidades', 'ph ph-tree-structure'], ['hist', 'Historial', 'ph ph-clock-counter-clockwise']].map(x => { const on = (s.progTab || 'skills') === x[0]; return { label: x[1], icon: x[2], onClick: () => { if (!on) this.goTab({ progTab: x[0] }); }, style: 'display: flex; align-items: center; gap: 8px; padding: 10px 14px; margin-bottom: -1px; border: 0; border-bottom: 2px solid ' + (on ? 'var(--color-accent)' : 'transparent') + '; background: transparent; cursor: pointer; font-family: var(--font-body); font-size: 13px; color: ' + (on ? 'var(--color-text)' : 'var(--color-neutral-400)') + ';' }; }),
-      uHistRows: s.history.map((h, hi) => { const open = s.histOpen === hi; const mm = h.mid === 'pboss' ? this.pbossMission() : (h.mid ? approved.find(x => x.id === h.mid) : approved.find(x => x.name === h.name));
+      uHistRows: s.history.map((h, hi) => { const open = s.histOpen === hi; const mm = h.mid ? approved.find(x => x.id === h.mid) : approved.find(x => x.name === h.name);
         return Object.assign(histRow(h), { past: !!h.past, open, caret: open ? 'ph ph-caret-up' : 'ph ph-caret-down', good: h.good || 'Completaste la misión.', bad: h.bad || 'Sin observaciones.',
           canReplay: !!mm, noReplay: !mm, onToggle: () => this.set({ histOpen: open ? -1 : hi }), onReplay: () => { if (mm) this.go(() => this.startMission(mm.id), 450, 'Preparando la misión…'); } }); }),
       uNext, homeSkills, mySkills, hasMyNa: myNa.length > 0, myNaLabel: 'Tu rol (' + myArea + ') no evalúa: ' + myNa.join(', ') + '.',
