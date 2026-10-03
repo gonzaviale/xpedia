@@ -98,6 +98,7 @@ Lo que retiene es el progreso hacia algo real, no los puntos.
 | Conseguir usuarios gratuitos | Hay que definir un canal: el producto solo no lo resuelve |
 | Perder el diferencial para empresas | Mantener la trazabilidad y la evidencia de competencia como eje del plan pago |
 | Derechos de autor | Solo fuentes oficiales o con licencia abierta; lo demás, como "lectura" externa |
+| Poco contenido abierto que se pueda usar comercialmente | Xpedia produce la mayor parte del material (IA + revisión humana), basado en fuentes que lo permiten. Ver sección 10 |
 
 ## 9. Cómo lo validamos
 
@@ -111,16 +112,39 @@ Antes de construir todo, armamos **3 rutas piloto**, una de cada tipo:
 
 **Métrica principal:** ¿la gente completa el segundo hito y vuelve a la semana siguiente?
 
-## 10. Decisiones abiertas
+## 10. Lo que aprendimos al diseñar las rutas piloto
+
+| Ruta | Hitos | Duración (10-20 min/día) | Mecánica estrella |
+|---|---|---|---|
+| Sistemas | 8 (unas 300 h) | 2,5 a 5 años: no alcanza | "Ticket de bug": un carrito que concatena en vez de sumar, con decisiones, casos de prueba y explicación a la clienta |
+| Atención al cliente | 7 | 10-12 semanas | Roleplay con un cliente enojado, con escala de enojo que sube o baja según la respuesta |
+| Oratoria | 7 | 8-10 semanas | "Ensayo": grabación de audio con feedback de IA sobre estructura, muletillas, ritmo y pausas |
+
+**Hallazgos que cambian supuestos de este documento:**
+
+- **Hay muy poco contenido abierto que se pueda usar comercialmente.** La mayoría de los libros abiertos de habilidades blandas son no comerciales (CC BY-NC). Tampoco se pueden adaptar el currículo de freeCodeCamp, javascript.info, The Odin Project, las charlas TED ni, aparentemente, OpenStax. Lo que sí se puede adaptar: MDN (con la obligación de publicar lo adaptado con la misma licencia CC BY-SA), la documentación de React, argentina.gob.ar, O\*NET, ESCO y algunos libros con licencia CC BY. **Xpedia tendría que producir entre el 70 y el 80 % del material**, con IA y revisión humana.
+- **Con 10 minutos por día, las rutas técnicas no cierran.** Hay que recomendar un ritmo realista (por ejemplo, 1 h/día para sistemas) y presentar el modo liviano como exploración.
+- **Algunas rutas obligan a salir de la app.** En sistemas, en algún momento hay que usar VS Code y GitHub. Se puede verificar ese trabajo conectando GitHub.
+- **No todo lo técnico está resuelto.** Transcribir audio en español y medir el ritmo es viable hoy. Detectar muletillas como "eh" o "mmm" no es confiable todavía, y analizar el lenguaje corporal por video tampoco.
+- **El contenido depende del país.** Las rutas usan leyes y fuentes argentinas.
+
+El detalle completo, con fuentes verificadas y licencias, está en cada documento de ruta.
+
+## 11. Decisiones abiertas
 
 - [ ] ¿"Cambiar de rubro" es un tipo de roadmap aparte (con diagnóstico de habilidades transferibles) o una variante del mismo?
 - [ ] ¿El mockup v15 arranca solo con el usuario individual, o mostramos también el panel de empresa?
 - [ ] ¿Por qué canal conseguimos los primeros usuarios gratuitos?
-- [ ] ¿Cuánta práctica con IA incluye el plan gratuito por día?
+- [ ] ¿Cuánta práctica con IA incluye el plan gratuito por día? ¿El roleplay por voz entra en el plan gratuito?
+- [ ] Consulta legal: ¿un plan gratuito con plan pago aparte cuenta como "uso comercial" para las licencias CC BY-NC?
+- [ ] ¿El piloto es solo para Argentina?
+- [ ] ¿Qué ritmo recomendamos para las rutas largas, y cómo lo comunicamos sin espantar?
+- [ ] ¿Quién revisa el contenido que genera la IA (docentes y especialistas por ruta)?
+- [ ] Atención al cliente: ¿sumamos una rama de soporte en inglés?
 
-## 11. Próximos pasos
+## 12. Próximos pasos
 
 1. Revisar este documento en equipo.
-2. Diseñar las 3 rutas piloto en detalle (en curso).
+2. ~~Diseñar las 3 rutas piloto en detalle.~~ Hecho: ver la sección 9.
 3. Mockup v15 con el recorrido del usuario individual.
 4. Probar las rutas con un grupo chico de usuarios reales.
