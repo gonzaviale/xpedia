@@ -146,5 +146,5 @@ El detalle completo, con fuentes verificadas y licencias, está en cada document
 
 1. Revisar este documento en equipo.
 2. ~~Diseñar las 3 rutas piloto en detalle.~~ Hecho: ver la sección 9.
-3. Mockup v15 con el recorrido del usuario individual.
+3. ~~Mockup v15 con el recorrido del usuario individual.~~ Hecho: [mockups/v15](../mockups/v15/index.html), con los cambios en [CAMBIOS.md](../mockups/v15/CAMBIOS.md).
 4. Probar las rutas con un grupo chico de usuarios reales.
