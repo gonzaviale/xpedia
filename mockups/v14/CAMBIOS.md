@@ -43,3 +43,11 @@ En v13, «Roles y objetivos» era una pantalla suelta del menú, separada de las
 - El jefe final ahora es el **juego de escapar del virus en modo validación** (antes era Crisis): otro escenario, una sola chance por paso, confianza y resultado paso por paso.
 - Se abre al completar todas las misiones publicadas para el rol.
 - Como ya cumple esa función, se sacó el «Jefe del protocolo» aparte, tanto del mapa como del inicio.
+
+## Arreglo: el motor «Protocolo» se confundía con el jefe final
+Al jugar una misión normal de Protocolo se veía (y se jugaba) casi igual que el jefe final: v13 le había cambiado la mecánica a un tablero donde el «caos» te persigue, y el jefe final reutiliza ese mismo motor, solo que en modo difícil.
+
+- **Las misiones normales de Protocolo vuelven a la mecánica simple de v9**: tocar los 6 pasos del protocolo en el orden correcto, contra reloj, evitando 2 tarjetas trampa. Sin tablero ni persecución.
+- **El jefe final no cambia**: sigue siendo el tablero con el caos, en modo validación (una sola chance por paso, confianza y resultado recién al final). Así queda claramente distinto de una misión de entrenamiento.
+- El resumen de la misión («Tus decisiones») y las métricas de puntos clave más fallados siguen funcionando igual para el entrenamiento simple.
+- De paso se terminó de limpiar el código muerto del «Jefe del protocolo» (una función intermedia que ya se había sacado del mapa y del inicio, pero cuyo código había quedado sin borrar del todo).
