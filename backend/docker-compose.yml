@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: xpedia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${XPEDIA_POSTGRES_DB:-xpedia}
+      POSTGRES_USER: ${XPEDIA_POSTGRES_USER:-xpedia_user}
+      POSTGRES_PASSWORD: ${XPEDIA_POSTGRES_PASSWORD:-xpedia_pass}
+    ports:
+      - "${XPEDIA_POSTGRES_PORT:-5434}:5432"
+    volumes:
+      - xpedia-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${XPEDIA_POSTGRES_USER:-xpedia_user} -d ${XPEDIA_POSTGRES_DB:-xpedia}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  xpedia-pgdata:
