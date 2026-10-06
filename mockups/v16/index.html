@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xpedia v16 · Roadmaps</title>
+<link rel="stylesheet" href="_ds/nocturne-fe7002fc-3193-410f-a828-588fe25132bd/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  :root {
+    --ok: oklch(0.78 0.15 150);
+    --warn: oklch(0.82 0.14 80);
+    --bad: oklch(0.72 0.16 30);
+    --line: var(--color-neutral-800);
+    --muted: var(--color-neutral-500);
+    --soft: var(--color-neutral-400);
+    --code-bg: #0f1019;
+  }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-size: 14px; }
+  a { color: var(--color-accent-300); text-decoration: none; }
+  a:hover { color: var(--color-accent-200); }
+  .btn, .tag, .chip { white-space: nowrap; flex-shrink: 0; }
+  button { font-family: inherit; }
+  @keyframes xpFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes xpFill { from { width: 0; } }
+  @keyframes xpPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  @keyframes xpGlow { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 0%, transparent); } 40% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent) 28%, transparent); } }
+  @keyframes xpWave { 0%,100% { height: 6px; } 50% { height: 34px; } }
+  @keyframes xpSlide { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes xpSpin { to { transform: rotate(360deg); } }
+  @keyframes xpDots { 0%,80%,100% { opacity: .25; } 40% { opacity: 1; } }
+
+  /* ── header ── */
+  .top { display: flex; align-items: center; gap: 16px; height: 52px; padding: 0 20px; border-bottom: 1px solid var(--line); background: var(--color-neutral-900); position: sticky; top: 0; z-index: 40; }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand-mark { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--color-accent); display: flex; align-items: center; justify-content: center; color: var(--color-accent); }
+  .brand-name { letter-spacing: .14em; font-size: 12px; text-transform: uppercase; }
+  .vtag { font-size: 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+  .switch { display: flex; gap: 2px; padding: 3px; border-radius: 8px; background: var(--color-bg); border: 1px solid var(--line); }
+  .switch button { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--soft); font-size: 12px; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+  .switch button.on { background: var(--color-accent-800); color: var(--color-accent-100); }
+  .sel { height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--color-bg); color: var(--color-text); font-family: inherit; font-size: 12px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent-800); color: var(--color-accent-200); display: flex; align-items: center; justify-content: center; font-size: 11px; }
+
+  /* ── layout ── */
+  .shell { display: flex; min-height: calc(100vh - 52px); }
+  .side { flex: 0 0 224px; border-right: 1px solid var(--line); padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; scrollbar-width: none; }
+  .side::-webkit-scrollbar { display: none; }
+  .side-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: var(--color-neutral-300); cursor: pointer; border: 0; background: none; font-size: 14px; text-align: left; width: 100%; }
+  .side-item:hover { background: color-mix(in srgb, var(--color-text) 6%, transparent); }
+  .side-item.on { background: var(--color-accent-900); color: var(--color-accent-200); }
+  .side-item i { font-size: 17px; }
+  .side-foot { margin-top: auto; padding: 12px 10px 0; border-top: 1px solid var(--line); }
+  .main { flex: 1; min-width: 0; padding: 28px 32px 72px; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .narrow { max-width: 780px; margin: 0 auto; }
+  .page { animation: xpFadeIn .25s ease-out; }
+  .panel { background: var(--color-surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 20px; }
+  .panel.tight { padding: 14px 16px; }
+  .panel.flat { background: var(--color-bg); }
+  .grid2 { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .grid-half { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .stack-sm { display: flex; flex-direction: column; gap: 8px; }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row.wrapx { flex-wrap: wrap; }
+  .between { justify-content: space-between; }
+  .kicker { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent-300); }
+  .muted { color: var(--muted); }
+  .soft { color: var(--soft); }
+  .small { font-size: 12.5px; }
+  .tiny { font-size: 11px; }
+  .h-page { font-size: 28px; margin: 4px 0 6px; }
+  .h-sec { font-size: 17px; margin: 0; }
+  p { margin: 0; }
+  .lead { font-size: 15px; color: var(--color-neutral-300); line-height: 1.6; }
+
+  /* ── atoms ── */
+  .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--color-neutral-300); }
+  .chip.acc { border-color: var(--color-accent-600); color: var(--color-accent-200); background: var(--color-accent-900); }
+  .chip.ok { border-color: color-mix(in srgb, var(--ok) 45%, transparent); color: var(--ok); }
+  .chip.warn { border-color: color-mix(in srgb, var(--warn) 45%, transparent); color: var(--warn); }
+  .chip.bad { border-color: color-mix(in srgb, var(--bad) 45%, transparent); color: var(--bad); }
+  .src { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; font-size: 11px; color: var(--soft); background: var(--color-neutral-900); border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; }
+  .btn-solid { background: var(--color-accent-700); border-color: var(--color-accent-600); color: #fff; }
+  .btn-solid:hover { background: var(--color-accent-600); }
+  .btn-sm { font-size: 12.5px; padding: 4px 9px; }
+  .icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--color-accent-900); color: var(--color-accent-300); border: 1px solid var(--color-accent-800); flex: none; }
+  .bar { height: 6px; border-radius: 999px; background: var(--color-neutral-800); overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: var(--color-accent-500); border-radius: inherit; animation: xpFill .8s ease-out; }
+  .bar.ok > span { background: var(--ok); }
+  .divider { height: 1px; background: var(--line); margin: 4px 0; }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat b { font-size: 22px; font-weight: 500; }
+  .input { background: var(--color-bg); }
+  .banner { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; border: 1px dashed var(--color-accent-700); background: var(--color-accent-900); color: var(--color-accent-100); font-size: 12.5px; }
+  .note { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 10px; background: var(--color-neutral-900); border: 1px solid var(--line); font-size: 12.5px; color: var(--color-neutral-300); }
+  .note i { margin-top: 2px; color: var(--color-accent-300); }
+  .note.warn i { color: var(--warn); }
+
+  /* ── choices & feedback ── */
+  .choice { display: flex; gap: 12px; align-items: flex-start; text-align: left; width: 100%; padding: 13px 15px; border-radius: 12px; border: 1px solid var(--line); background: var(--color-bg); color: var(--color-text); font-size: 13.5px; line-height: 1.5; cursor: pointer; transition: border-color .15s; }
+  .choice:hover:not(:disabled) { border-color: var(--color-accent-600); }
+  .choice.picked { border-color: var(--color-accent); box-shadow: inset 0 0 0 1px var(--color-accent); }
+  .choice.right { border-color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok); }
+  .choice.wrong { border-color: color-mix(in srgb, var(--bad) 60%, transparent); opacity: .7; }
+  .choice.partial { border-color: color-mix(in srgb, var(--warn) 60%, transparent); }
+  .choice:disabled { cursor: default; }
+  .choice-big { flex-direction: column; gap: 8px; padding: 18px; }
+  .letter { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--soft); }
+  .fb { border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.5; border: 1px solid; animation: xpFadeIn .2s; }
+  .fb.ok { border-color: color-mix(in srgb, var(--ok) 40%, transparent); background: color-mix(in srgb, var(--ok) 8%, transparent); }
+  .fb.bad { border-color: color-mix(in srgb, var(--bad) 40%, transparent); background: color-mix(in srgb, var(--bad) 8%, transparent); }
+  .fb.warn { border-color: color-mix(in srgb, var(--warn) 40%, transparent); background: color-mix(in srgb, var(--warn) 8%, transparent); }
+  .fb.info { border-color: var(--color-accent-700); background: var(--color-accent-900); }
+  .chipbtn { border: 1px solid var(--line); background: var(--color-bg); color: var(--color-neutral-300); border-radius: 999px; padding: 7px 13px; font-size: 13px; cursor: pointer; }
+  .chipbtn:hover { border-color: var(--color-accent-600); }
+  .chipbtn.on { border-color: var(--color-accent); color: var(--color-accent-100); background: var(--color-accent-900); }
+
+  /* ── steps ── */
+  .steps { display: flex; gap: 6px; flex-wrap: wrap; }
+  .step { font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); display: inline-flex; gap: 5px; align-items: center; }
+  .step.on { border-color: var(--color-accent); color: var(--color-accent-200); }
+  .step.done { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+  .dots { display: flex; gap: 6px; }
+  .dots span { width: 26px; height: 4px; border-radius: 2px; background: var(--color-neutral-800); }
+  .dots span.on { background: var(--color-accent-500); }
+
+  /* ── code ── */
+  .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px; line-height: 1.6; background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; overflow: auto; white-space: pre; color: #d7d9f0; margin: 0; }
+  textarea.codeedit { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px; line-height: 1.6; background: var(--code-bg); color: #d7d9f0; border: 1px solid var(--color-accent-700); border-radius: 10px; padding: 12px 14px; width: 100%; min-height: 230px; resize: vertical; tab-size: 2; }
+  textarea.codeedit:focus { outline: none; border-color: var(--color-accent); }
+  .test { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; font-size: 12.5px; border-bottom: 1px solid color-mix(in srgb, var(--color-text) 6%, transparent); }
+  .test:last-child { border-bottom: 0; }
+  .test i { margin-top: 2px; }
+  .t-ok { color: var(--ok); } .t-bad { color: var(--bad); } .t-wait { color: var(--muted); }
+
+  /* ── roadmap ── */
+  .path { display: flex; flex-direction: column; gap: 10px; }
+  .hito { display: flex; gap: 14px; position: relative; }
+  .hito-dot { flex: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--line); background: var(--color-bg); color: var(--muted); z-index: 1; font-size: 13px; }
+  .hito.done .hito-dot { background: color-mix(in srgb, var(--ok) 16%, var(--color-bg)); border-color: var(--ok); color: var(--ok); }
+  .hito.cur .hito-dot { border-color: var(--color-accent); color: var(--color-accent-100); background: var(--color-accent-800); animation: xpGlow 1.8s ease-out infinite; }
+  .hito:not(:last-child)::before { content: ''; position: absolute; left: 16px; top: 34px; bottom: -10px; width: 2px; background: var(--line); }
+  .hito.done:not(:last-child)::before { background: color-mix(in srgb, var(--ok) 45%, transparent); }
+  .hito-body { flex: 1; min-width: 0; padding: 6px 0 4px; }
+  .hito.cur .hito-body { background: var(--color-bg); border: 1px solid var(--color-accent-700); border-radius: 12px; padding: 14px; }
+  .hito.lock .hito-body { opacity: .65; }
+  .node { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; padding: 5px 0; }
+  .node i { font-size: 15px; }
+
+  /* ── tree ── */
+  .tree { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .branch { display: flex; flex-direction: column; gap: 8px; }
+  .branch-h { font-size: 12px; color: var(--color-neutral-300); padding-bottom: 6px; border-bottom: 1px solid var(--line); margin-bottom: 2px; }
+  .tnode { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); font-size: 12.5px; background: var(--color-bg); line-height: 1.3; }
+  .tnode i { font-size: 15px; flex: none; }
+  .tnode.done { border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+  .tnode.done i { color: var(--ok); }
+  .tnode.real { border-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, var(--color-bg)); }
+  .tnode.real i { color: var(--ok); }
+  .tnode.next { border-color: var(--color-accent); box-shadow: inset 0 0 0 1px var(--color-accent-700); }
+  .tnode.next i { color: var(--color-accent-300); }
+  .tnode.rust { border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+  .tnode.rust i { color: var(--warn); }
+  .tnode.locked { opacity: .45; }
+
+  /* ── chat ── */
+  .chat { display: flex; flex-direction: column; gap: 10px; min-height: 320px; max-height: 470px; overflow-y: auto; padding: 4px 2px; }
+  .bub { max-width: 84%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; animation: xpFadeIn .25s; }
+  .bub.them { background: var(--color-neutral-800); border-top-left-radius: 4px; align-self: flex-start; }
+  .bub.me { background: var(--color-accent-800); color: var(--color-accent-100); border-top-right-radius: 4px; align-self: flex-end; }
+  .bub.sys { align-self: center; background: transparent; border: 1px dashed var(--line); color: var(--soft); font-size: 12px; max-width: 92%; }
+  .bub-tip { align-self: flex-end; font-size: 11px; margin-top: -4px; }
+  .typing { align-self: flex-start; display: flex; gap: 4px; padding: 12px 14px; background: var(--color-neutral-800); border-radius: 14px; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--soft); animation: xpDots 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: .2s; } .typing span:nth-child(3) { animation-delay: .4s; }
+  .thermo { height: 10px; border-radius: 999px; background: linear-gradient(90deg, var(--ok), var(--warn), var(--bad)); position: relative; flex: 1; }
+  .thermo-mark { position: absolute; top: -5px; width: 6px; height: 20px; margin-left: -3px; border-radius: 3px; background: #fff; box-shadow: 0 0 0 2px var(--color-bg); transition: left .6s ease; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 12.5px; }
+  .kv dt { color: var(--muted); } .kv dd { margin: 0; }
+
+  /* ── recording ── */
+  .ring { width: 172px; height: 172px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; position: relative; }
+  .ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .ring b { font-size: 34px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .wave { display: flex; align-items: center; gap: 3px; height: 40px; }
+  .wave span { width: 4px; border-radius: 2px; background: var(--color-accent-400); animation: xpWave .9s ease-in-out infinite; }
+  .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--bad); animation: xpPulse 1s infinite; display: inline-block; }
+  mark.mul { background: color-mix(in srgb, var(--warn) 24%, transparent); color: var(--color-text); border-radius: 3px; padding: 0 2px; }
+  .idea { background: color-mix(in srgb, var(--ok) 16%, transparent); border-bottom: 2px solid var(--ok); padding: 0 2px; }
+  .transcript { font-size: 14px; line-height: 1.85; color: var(--color-neutral-200); }
+  .lvl { display: inline-flex; font-size: 11px; padding: 2px 8px; border-radius: 6px; border: 1px solid; white-space: nowrap; }
+  .lvl.i { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+  .lvl.d { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+  .lvl.s { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, transparent); }
+  .ts { font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--color-accent-300); background: var(--color-accent-900); border-radius: 5px; padding: 1px 5px; }
+  details > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] > summary .ph-caret-right { transform: rotate(90deg); }
+  .ph-caret-right { transition: transform .15s; }
+
+  /* ── table ── */
+  .table td, .table th { vertical-align: top; }
+  .table td { font-size: 13px; }
+  .heat { display: inline-flex; width: 30px; height: 22px; border-radius: 5px; align-items: center; justify-content: center; font-size: 11px; }
+
+  /* ── drawer & toast ── */
+  .drawer { position: fixed; top: 52px; right: 0; bottom: 0; width: min(410px, 100%); background: var(--color-neutral-900); border-left: 1px solid var(--line); z-index: 50; display: flex; flex-direction: column; animation: xpSlide .22s ease-out; box-shadow: -20px 0 40px rgba(0,0,0,.35); }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .toast { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: var(--radius-md); background: var(--color-accent-800); border: 1px solid var(--color-accent-600); color: var(--color-accent-100); font-size: 13px; box-shadow: var(--shadow-md); animation: xpFadeIn .2s; max-width: calc(100% - 32px); }
+
+  @media (max-width: 960px) {
+    .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); }
+    .grid4, .tree { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    .shell { flex-direction: column; }
+    .side { flex: none; flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 8px 12px; gap: 2px; }
+    .side-item { width: auto; white-space: nowrap; }
+    .side-foot, .side-title { display: none; }
+    .main { padding: 20px 16px 72px; }
+    .top { gap: 10px; padding: 0 12px; }
+    .hide-sm { display: none !important; }
+    .grid-half { grid-template-columns: minmax(0, 1fr); }
+    .grid4, .tree { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    .tree { grid-template-columns: minmax(0, 1fr); }
+    .h-page { font-size: 23px; }
+  }
+</style>
+</head>
+<body>
+<header class="top" id="top"></header>
+<div id="app"></div>
+<div id="drawer"></div>
+<div id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   Xpedia v15 · Roadmaps. Mockup sin backend: la IA está simulada
+   con respuestas precargadas que salen de docs/rutas/*.md.
+   ════════════════════════════════════════════════════════════════ */
+
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const PACES = [{ m: 10, l: '10 min' }, { m: 20, l: '20 min' }, { m: 60, l: '1 h' }, { m: 120, l: '2 h o más' }];
+
+/* ── Rutas piloto ─────────────────────────────────────────────── */
+const ROUTES = {
+  sistemas: {
+    id: 'sistemas', short: 'Desarrollo web desde cero', icon: 'ph-code', kind: 'Ruta técnica', goal: 'arrancar',
+    title: 'Desarrollo web desde cero',
+    meta: 'Postularte a frontend junior o trainee con un sitio publicado, 3 proyectos en GitHub y una entrevista técnica simulada aprobada.',
+    from: 'Sin experiencia en programación',
+    eta: { 10: '~5 años', 20: '~2,5 años', 60: '~10 meses', 120: '~5 meses' },
+    recPace: 60,
+    paceNote: 'Son unas 300 h de práctica. Con 10-20 min por día la ruta sirve para explorar: en 5-10 semanas terminás el hito 1 y sabés si te gusta. Para cambiar de trabajo recomendamos 1 h por día, y la sesión de 10 minutos queda como piso para los días en que no da para más.',
+    demoWhen: 'a los 5 meses (con 1 h por día)',
+    cur: 5,
+    hitos: [
+      { t: 'Tu primera página', d: '12 h', ev: '«Mi primera página» (CV) publicada' },
+      { t: 'Darle estilo', d: '25 h', ev: 'La misma página, con estilo propio' },
+      { t: 'Publicar y versionar', d: '15 h', ev: 'Sitio en GitHub Pages y primeros commits' },
+      { t: 'Responsive y accesibilidad', d: '25 h', ev: 'Sitio que funciona en el celular, con auditoría de accesibilidad' },
+      { t: 'JavaScript', d: '55 h', ev: '12 retos de lógica aprobados' },
+      { t: 'DOM y fetch', d: '55 h', ev: 'Buscador de localidades con la API Georef Argentina' },
+      { t: 'React', d: '60 h', ev: 'Proyecto en React publicado' },
+      { t: 'Proyecto final y entrevista', d: '50 h', ev: 'Proyecto integrador y entrevista técnica simulada', boss: true },
+    ],
+    curNodes: [
+      { t: 'DOM y eventos', s: 'done' },
+      { t: 'Formularios', s: 'prog', p: '2/3' },
+      { t: 'Debugging metódico', s: 'next', p: '1/3', mech: true },
+      { t: 'Asincronía y fetch', s: 'locked' },
+    ],
+    branches: [
+      { n: 'Estructura y estilo', nodes: [['Cómo funciona la web', 'done'], ['HTML semántico', 'done'], ['Selectores, cascada y box model', 'rust'], ['Flexbox', 'done'], ['Grid y responsive', 'done'], ['Accesibilidad', 'done']] },
+      { n: 'Lógica', nodes: [['Variables, tipos y operadores', 'done'], ['Condicionales y bucles', 'done'], ['Funciones', 'done'], ['Arrays y objetos', 'done'], ['DOM y eventos', 'done'], ['Formularios', 'next'], ['Asincronía y fetch', 'locked']] },
+      { n: 'Herramientas y oficio', nodes: [['Editor y DevTools', 'done'], ['Terminal mínima', 'done'], ['Git y GitHub', 'done'], ['Deploy', 'done'], ['Debugging metódico', 'next'], ['npm y Vite', 'locked'], ['Programar con IA con criterio', 'locked'], ['Comunicación técnica', 'locked']] },
+      { n: 'Aplicaciones', nodes: [['Pensar en componentes', 'locked'], ['Props y estado', 'locked'], ['Efectos y datos remotos', 'locked'], ['Proyecto integrador', 'locked'], ['Entrevista técnica', 'locked']] },
+    ],
+    mech: { key: 'ticket', name: 'Ticket de bug', icon: 'ph-bug', where: 'Hito 6 · Debugging metódico', desc: 'Recibís un reporte de una clienta, reproducís el error, confirmás la causa, lo arreglás con tests y se lo explicás sin jerga.' },
+    session: {
+      node: 'Debugging metódico', from: 33, to: 66,
+      repaso: [
+        { q: '¿Qué muestra la consola con console.log(typeof "1500")?', a: '"string". Aunque parezca un número, está entre comillas: es texto.' },
+        { q: '¿Por qué este título no se pone azul? #titulo { color: red } le gana a .destacado { color: blue }.', a: 'Por especificidad: un selector de id (#) pesa más que uno de clase (.). Este nodo se estaba oxidando: vuelve en 2 días.' },
+      ],
+      leccion: {
+        t: 'Lo que leés del HTML llega como texto',
+        b: ['Los atributos data-* se leen con elemento.dataset.', 'Lo que devuelve dataset es siempre texto (string), aunque en el HTML escribas un número.', 'Si un lado del + es texto, JavaScript pega en vez de sumar: 0 + "1500" da "01500".', 'Para sumar, convertí antes: Number(boton.dataset.precio).'],
+        code: '<button data-precio="1500">Mate</button>\n\nboton.dataset.precio          // "1500" (texto)\n0 + boton.dataset.precio      // "01500"\n0 + Number(boton.dataset.precio) // 1500',
+        src: 'MDN · HTMLElement: dataset y Addition (+) · CC BY-SA 2.5 · traducido y adaptado',
+      },
+      challenge: null,
+      tomorrow: 'Variante con los mismos puntos clave: un contador de «me gusta» que muestra 0111.',
+    },
+    challenge: { kind: 'tool', t: 'Herramientas reales', d: 'Desde el hito 3 trabajás en VS Code y GitHub. Salir a las herramientas es parte de la meta; lo que no queremos es que tengas que ir a aprender a otro lado.', cta: 'Conectar GitHub', toast: 'GitHub conectado (simulado): verificamos tus commits del hito 6 sin capturas.' },
+    coach: [
+      { icon: 'ph-lightning', t: 'Este mes aprobaste el 88 % de los retos al primer intento. ¿Querés saltar «Formularios» con una prueba de 10 minutos?', cta: 'Rendir prueba de salto' },
+      { icon: 'ph-book-open', t: 'Para el hito 7 te va a servir Eloquent JavaScript (cap. 1 a 3). Lo sumé como lectura: se abre adentro de la app y, cuando vuelvas, te tomo un «predecí la salida» de 2 minutos.', tag: 'Libro online · CC BY-NC 3.0 · solo enlace', cta: 'Agregar a mi ruta' },
+      { icon: 'ph-arrow-counter-clockwise', t: 'Fallaste dos veces el repaso de especificidad: el nodo «Selectores, cascada y box model» se está oxidando. Te lo pongo en la sesión de hoy.', cta: 'Ver el nodo' },
+    ],
+    reading: [
+      { t: 'Eloquent JavaScript, cap. 1-3 (en español)', type: 'Libro online', lic: 'CC BY-NC 3.0 · solo enlace', st: 'Check pendiente' },
+      { t: 'Desafío de Frontend Mentor (plan gratuito)', type: 'Proyecto externo', lic: 'Propietario · opcional en el hito 8', st: 'Más adelante' },
+    ],
+    faq: [
+      ['¿Me alcanza con 20 minutos por día?', 'Para explorar, sí: en 5-10 semanas terminás el hito 1 y sabés si te gusta. Para conseguir trabajo, no: la ruta tiene unas 300 h. Con 1 h por día son unos 10 meses. Te lo digo ahora para que no te frustres después.'],
+      ['¿Cuándo tengo que usar VS Code?', 'Desde el hito 3. Hasta ahí todo pasa en el editor de la app, incluso desde el celular. Si conectás GitHub, verifico tus commits y tu sitio publicado sin que subas capturas.'],
+      ['¿Me sirve el certificado de freeCodeCamp?', 'Podés importarlo como evidencia externa, marcada «de terceros». Para que sume a un nodo te tomo un reto corto: así validamos que lo sabés aplicar.'],
+    ],
+  },
+
+  atencion: {
+    id: 'atencion', short: 'Atención al cliente remota', icon: 'ph-headset', kind: 'Cambio de rubro', goal: 'cambiar',
+    title: 'Atención al cliente remota',
+    meta: 'Pasar de gastronomía o comercio a atención al cliente remota, con evidencia para postularte: respuestas evaluadas, un roleplay aprobado, un turno simulado y el CV traducido.',
+    from: 'Mozo/a, cajero/a o vendedor/a de local',
+    eta: { 10: '~12 semanas', 20: '~10 semanas', 60: '4 a 5 semanas', 120: '~4 semanas' },
+    recPace: 20,
+    paceNote: 'La meta es «listo/a para postularte», no «conseguir trabajo»: eso también depende del mercado. La búsqueda viene después y puede llevar meses; la app la acompaña con un registro de postulaciones, pero no promete plazos.',
+    demoWhen: 'en la semana 4',
+    cur: 2,
+    hitos: [
+      { t: 'Del mostrador a la pantalla', d: '~1 semana', ev: 'Mapa de habilidades transferibles' },
+      { t: 'Escribir para clientes', d: '~2 semanas', ev: '5 respuestas escritas evaluadas' },
+      { t: 'Clientes enojados y malas noticias', d: '~2 semanas', ev: 'Roleplay con cliente enojado aprobado en modo validación' },
+      { t: 'Tickets, macros y datos personales', d: '~2 semanas', ev: 'Bandeja simulada resuelta' },
+      { t: 'Teléfono sin cara', d: '~1 semana', ev: 'Llamada simulada aprobada' },
+      { t: 'Turno simulado remoto', d: '~1 semana', ev: 'Turno completo en modo validación', boss: true },
+      { t: 'Listo/a para postularte', d: '~2 semanas', ev: 'CV traducido y simulacro de selección' },
+    ],
+    curNodes: [
+      { t: 'Empatía específica', s: 'done' },
+      { t: 'Desescalar un reclamo', s: 'done', real: true },
+      { t: 'Dar malas noticias y decir que no', s: 'next', p: '1/3', mech: true },
+      { t: 'Cerrar y hacer seguimiento', s: 'locked' },
+    ],
+    branches: [
+      { n: 'Trato con clientes', nodes: [['Escuchar e indagar', 'real'], ['Empatía específica', 'done'], ['Desescalar un reclamo', 'real'], ['Dar malas noticias y decir que no', 'next'], ['Cerrar y hacer seguimiento', 'locked']] },
+      { n: 'Comunicación a distancia', nodes: [['Lenguaje claro', 'done'], ['Chat', 'done'], ['Mail', 'done'], ['Teléfono sin cara', 'locked'], ['Ortografía y tipeo', 'rust']] },
+      { n: 'Herramientas y procesos', nodes: [['Ciclo de un ticket', 'locked'], ['Base de conocimiento y macros', 'locked'], ['Notas internas y escalamiento', 'locked'], ['Datos personales y verificación', 'locked'], ['Métricas de atención', 'locked']] },
+      { n: 'Trabajo remoto y empleabilidad', nodes: [['Tu puesto remoto', 'done'], ['Turnos y autogestión', 'locked'], ['CV traducido', 'locked'], ['Entrevista', 'locked'], ['Prueba práctica y búsqueda', 'locked']] },
+    ],
+    mech: { key: 'roleplay', name: 'Roleplay con cliente enojado', icon: 'ph-chats-circle', where: 'Hito 3 · Dar malas noticias', desc: 'Marcelo escribe por tercera vez y está furioso. Tenés el sistema y la política a mano: bajale el enojo sin prometer lo que no podés cumplir.' },
+    session: {
+      node: 'Dar malas noticias y decir que no', from: 33, to: 66,
+      repaso: [
+        { q: 'Reescribilo más claro: «Le informamos que su solicitud se encuentra en proceso de evaluación por el área correspondiente».', a: '«Ya estamos revisando tu pedido. Te escribimos antes del jueves.»' },
+        { q: '¿Podés prometer una fecha de entrega que el sistema no muestra?', a: 'No. Decí lo que sí sabés y cuándo vas a volver a escribir. Ayer te pasó: por eso vuelve hoy.' },
+      ],
+      leccion: {
+        t: 'Dar una mala noticia sin perder al cliente',
+        b: ['Reconocé lo concreto: qué le pasó, no «las molestias ocasionadas».', 'Decí la verdad sin culpar a otro: «El correo no nos da fecha».', 'Ofrecé opciones reales, dentro de la política.', 'Cerrá con quién hace qué y cuándo.'],
+        src: 'Contenido Xpedia revisado por especialista · Base: «Conocé tus derechos», argentina.gob.ar · CC BY 4.0',
+      },
+      challenge: 'Hoy, cuando una mesa se queje, decí el próximo paso con un tiempo concreto. Mañana contanos cómo te fue.',
+      tomorrow: 'El mismo caso por mail, con una clienta apurada.',
+    },
+    challenge: { kind: 'real', t: 'Desafío en el mundo real', d: 'Hoy, cuando una mesa se queje, decí el próximo paso con un tiempo concreto («en 10 minutos te la traigo»). Funciona porque todavía atendés público.' },
+    coach: [
+      { icon: 'ph-target', t: 'Esta semana prometiste 2 veces algo sin tener el dato. El roleplay de hoy arranca justo con eso.', cta: 'Ir al roleplay' },
+      { icon: 'ph-trend-up', t: 'Tu escritura subió a «Sólido». Podés rendir la prueba de salida del hito 2 y ganar una semana.', cta: 'Rendir prueba' },
+      { icon: 'ph-book-open', t: 'Zendesk aparece en muchos avisos. Su ruta gratuita «Zendesk Agent» (6 cursos, ~2 h) es opcional para el hito 4. Si la hacés, al volver te tomo un caso en Tienda Andén.', tag: 'Externo · gratis · idioma a verificar', cta: 'Agregar a mi ruta' },
+    ],
+    reading: [
+      { t: 'Zendesk Academy · ruta «Zendesk Agent»', type: 'Curso externo', lic: 'Gratis · opcional en el hito 4', st: 'Sugerida' },
+      { t: 'Capacítate para el empleo: Representante telefónico', type: 'Curso externo', lic: 'Gratis · Fundación Carlos Slim · hito 5', st: 'Más adelante' },
+    ],
+    faq: [
+      ['¿Necesito inglés?', 'Para esta ruta, no. Pero muchas búsquedas remotas para empresas del exterior lo piden. Si te manejás, hay una rama opcional de soporte en inglés (el equipo todavía la está definiendo).'],
+      ['¿Esto me garantiza un trabajo?', 'No, y no te lo vamos a prometer. Te deja «listo/a para postularte», con evidencia que podés mostrar. La búsqueda depende también del mercado; te acompañamos con un registro de postulaciones.'],
+      ['¿Me conviene la certificación de Zendesk de USD 199?', 'Para un puesto de entrada, no te la recomendamos. Los cursos gratuitos de su ruta «Zendesk Agent» sí te sirven para conocer la herramienta.'],
+    ],
+  },
+
+  oratoria: {
+    id: 'oratoria', short: 'Oratoria en el trabajo', icon: 'ph-microphone-stage', kind: 'Habilidad blanda', goal: 'mejorar',
+    title: 'Oratoria y presentaciones en el trabajo',
+    meta: 'Intervenir en una reunión con una idea clara, presentar un avance con estructura, hacer un pitch de 90 s y responder preguntas difíciles. Con grabaciones de antes y después.',
+    from: 'Con empleo, se pone nervioso/a al hablar',
+    eta: { 10: '~10 semanas', 20: '~8 semanas', 60: '4 a 5 semanas', 120: '4 semanas (mínimo)' },
+    recPace: 20,
+    paceNote: 'No baja de 4 semanas aunque tengas más tiempo: los desafíos reales dependen de que haya reuniones donde practicar.',
+    demoWhen: 'en la semana 4',
+    cur: 3,
+    hitos: [
+      { t: 'Romper el hielo', d: '~1 semana', ev: 'Grabación de diagnóstico (el «antes»)' },
+      { t: 'Idea principal primero', d: '~1 semana', ev: 'Respuesta con PREP en 60 s' },
+      { t: 'Intervenir en reuniones', d: '~1,5 semanas', ev: 'Intervención en una reunión real (check-in)' },
+      { t: 'Presentar un avance', d: '~1,5 semanas', ev: 'Avance de 2 minutos con estructura' },
+      { t: 'Pitch de 90 segundos', d: '~1 semana', ev: 'Pitch grabado y aprobado' },
+      { t: 'Preguntas difíciles', d: '~1 semana', ev: 'Ronda de preguntas aprobada' },
+      { t: 'Prueba final y desafío real', d: '~1 semana', ev: 'Antes y después, del diagnóstico a la prueba final', boss: true },
+    ],
+    curNodes: [
+      { t: 'Qué / Y entonces / Ahora qué', s: 'next', p: '1/3', mech: true },
+      { t: 'Presentar un avance', s: 'prog', p: '1/3' },
+      { t: 'Pausa en vez de muletilla', s: 'done', real: true },
+      { t: 'Cierre con pedido concreto', s: 'locked' },
+    ],
+    branches: [
+      { n: 'Calma y voz', nodes: [['Entender los nervios', 'done'], ['Rutina de 2 minutos antes de hablar', 'real'], ['Pausa en vez de muletilla', 'real'], ['Ritmo y volumen', 'rust']] },
+      { n: 'Estructura y claridad', nodes: [['Idea principal primero', 'real'], ['PREP para intervenir', 'done'], ['Qué / Y entonces / Ahora qué', 'next'], ['Cierre con pedido concreto', 'locked'], ['Una idea por oración', 'done']] },
+      { n: 'Reuniones', nodes: [['Entrar en la conversación', 'real'], ['Intervenir en 60 segundos', 'done'], ['Resumir y redirigir', 'locked'], ['Reuniones remotas', 'locked']] },
+      { n: 'Presentar y persuadir', nodes: [['Presentar un avance', 'next'], ['Apoyo visual mínimo', 'locked'], ['Pitch de 90 segundos', 'locked'], ['Preguntas difíciles', 'locked']] },
+    ],
+    mech: { key: 'ensayo', name: 'Ensayo con feedback', icon: 'ph-microphone', where: 'Hito 4 · Presentar un avance', desc: 'Grabás un avance de hasta 2 minutos y la IA te devuelve una fortaleza, un solo foco y la evidencia con marca de tiempo. Reintentás y ves la diferencia.' },
+    session: {
+      node: 'Qué / Y entonces / Ahora qué', from: 33, to: 66,
+      repaso: [
+        { q: 'En PREP, ¿qué va al final?', a: 'Volver a la idea principal (Point): la repetís para cerrar.' },
+        { q: '¿Qué conviene hacer en lugar de un «eh»?', a: 'Un segundo de silencio. La pausa suena más segura que la muletilla.' },
+      ],
+      leccion: {
+        t: 'Qué / Y entonces / Ahora qué',
+        b: ['Qué: dónde estamos, en una oración.', 'Y entonces: por qué importa o qué riesgo hay.', 'Ahora qué: el próximo paso y qué necesitás de quien te escucha.', 'Abrí con la decisión o el dato más importante, no con la historia.'],
+        src: 'Contenido Xpedia revisado por docente de oratoria · Base: Communication at Work · CC BY 4.0',
+      },
+      challenge: 'En la reunión del lunes, presentá tu avance con Qué / Y entonces / Ahora qué. A las 18 te pregunto cómo te fue.',
+      tomorrow: 'Cierre con pedido concreto: quién, qué y cuándo.',
+    },
+    challenge: { kind: 'real', t: 'Desafío en el mundo real', d: 'En la daily de mañana, cuando te toque, arrancá con la conclusión. Si no te animás, no pasa nada: te propongo una versión más chica.' },
+    coach: [
+      { icon: 'ph-trend-down', t: 'Tus muletillas bajaron de 10 a 5 por minuto en dos semanas. Hoy cambiamos el foco: la idea principal primero.', cta: 'Ir al ensayo' },
+      { icon: 'ph-play-circle', t: 'La lista de TED sobre oratoria tiene una charla de Julian Treasure sobre cómo hablar para que te escuchen. Te la dejo como «Para ver». Cuando vuelvas: 2 preguntas y una grabación de 30 s aplicando una idea.', tag: 'TED · CC BY-NC-ND · solo enlace', cta: 'Agregar a mi ruta' },
+      { icon: 'ph-calendar-check', t: 'Tenés reunión de equipo los lunes. ¿Hacemos que el desafío de esta semana sea presentar tu avance ahí?', cta: 'Sí, usar el lunes' },
+    ],
+    reading: [
+      { t: 'Lista de TED «Before public speaking»', type: 'Para ver', lic: 'CC BY-NC-ND 4.0 · solo enlace', st: 'Check pendiente' },
+      { t: 'Ir como invitado/a a un club de Toastmasters', type: 'Desafío real', lic: 'Opcional · costo a verificar por club', st: 'Más adelante' },
+    ],
+    faq: [
+      ['¿Alguien escucha mis grabaciones?', 'No. Tus prácticas son privadas. Si tu empresa usa Xpedia, ve niveles agregados de grupos de 5 personas o más, nunca tu audio. El audio se borra a los 30 días; si querés, conservás la transcripción.'],
+      ['¿Por qué dice que el conteo de «eh» es aproximado?', 'Porque las muletillas que son palabras («o sea», «tipo») se detectan bien, pero los «eh» y «mmm» todavía no son confiables en español. Preferimos decírtelo antes que mostrarte un número que no es exacto.'],
+      ['Me pongo muy nervioso/a, ¿qué hago?', 'Es lo más común. Probá la rutina de 2 minutos antes de hablar (rama Calma y voz). Ojo: no medimos tus nervios por la voz; solo lo que vos nos contás.'],
+    ],
+  },
+};
+
+/* ── Diagnósticos ─────────────────────────────────────────────── */
+const DIAG = {
+  sistemas: [
+    { type: 'choice', block: 'Web', q: 'Escribís una dirección y aparece una página. ¿Dónde estaba esa página?', opts: ['En tu compu', 'En otra compu (un servidor) que te la mandó', 'Adentro de Google'], ok: 1, knew: true },
+    { type: 'choice', block: 'HTML', q: '¿Qué pasa al tocar «Escribinos»?', code: '<a href="contacto.html">Escribinos</a>', opts: ['Abre la página contacto.html', 'Manda un mail', 'Nada: falta un botón'], ok: 0, knew: true },
+    { type: 'choice', block: 'JavaScript', q: '¿Qué muestra la consola?', code: 'console.log("5" + 3);', opts: ['8', '"53"', 'Un error'], ok: 1, knew: true },
+    { type: 'choice', block: 'Git', q: 'Te dicen «hacé un commit». ¿Qué te piden?', opts: ['Guardar una versión de los cambios con una descripción', 'Subir el sitio a internet', 'Borrar lo que no sirve'], ok: 0, knew: true },
+  ],
+  atencion: [
+    { type: 'chips', single: true, q: '¿Dónde atendés público hoy?', opts: ['Gastronomía (mozo/a)', 'Comercio (cajero/a)', 'Comercio (vendedor/a)', 'Recepción'] },
+    { type: 'choice', block: 'En tu mundo', tag: 'Escenario espejo · 1 de 2', q: 'Viernes, 21 h, salón lleno. La pizza de una mesa llegó fría después de 50 minutos. ¿Qué hacés primero?', opts: ['Explicás que la cocina está colapsada', 'Te disculpás, ofrecés cambiarla y decís cuánto va a tardar', 'Llamás al encargado', 'Traés un postre sin preguntar'], ok: 1 },
+    { type: 'choice', block: 'Por chat', tag: 'Escenario espejo · 2 de 2', q: 'La misma situación, ahora por chat. ¿Qué respondés?', quote: 'Pedí delivery hace 1 h 10 y llegó todo frío. Nunca más.', opts: ['Lamentamos los inconvenientes ocasionados. Su reclamo será derivado al área correspondiente.', 'Uh, qué macana. Es viernes y la cocina estaba colapsada, viste cómo es.', 'Hola, perdón: 1 h 10 de espera y la comida fría es mucho. Te reintegro el pedido ahora o te mandamos uno nuevo en 30 minutos. ¿Qué preferís?'], ok: 2 },
+    { type: 'text', block: 'Escritura', q: 'Respondé este mensaje en 3 o 4 líneas:', quote: 'hola compre unas zapatillas x la web y me llegaron en otro talle. las necesito ya q hago??', ph: 'Escribí tu respuesta…' },
+  ],
+  oratoria: [
+    { type: 'chips', q: '¿Dónde te toca hablar?', opts: ['Daily o reunión de equipo', 'Reuniones con jefes', 'Clientes', 'Capacitaciones'] },
+    { type: 'chips', q: '¿Qué te pasa cuando hablás?', opts: ['Me trabo', 'Me voy por las ramas', 'Me quedo callado/a', 'Hablo rápido', 'Leo'] },
+    { type: 'slider', q: 'Del 0 al 10, ¿cuántos nervios sentís antes de hablar en una reunión?' },
+    { type: 'record', q: 'Contá qué hiciste esta semana en tu trabajo, como si fuera la reunión del lunes.', alt: '¿No querés hablar de tu trabajo? Explicá cómo se hace algo que sabés hacer bien.' },
+  ],
+};
+
+/* ── Novedades (newsletter adaptado al nivel) ────────────────────
+   atHito: a partir de qué hito (índice, 0-based) le sirve de verdad a
+   esta persona. Si atHito <= R().cur ya se muestra en «Para vos ahora»;
+   si no, queda en «Más adelante» con el motivo (`why`).
+   Las de «Para vos ahora» se pueden sumar a la ruta: entran como un
+   nodo más (`nodo`) dentro del hito `atHito`. S.news[id] guarda
+   'added' o 'dismissed'. ─────────────────────────────────────────── */
+const NEWS = {
+  sistemas: [
+    { id: 'sis1', nodo: 'Cancelar un fetch con AbortSignal.timeout()', icon: 'ph-plugs-connected', t: 'AbortSignal.timeout() ya anda en todos los navegadores modernos', d: 'Una forma corta de cancelar un fetch que tarda demasiado, sin armar el controller a mano.', atHito: 5 },
+    { id: 'sis2', nodo: 'Código postal en tu buscador Georef', icon: 'ph-map-pin', t: 'Georef Argentina sumó un endpoint de código postal', d: 'La misma API que usás en tu buscador de localidades ahora devuelve el código postal de cada resultado.', atHito: 5 },
+    { id: 'sis3', icon: 'ph-atom', t: 'React 19 ya es la versión por defecto al crear un proyecto con Vite', d: 'Cambia cómo se escriben algunos formularios y el manejo de estado async.', atHito: 6, why: 'Tiene que ver con tu ruta, pero todavía te falta «Asincronía y fetch» antes de React. Te la mostramos completa en el hito «React».' },
+    { id: 'sis4', icon: 'ph-robot', t: 'Empezaron a pedir «programar con IA con criterio» en búsquedas junior', d: 'Saber revisar y corregir código generado, no solo pedirlo.', atHito: 7, why: 'Es un nodo de «Herramientas y oficio» más avanzado que donde estás. Te conviene primero afirmar la lógica de base — si lo ves ahora, es fácil apoyarte de más en la IA y aprender menos.' },
+  ],
+  atencion: [
+    { id: 'atc1', nodo: 'Nuevo plazo de respuesta a reclamos', icon: 'ph-scales', t: 'Cambió el plazo máximo de respuesta a reclamos online', d: 'Defensa del Consumidor bajó el plazo esperado de respuesta inicial. Te sirve ahora, justo cuando estás practicando malas noticias.', atHito: 2 },
+    { id: 'atc2', nodo: 'Corregir una respuesta que arrancó con IA', icon: 'ph-sparkle', t: 'Las plataformas grandes ya responden el primer mensaje con IA', d: 'Cada vez más empresas buscan gente que sepa corregir y humanizar una respuesta que arrancó mal, no solo escribir desde cero.', atHito: 2 },
+    { id: 'atc3', icon: 'ph-phone-call', t: 'Crecen las búsquedas de «atención por voz con apoyo de IA»', d: 'Call centers que suman un asistente que transcribe y sugiere en vivo.', atHito: 4, why: 'Es del canal telefónico, y todavía estás en el de texto. Te la mostramos completa en «Teléfono sin cara».' },
+    { id: 'atc4', icon: 'ph-certificate', t: 'Certificación internacional de atención al cliente en inglés (USD 150)', d: 'Pedida en algunas búsquedas remotas para empresas del exterior.', atHito: 6, why: 'No tiene sentido pagarla antes de estar «listo/a para postularte» en español — primero esa base, después evaluamos si te conviene.' },
+  ],
+  oratoria: [
+    { id: 'ora1', nodo: 'STAR para presentar un avance', icon: 'ph-target', t: 'La técnica STAR, además de para entrevistas, sirve para estructurar un avance', d: 'Situación, Tarea, Acción, Resultado: el mismo orden que ya estás practicando para presentar un avance.', atHito: 3 },
+    { id: 'ora2', nodo: 'Standup de 60 segundos por chat', icon: 'ph-slack-logo', t: 'Más equipos remotos piden el standup como resumen de 60 segundos por chat', d: 'La misma idea principal primero que ya veniste practicando, ahora aplicada a texto corto.', atHito: 3 },
+    { id: 'ora3', icon: 'ph-linkedin-logo', t: 'LinkedIn empezó a recomendar un video-pitch de 90 segundos en el perfil', d: 'Un espacio nuevo para mostrar justo lo que vas a practicar más adelante.', atHito: 4, why: 'Todavía no armaste tu pitch de 90 segundos — te lo mostramos completo apenas llegués a ese hito, para que lo practiques primero y lo publiques después.' },
+    { id: 'ora4', icon: 'ph-question', t: 'Guía nueva sobre cómo manejar preguntas hostiles en un panel', d: 'Técnicas para no quedarte en blanco cuando te preguntan algo incómodo en público.', atHito: 5, why: 'Es el tema del hito «Preguntas difíciles», más adelante en tu ruta. Antes conviene afirmar el pitch de 90 segundos.' },
+  ],
+};
+function novedadesScreen() {
+  const r = R();
+  const items = NEWS[r.id] || [];
+  const ready = items.filter((n) => n.atHito <= r.cur);
+  const held = items.filter((n) => n.atHito > r.cur);
+  const card = (n, isReady) => `<div class="panel stack-sm" style="${isReady ? '' : 'opacity:.8'}">
+    <div class="row between wrapx">
+      <div class="row" style="gap:10px"><i class="ph ${n.icon}" style="color:var(--color-accent-300);font-size:18px"></i><b style="font-weight:500">${esc(n.t)}</b></div>
+      ${isReady ? (S.news[n.id] === 'added' ? '<span class="chip acc"><i class="ph ph-path"></i>En tu ruta</span>' : S.news[n.id] === 'dismissed' ? '<span class="chip"><i class="ph ph-x"></i>Descartada</span>' : '<span class="chip ok"><i class="ph ph-sparkle"></i>Para vos ahora</span>') : `<span class="chip warn"><i class="ph ph-clock"></i>En «${esc(r.hitos[n.atHito].t)}»</span>`}
+    </div>
+    <p class="small soft">${esc(n.d)}</p>
+    ${!isReady ? `<div class="note warn"><i class="ph ph-info"></i><span>${esc(n.why)}</span></div>`
+      : S.news[n.id] === 'added' ? `<div class="row wrapx"><span class="tiny soft" style="flex:1"><i class="ph ph-check"></i> Sumada como nodo «${esc(n.nodo)}» en el hito ${n.atHito + 1}: ${esc(r.hitos[n.atHito].t)}.</span><button class="btn btn-ghost btn-sm" data-act="nav" data-arg="home">Ver en mi roadmap</button><button class="btn btn-ghost btn-sm" data-act="newsUndo" data-arg="${n.id}">Quitar</button></div>`
+      : S.news[n.id] === 'dismissed' ? `<button class="btn btn-ghost btn-sm" data-act="newsUndo" data-arg="${n.id}" style="align-self:flex-start">Deshacer</button>`
+      : `<div class="row wrapx"><button class="btn btn-solid btn-sm" data-act="newsAdd" data-arg="${n.id}"><i class="ph ph-plus"></i>Sumar a mi ruta</button><button class="btn btn-ghost btn-sm" data-act="newsDismiss" data-arg="${n.id}">Descartar</button><span class="tiny muted">Entra en el hito ${n.atHito + 1}: ${esc(r.hitos[n.atHito].t)}</span></div>`}
+  </div>`;
+  return `<div class="narrow page stack">
+    <div><div class="kicker">${esc(r.short)}</div><h1 class="h-page">Novedades</h1><p class="lead">Lo que pasa en tu rubro, pero solo cuando ya te sirve. Si algo nuevo tiene que ver con tu ruta pero todavía te falta camino, Xpedia lo guarda y te lo muestra recién en el hito que corresponde.</p></div>
+    <div class="stack-sm"><h2 class="h-sec">Para vos ahora</h2>${ready.length ? ready.map((n) => card(n, true)).join('') : '<p class="small muted">Por ahora no hay nada nuevo para tu nivel. Volvé más adelante.</p>'}</div>
+    <div class="stack-sm"><div class="row between"><h2 class="h-sec">Más adelante</h2><span class="tiny muted">${held.length}</span></div>${held.length ? held.map((n) => card(n, false)).join('') : '<p class="small muted">No hay nada en espera.</p>'}</div>
+  </div>`;
+}
+
+/* ── Ticket de bug (ruta Sistemas) ────────────────────────────── */
+const TK_HTML = '<ul>\n  <li><button class="agregar" data-precio="1500">Mate de calabaza</button></li>\n  <li><button class="agregar" data-precio="2300">Bombilla de alpaca</button></li>\n</ul>\n<p>Total: $<span id="total">0</span></p>';
+const TK_JS = 'let total = 0;\nconst botones = document.querySelectorAll(".agregar");\n\nbotones.forEach((boton) => {\n  boton.addEventListener("click", () => {\n    total = total + boton.dataset.precio;\n    document.querySelector("#total").textContent = total;\n  });\n});';
+const TK_DEC = {
+  1: { q: '¿Qué hacés primero?', opts: [
+    { t: 'Reescribo la función del carrito desde cero', fb: 'Todavía no sabés qué está mal: podrías volver a escribir el mismo error. Primero, reproducilo.' },
+    { t: 'Reproduzco el error: hago los mismos clics y miro el total', ok: true, fb: 'Bien. Reproducir confirma el problema y te deja un caso para probar el arreglo.' },
+    { t: 'Le pido la solución a la IA', fb: 'En un trabajo real a veces se hace. Pero si no entendés la causa, no vas a saber si la respuesta es correcta. Pista: fijate de qué tipo es cada cosa que sumás.' },
+    { t: 'Le digo a Marta que es un problema de su navegador', fb: 'Sin evidencia, no. Además, el total tiene un patrón: parece que los números se están pegando.' },
+  ] },
+  2: { q: 'Después de un clic se ve 01500. ¿Cuál es la hipótesis más probable?', opts: [
+    { t: 'El precio está mal cargado en el HTML', fb: 'Los precios del HTML son 1500 y 2300: están bien. Lo raro es que aparecen pegados.' },
+    { t: 'Se están uniendo textos en lugar de sumar números', ok: true, fb: 'Exacto: 01500 es un 0 seguido de "1500". Eso es concatenar (PC2).' },
+    { t: 'El evento se dispara dos veces', fb: 'En ese caso verías el precio repetido con un solo clic (015001500).' },
+    { t: 'textContent no puede mostrar números', fb: 'Sí puede: textContent muestra lo que le des. El problema está antes.' },
+  ] },
+  3: { q: '¿Cómo confirmás la hipótesis?', opts: [
+    { t: 'console.log(typeof boton.dataset.precio)', ok: true, fb: 'La consola muestra "string". Confirmado: el precio llega como texto (PC1), y 0 + "1500" da "01500" (PC2).' },
+    { t: 'Cambio los precios del HTML y pruebo de nuevo', fb: 'Vas a ver el mismo patrón con otros números. No confirma la causa.' },
+    { t: 'Borro el caché del navegador', fb: 'El caché no cambia la forma en que se suman los valores.' },
+    { t: 'console.log(total)', partial: true, fb: 'Ayuda: verías 01500, pero no sabrías de qué tipo es el precio. Probá con typeof. (Crédito parcial.)' },
+  ] },
+};
+const TK_PC = [
+  ['PC1', 'Lo que leés de un atributo data-* con dataset es texto (string).', 'MDN · HTMLElement: dataset property', 'https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset'],
+  ['PC2', 'Si uno de los lados de + es texto, JavaScript concatena en vez de sumar.', 'MDN · Addition (+)', 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Addition'],
+  ['PC3', 'Number(valor) convierte un texto en número.', 'MDN · Number() constructor', 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/Number'],
+  ['PC4', 'Antes de tocar el código, reproducí el error y verificá la hipótesis con la consola.', 'MDN · What went wrong? Troubleshooting JavaScript', 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/What_went_wrong'],
+];
+
+/* ── Roleplay (ruta Atención al cliente) ──────────────────────── */
+const RP_OPEN = 'Hola. Es la TERCERA vez que escribo. Compré unas zapatillas hace 12 días, me dijeron 5 días hábiles y el seguimiento está igual desde el viernes. Nadie me contesta los mails. Las necesito para el domingo. ¿Alguien me puede dar una respuesta de verdad o me tengo que ir a Defensa del Consumidor?';
+const RP_TURNS = [
+  { opts: [
+    { t: 'Lamentamos las molestias ocasionadas. ¿Me pasás el número de pedido?', d: 2, reply: 'No quiero que lo lamenten, quiero las zapatillas. Y el número ya lo mandé DOS veces.', tip: 'Frase hecha (+1) y pediste un dato que ya estaba en la ficha (+1)', fx: { emp: 0, cargo: 1 } },
+    { t: 'Hola, Marcelo, soy Vale. Tenés razón: escribiste dos veces y nadie te respondió. Me ocupo yo. Dame 2 minutos que reviso el envío.', d: -2, reply: 'Bueno. Espero.', tip: 'Reconociste lo concreto y te hiciste cargo', fx: { emp: 3, cargo: 3 }, best: true },
+    { t: 'Hola. El problema es del correo: nosotros no manejamos los envíos.', d: 2, reply: 'Yo les compré a ustedes, no al correo.', tip: 'Le echaste la culpa a otro (+2)', fx: { emp: 0, cargo: 0 } },
+  ] },
+  { sys: 'Revisaste el sistema: el pedido #48213 está «En centro de distribución Rosario» desde el viernes y el correo no da fecha. En el punto de retiro Rosario Centro queda 1 par «Trote» talle 43, gris.',
+    opts: [
+    { t: 'Ya lo revisé: te llegan mañana seguro.', d: -1, reply: '¿Me lo garantizás? Mirá que el domingo corro.', tip: 'Calmó un poco, pero prometiste una fecha que el sistema no muestra', fx: { pol: 1, clar: 2 }, fault: 'Prometiste una fecha que el sistema no muestra.' },
+    { t: 'El correo no nos da fecha, así que no te puedo asegurar el domingo. Te propongo dos opciones: mañana desde las 14 retirás el mismo modelo en talle 43, gris, en Rosario Centro, y te devolvemos el envío. O esperás el negro y, si no llega en 15 días, te reintegramos todo.', d: -3, reply: 'El gris me da igual, lo necesito para correr. ¿Seguro que mañana está?', tip: 'Mala noticia con opciones reales, dentro de la política', fx: { pol: 3, clar: 3 }, best: true },
+    { t: 'Te devuelvo la plata, ¿te parece?', d: 0, reply: '¿Y el domingo qué hago? Yo quiero correr con zapatillas nuevas.', tip: 'Es válido, pero no resuelve lo que necesita', fx: { pol: 2, clar: 2 } },
+  ] },
+  { extra: 'Igual les aviso: voy a hacer la denuncia en Defensa del Consumidor. Esto no puede ser.',
+    opts: [
+    { t: 'No hace falta amenazar.', d: 2, reply: 'No es una amenaza, es mi derecho.', tip: 'Te pusiste a la defensiva (+2)', fx: { cargoAdj: -1 } },
+    { t: 'Estás en tu derecho de reclamar ahí. Igual quiero resolverlo ahora: si te sirve el par gris, te lo reservo ya mismo.', d: -1, reply: 'Dale, reservalo.', tip: 'Reconociste su derecho sin desalentarlo', fx: {}, best: true },
+    { t: 'Te pido que no hagas la denuncia, así lo arreglamos entre nosotros.', d: 1, reply: '¿Me estás pidiendo que no reclame? Peor todavía.', tip: 'Falta automática: desalentar un reclamo', fx: {}, fault: 'Desalentar un reclamo ante Defensa del Consumidor es falta automática.', autofail: true },
+  ] },
+  { opts: [
+    { t: 'Listo. ¿Algo más?', d: 1, reply: '¿Y cómo sé que está reservado? ¿Qué tengo que llevar?', tip: 'Cierre apurado (+1)', fx: { cierre: 0 } },
+    { t: 'Listo: te reservé el par gris talle 43 en Rosario Centro, código RC-7731. Lo retirás mañana desde las 14 y te devolvemos el envío. Mañana a las 15 te escribo para confirmar que lo tengas.', d: -1, reply: 'Bueno, gracias. Ojalá esté.', tip: 'Cierre completo: código, horario y seguimiento', fx: { cierre: 3 }, best: true },
+    { t: 'Te reservé el par gris y te dejo un cupón del 15 % por las molestias.', d: -1, reply: 'Bueno, gracias. ¿Y el código de la reserva?', tip: 'El cupón supera el 10 % que podés dar sin supervisor', fx: { cierre: 1, polCap: 1 }, fault: 'Ofreciste un cupón del 15 %: sin supervisor, el máximo es 10 %.' },
+  ] },
+];
+
+/* ── Ensayo (ruta Oratoria) ───────────────────────────────────── */
+const ENS = {
+  1: {
+    dur: 58, words: 150, idea: 50, mpm: 10.3, ppm: 155,
+    good: 'Tenés todo lo que la reunión necesita saber: por qué se busca otro proveedor (los precios subieron un 20 %), qué hiciste (4 presupuestos y la prueba de las muestras con Juan) y la fecha límite. Además, tu ritmo es cómodo de seguir.',
+    focus: 'Lo más importante, que hay que decidir antes del 15, aparece en el segundo 50 de 58. Probá abrir con eso, con tus propias palabras: «Tenemos que decidir el proveedor de embalaje antes del 15, que se vence el contrato».',
+    focusTs: '0:50',
+    rows: [
+      ['Idea principal', 'i', 'Aparece en [0:50].'],
+      ['Estructura', 'd', 'El Qué está. El Y entonces (el vencimiento) aparece recién al final. Falta el Ahora qué: «ver si avanzamos con alguno» no dice qué proponés ni qué necesitás.'],
+      ['Claridad', 'd', 'Hay datos concretos (20 %, 4 presupuestos), pero no nombrás las opciones. Hay una oración de 40 palabras encadenada con «que» [0:04].'],
+      ['Fluidez', 'i', '10 muletillas en 58 s, unas 10 por minuto (eh ×5, o sea ×3, este ×1, nada ×1). Casi no hay pausas en silencio entre ideas [0:32].'],
+      ['Ritmo', 's', '155 palabras por minuto, parejo.'],
+      ['Cierre', 'i', '«Y bueno, eso, no sé si alguien tiene alguna pregunta.»'],
+    ],
+    extra: '«La idea sería, no sé…» [0:46] le resta fuerza a tu propuesta. Si tenés una recomendación, decila.',
+    text: 'Bueno, **eh,** les cuento un poco lo del tema proveedores. **Eh,** como saben, desde marzo venimos viendo lo de cambiar el proveedor de embalaje, que en realidad arrancó porque Marcos vio que los precios habían subido bastante, **o sea,** como un veinte por ciento, y ahí empezamos a pedir presupuestos. Pedimos a cuatro, **eh,** dos respondieron rápido y uno tardó muchísimo, que, **o sea,** el que tardó es el más barato, pero no sé si nos conviene porque tardan con todo. **Este...** y **nada,** las muestras llegaron la semana pasada, las probamos en el depósito con Juan y, **eh,** la verdad que andan bien, **o sea,** la caja es un poco más finita pero aguanta. **Eh,** entonces la idea sería, no sé, ver si avanzamos con alguno, porque «tenemos que decidir antes del quince, que se vence el contrato actual». Y bueno, eso, no sé si alguien tiene alguna pregunta.',
+  },
+  2: {
+    dur: 52, words: 121, idea: 0, mpm: 2.3, ppm: 140,
+    good: 'La decisión y la fecha están en la primera oración, y cerrás con un pedido concreto: quién (Martín), qué (aprobar el presupuesto) y cuándo (esta semana).',
+    focus: 'Antes del pedido hay un «o sea» [0:46]. Probá reemplazarlo por un segundo de silencio: el pedido va a sonar más firme.',
+    focusTs: '0:46',
+    rows: [
+      ['Idea principal', 's', 'Aparece en [0:00], en una oración.'],
+      ['Estructura', 's', 'Qué, Y entonces y Ahora qué, en orden y con transiciones («Les cuento dónde estamos», «¿Por qué importa?»).'],
+      ['Claridad', 's', 'Nombrás las dos opciones con plazos concretos (10 días contra 48 horas).'],
+      ['Fluidez', 's', '2 muletillas en 52 s. Hay pausas entre las partes.'],
+      ['Ritmo', 's', '140 palabras por minuto.'],
+      ['Cierre', 's', 'Pedido concreto: Martín aprueba el presupuesto esta semana.'],
+    ],
+    extra: '',
+    text: '«Tenemos que elegir el proveedor de embalaje antes del 15, porque ese día vence el contrato actual». Les cuento dónde estamos. Pedimos cuatro presupuestos y quedan dos opciones: Cartonera Sur, que es la más barata pero tarda hasta diez días en entregar, y Embalajes Delta, que sale un poco más pero entrega en 48 horas. Las muestras de las dos las probamos con Juan en el depósito y, **eh,** aguantan bien. ¿Por qué importa? Si no decidimos antes del 15, seguimos con el proveedor actual, que ya subió un veinte por ciento. Mi recomendación es Delta, porque un atraso en las cajas frena todos los despachos. **O sea,** lo que necesito es que Martín apruebe el presupuesto esta semana. ¿Alguna duda?',
+  },
+};
+const LVL = { i: 'Inicial', d: 'En desarrollo', s: 'Sólido' };
+
+/* ── Estado ───────────────────────────────────────────────────── */
+function newTicket() { return { step: 0, picks: { 1: [], 2: [], 3: [] }, score: { 1: null, 2: null, 3: null }, code: TK_JS, tests: null, testScore: 0, hint: false, commit: '', marta: '', evald: null, saved: false }; }
+function newRp() { return { mode: 'practica', anger: 8, curve: [8], msgs: [{ who: 'them', t: RP_OPEN }], picks: [], typing: false, ended: false, saved: false }; }
+function newEns() { return { stage: 'consigna', attempt: 1, notes: ['', '', '', ''], t: 0, proc: 0, saved: false }; }
+function initial() {
+  return {
+    view: 'persona', started: false, screen: 'onb', onb: 0, goal: null, route: null, pace: 20, otherGoal: '',
+    diag: { i: 0, ans: {}, knew: {}, chips: {}, text: '', nerv: 6, rec: 0, recDone: false },
+    banner: true, coachOpen: false, coachMsgs: [], sess: { step: 0, card: 0, reveal: false, knew: [] },
+    fromSession: false, done: {}, saved: [], checkin: null, ghConnected: false, empresaLoaded: false,
+    empresaRoadmapBuilt: false, empresaHitosAjustados: {}, empresaTutor: null, news: {},
+    ticket: newTicket(), rp: newRp(), ens: newEns(),
+  };
+}
+let S = initial();
+let timer = null;
+const R = () => ROUTES[S.route];
+function clearTimer() { if (timer) { clearInterval(timer); clearTimeout(timer); timer = null; } }
+function go(screen) { clearTimer(); S.screen = screen; render(); window.scrollTo(0, 0); }
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.innerHTML = `<div class="toast"><i class="ph-fill ph-check-circle"></i><span>${esc(msg)}</span></div>`;
+  clearTimeout(toast.t); toast.t = setTimeout(() => { el.innerHTML = ''; }, 3200);
+}
+function setPath(path, v) { const ks = path.split('.'); let o = S; ks.slice(0, -1).forEach((k) => { o = o[k]; }); o[ks[ks.length - 1]] = v; }
+
+/* ── Render ───────────────────────────────────────────────────── */
+function render() {
+  document.getElementById('top').innerHTML = header();
+  document.getElementById('app').innerHTML = S.view === 'empresa' ? empresaView() : personaView();
+  document.getElementById('drawer').innerHTML = (S.coachOpen && S.view === 'persona' && S.started) ? coachDrawer() : '';
+  const chat = document.querySelector('.chat'); if (chat) chat.scrollTop = chat.scrollHeight;
+  const cm = document.querySelector('.coach-msgs'); if (cm) cm.scrollTop = cm.scrollHeight;
+}
+
+function header() {
+  return `
+  <div class="brand"><div class="brand-mark"><i class="ph ph-hexagon"></i></div><span class="brand-name">Xpedia</span><span class="vtag hide-sm">v16 · roadmaps</span></div>
+  <div class="switch">
+    <button class="${S.view === 'persona' ? 'on' : ''}" data-act="view" data-arg="persona"><i class="ph ph-user"></i><span class="hide-sm">Persona · gratis</span></button>
+    <button class="${S.view === 'empresa' ? 'on' : ''}" data-act="view" data-arg="empresa"><i class="ph ph-buildings"></i><span class="hide-sm">Empresa · pago</span></button>
+  </div>
+  ${S.view === 'persona' && S.started ? `<select class="sel hide-sm" data-change="route" aria-label="Ruta">${Object.values(ROUTES).map((x) => `<option value="${x.id}" ${x.id === S.route ? 'selected' : ''}>Ruta: ${esc(x.short)}</option>`).join('')}</select>` : ''}
+  <div class="row" style="margin-left:auto">
+    <button class="btn btn-ghost btn-sm" data-act="reset" title="Volver al inicio de la demo"><i class="ph ph-arrow-counter-clockwise"></i><span class="hide-sm">Reiniciar demo</span></button>
+    <span class="small soft hide-sm">${S.view === 'empresa' ? 'Andén Store · RR. HH.' : 'Vale Gómez'}</span>
+    <div class="avatar">${S.view === 'empresa' ? 'AS' : 'VG'}</div>
+  </div>`;
+}
+
+function personaView() {
+  if (!S.started) {
+    return `<main class="main"><div class="narrow page">${S.screen === 'diag' ? diagScreen() : S.screen === 'diagResult' ? diagResult() : onboarding()}</div></main>`;
+  }
+  const items = [
+    ['home', 'ph-path', 'Mi roadmap'],
+    ['session', 'ph-lightning', 'Sesión de hoy'],
+    ['mech', R().mech.icon, 'Práctica estrella'],
+    ['progress', 'ph-tree-structure', 'Progreso y portfolio'],
+    ['novedades', 'ph-bell', 'Novedades'],
+  ];
+  const mechScreens = ['ticket', 'roleplay', 'ensayo'];
+  const body = { home, session: sessionScreen, ticket: ticketScreen, roleplay: roleplayScreen, ensayo: ensayoScreen, progress: progressScreen, novedades: novedadesScreen }[S.screen] || home;
+  const unread = (NEWS[S.route] || []).filter((n) => n.atHito <= R().cur && !S.news[n.id]).length;
+  return `<div class="shell">
+    <nav class="side">
+      <div class="tiny muted side-title" style="padding:0 10px 10px">Tu desarrollo</div>
+      ${items.map(([k, ic, l]) => `<button class="side-item ${(S.screen === k || (k === 'mech' && mechScreens.includes(S.screen))) ? 'on' : ''}" data-act="nav" data-arg="${k}"><i class="ph ${ic}"></i><span>${l}</span>${k === 'novedades' && unread ? `<span class="chip acc" style="margin-left:auto;padding:1px 7px">${unread}</span>` : ''}</button>`).join('')}
+      <button class="side-item" data-act="coach"><i class="ph ph-sparkle"></i><span>Coach IA</span></button>
+      <div class="side-foot stack-sm">
+        <div class="tiny muted">Ruta activa</div>
+        <div class="row" style="gap:8px"><i class="ph ${R().icon}" style="color:var(--color-accent-300);font-size:18px"></i><span class="small">${esc(R().short)}</span></div>
+        <div class="tiny soft">${paceLabel()} por día · ${esc(R().eta[S.pace])}</div>
+        <button class="btn btn-ghost btn-sm" data-act="newRoute" style="justify-content:flex-start;padding-left:0"><i class="ph ph-plus"></i>Sumar otra ruta</button>
+      </div>
+    </nav>
+    <main class="main">${body()}</main>
+  </div>`;
+}
+const paceLabel = () => (PACES.find((p) => p.m === S.pace) || PACES[1]).l;
+
+/* ── Onboarding ───────────────────────────────────────────────── */
+function onbDots(n) { return `<div class="dots">${[0, 1, 2, 3].map((i) => `<span class="${i <= n ? 'on' : ''}"></span>`).join('')}</div>`; }
+function onboarding() {
+  if (S.onb === 0) {
+    const goals = [
+      ['mejorar', 'ph-trend-up', 'Mejorar en mi trabajo actual', 'Sumar una habilidad que te piden o que te frena.'],
+      ['cambiar', 'ph-arrows-left-right', 'Cambiar de rubro', 'Pasar a otro tipo de trabajo, aprovechando lo que ya sabés hacer.'],
+      ['arrancar', 'ph-rocket-launch', 'Aprender algo desde cero', 'Arrancar en un área nueva sin experiencia previa.'],
+    ];
+    return `<div class="stack" style="gap:22px">
+      ${onbDots(0)}
+      <div><div class="kicker">Gratis · paso 1 de 4</div><h1 class="h-page">Hola, Vale. ¿Qué querés lograr?</h1><p class="lead">Te armamos una hoja de ruta para llegar: qué aprender, en qué orden y cómo demostrar que lo sabés. Todo adentro de la app.</p></div>
+      <div class="grid3">${goals.map(([id, ic, t, d]) => `<button class="choice choice-big ${S.goal === id ? 'picked' : ''}" data-act="goal" data-arg="${id}"><i class="ph ${ic}" style="font-size:26px;color:var(--color-accent-300)"></i><b style="font-weight:500;font-size:15px">${t}</b><span class="small soft">${d}</span></button>`).join('')}</div>
+    </div>`;
+  }
+  if (S.onb === 1) {
+    const sug = Object.values(ROUTES).find((r) => r.goal === S.goal);
+    return `<div class="stack" style="gap:22px">
+      ${onbDots(1)}
+      <div><button class="btn btn-ghost btn-sm" data-act="onbBack" style="padding-left:0"><i class="ph ph-arrow-left"></i>Volver</button><div class="kicker" style="margin-top:6px">Paso 2 de 4</div><h1 class="h-page">Elegí tu ruta</h1><p class="lead">En el piloto hay 3 rutas, una de cada tipo. Cada una termina con evidencia que podés mostrar.</p></div>
+      <div class="stack-sm">
+      ${Object.values(ROUTES).map((r) => `<button class="choice ${S.route === r.id ? 'picked' : ''}" data-act="pickRoute" data-arg="${r.id}" style="padding:16px">
+        <div class="icon-box"><i class="ph ${r.icon}"></i></div>
+        <div style="flex:1;min-width:0" class="stack-sm">
+          <div class="row wrapx" style="gap:8px"><b style="font-weight:500;font-size:15px">${esc(r.title)}</b><span class="chip">${r.kind}</span>${sug && sug.id === r.id ? '<span class="chip acc"><i class="ph ph-sparkle"></i>Sugerida para vos</span>' : ''}</div>
+          <span class="small soft">${esc(r.meta)}</span>
+          <span class="tiny muted">${r.hitos.length} hitos · Desde: ${esc(r.from)} · Práctica estrella: ${esc(r.mech.name)}</span>
+        </div></button>`).join('')}
+        <div class="choice" style="cursor:default;padding:16px;border-style:dashed">
+          <div class="icon-box" style="background:var(--color-neutral-900);color:var(--soft);border-color:var(--line)"><i class="ph ph-magic-wand"></i></div>
+          <div style="flex:1" class="stack-sm"><b style="font-weight:500">Otro objetivo</b>
+            <input class="input" data-model="otherGoal" value="${esc(S.otherGoal)}" placeholder="Ej.: pasar de administración a recursos humanos">
+            <span class="tiny muted">Próximamente: la IA arma la ruta a partir de tu objetivo, con datos de búsquedas laborales reales. En el piloto, las rutas las arma el equipo.</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  const r = R();
+  return `<div class="stack" style="gap:22px">
+    ${onbDots(2)}
+    <div><button class="btn btn-ghost btn-sm" data-act="onbBack" style="padding-left:0"><i class="ph ph-arrow-left"></i>Volver</button><div class="kicker" style="margin-top:6px">Paso 3 de 4 · ${esc(r.short)}</div><h1 class="h-page">¿Cuánto tiempo por día tenés?</h1><p class="lead">Te mostramos cuánto tardarías de verdad. Podés cambiarlo cuando quieras.</p></div>
+    <div class="grid4">${PACES.map((p) => `<button class="choice choice-big ${S.pace === p.m ? 'picked' : ''}" data-act="pace" data-arg="${p.m}" style="padding:16px">
+      <span class="row between" style="width:100%"><b style="font-weight:500;font-size:17px">${p.l}</b>${p.m === r.recPace ? '<span class="chip acc">Recomendado</span>' : ''}</span>
+      <span class="small soft">Llegás en ${esc(r.eta[p.m])}</span></button>`).join('')}</div>
+    <div class="note ${S.pace < r.recPace ? 'warn' : ''}"><i class="ph ${S.pace < r.recPace ? 'ph-warning' : 'ph-info'}"></i><span>${esc(r.paceNote)}</span></div>
+    <div class="row wrapx"><button class="btn btn-solid" data-act="startDiag">Hacer el diagnóstico (4 min) <i class="ph ph-arrow-right"></i></button><button class="btn btn-ghost" data-act="skipDiag">Saltear y empezar desde el hito 1</button></div>
+    <p class="small muted">El diagnóstico no te pone nota: te ubica en la ruta para que no repitas lo que ya sabés.</p>
+  </div>`;
+}
+
+/* ── Diagnóstico ──────────────────────────────────────────────── */
+function diagScreen() {
+  const steps = DIAG[S.route]; const i = S.diag.i; const q = steps[i]; const D = S.diag;
+  let body = '';
+  let canNext = false;
+  if (q.type === 'choice') {
+    const a = D.ans[i];
+    body = `${q.code ? `<pre class="code">${esc(q.code)}</pre>` : ''}${q.quote ? `<div class="bub them" style="max-width:100%">${esc(q.quote)}</div>` : ''}
+      <div class="stack-sm">${q.opts.map((o, k) => `<button class="choice ${a === k ? 'picked' : ''}" data-act="diagPick" data-arg="${k}" ${a !== undefined ? 'disabled' : ''}><span class="letter">${'abcd'[k]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+      ${a !== undefined && q.knew && D.knew[i] === undefined ? `<div class="panel tight flat row wrapx between"><span class="small">¿Lo sabías o lo adivinaste?</span><span class="row"><button class="btn btn-secondary btn-sm" data-act="diagKnew" data-arg="1">Lo sabía</button><button class="btn btn-secondary btn-sm" data-act="diagKnew" data-arg="0">Lo adiviné</button></span></div>` : ''}`;
+    canNext = a !== undefined && (!q.knew || D.knew[i] !== undefined);
+  } else if (q.type === 'chips') {
+    const sel = D.chips[i] || [];
+    body = `<div class="row wrapx">${q.opts.map((o, k) => `<button class="chipbtn ${sel.includes(k) ? 'on' : ''}" data-act="diagChip" data-arg="${k}">${esc(o)}</button>`).join('')}</div><span class="tiny muted">${q.single ? 'Elegí una opción.' : 'Podés elegir varias.'}</span>`;
+    canNext = sel.length > 0;
+  } else if (q.type === 'text') {
+    body = `<div class="bub them" style="max-width:100%">${esc(q.quote)}</div><textarea class="input" data-model="diag.text" rows="5" placeholder="${esc(q.ph)}">${esc(D.text)}</textarea><span class="tiny muted">La IA mira el saludo, si reconocés el problema, el próximo paso y si pedís solo el dato necesario. La ortografía pesa poco.</span>`;
+    canNext = true;
+  } else if (q.type === 'slider') {
+    body = `<div class="row" style="gap:16px"><span class="muted">0</span><input type="range" min="0" max="10" value="${D.nerv}" data-model="diag.nerv" data-out="nervOut" style="flex:1;accent-color:var(--color-accent)"><span class="muted">10</span><b id="nervOut" style="font-size:22px;font-weight:500;width:28px;text-align:right">${D.nerv}</b></div><span class="tiny muted">Es solo lo que vos sentís. La app no mide nervios por la voz.</span>`;
+    canNext = true;
+  } else if (q.type === 'record') {
+    const pct = D.rec / 60;
+    body = `<p class="small soft">${esc(q.alt)}</p>
+      <div class="panel flat row wrapx" style="gap:20px;justify-content:center;padding:26px">
+        ${ringSvg(pct, D.rec >= 60 ? 'var(--ok)' : 'var(--color-accent)', `<b>${fmt(D.rec)}</b><span class="tiny muted">de 1:00</span>`)}
+        <div class="stack-sm" style="min-width:200px">
+          ${D.recDone ? '<span class="chip ok"><i class="ph ph-check"></i>Grabación lista</span>' : D.rec > 0 ? `<span class="row small"><span class="rec-dot"></span>Grabando… (simulado)</span>${wave()}` : '<span class="small soft">Solo audio. El video queda apagado.</span>'}
+          ${!D.recDone && D.rec === 0 ? '<button class="btn btn-solid" data-act="diagRec"><i class="ph-fill ph-microphone"></i>Grabar 60 s</button>' : ''}
+          <span class="tiny muted">En la versión real, después la IA te hace una repregunta corta para ver cómo respondés sin preparación.</span>
+        </div>
+      </div>`;
+    canNext = D.recDone;
+  }
+  return `<div class="stack" style="gap:20px">
+    ${onbDots(3)}
+    <div class="row between"><div class="kicker">Diagnóstico · ${esc(R().short)} · ${i + 1} de ${steps.length}</div>${q.tag ? `<span class="chip acc">${esc(q.tag)}</span>` : q.block ? `<span class="chip">${esc(q.block)}</span>` : ''}</div>
+    <h1 class="h-page" style="font-size:24px">${esc(q.q)}</h1>
+    ${body}
+    <div class="row between"><button class="btn btn-ghost" data-act="diagBack"><i class="ph ph-arrow-left"></i>Atrás</button><button class="btn btn-solid" data-act="diagNext" ${canNext ? '' : 'disabled'}>${i === steps.length - 1 ? 'Ver resultado' : 'Siguiente'} <i class="ph ph-arrow-right"></i></button></div>
+  </div>`;
+}
+function fmt(s) { return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`; }
+function wave(n = 22) { return `<div class="wave">${Array.from({ length: n }, (_, k) => `<span style="animation-delay:${(k * 73) % 900}ms"></span>`).join('')}</div>`; }
+function ringSvg(pct, color, inner) {
+  const c = 2 * Math.PI * 80;
+  return `<div class="ring"><svg width="172" height="172"><circle cx="86" cy="86" r="80" fill="none" stroke="var(--color-neutral-800)" stroke-width="6"/><circle cx="86" cy="86" r="80" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - Math.min(1, pct))}" style="transition:stroke-dashoffset .2s"/></svg>${inner}</div>`;
+}
+
+function diagResult() {
+  const r = R(); const D = S.diag; const steps = DIAG[S.route];
+  let main = '';
+  if (S.route === 'sistemas') {
+    const res = steps.map((q, i) => ({ b: q.block, ok: D.ans[i] === q.ok, knew: D.knew[i] === true }));
+    const solid = (i) => res[i].ok && res[i].knew;
+    const adj = [];
+    if (!solid(0) || !solid(1)) adj.push('Arrancás en el hito 1, nodo «Cómo funciona la web».');
+    else adj.push('Sabés lo básico de HTML: podés rendir la prueba de salto del hito 1 (10-15 min) y quedarte con su evidencia.');
+    if (solid(2)) adj.push('Acertaste JavaScript sabiéndolo: más adelante podés rendir la prueba de salto del hito 5.');
+    if (S.pace < 60) adj.push('Con tu ritmo, la ruta sirve para explorar. Te recomendamos 1 h por día si querés cambiar de trabajo.');
+    adj.push('Las respuestas adivinadas cuentan como no sabidas: así no te salteamos algo que te falta.');
+    main = `<div class="panel stack"><h2 class="h-sec">Dónde estás hoy</h2>
+      ${res.map((x) => `<div class="row between"><span>${x.b}</span><span class="chip ${x.ok && x.knew ? 'ok' : x.ok ? 'warn' : ''}">${x.ok && x.knew ? 'Lo sabés' : x.ok ? 'Acertaste, pero lo adivinaste' : 'Para aprender'}</span></div>`).join('')}</div>
+      <div class="panel stack"><h2 class="h-sec">Cómo se ajusta tu roadmap</h2><ul class="stack-sm small" style="margin:0;padding-left:18px">${adj.map((a) => `<li>${esc(a)}</li>`).join('')}</ul></div>`;
+  } else if (S.route === 'atencion') {
+    const b1 = D.ans[1] === 1; const b2 = D.ans[2] === 2;
+    const insight = b1 && !b2 ? ['La habilidad está: lo que falta es el canal.', 'En el salón resolviste bien; por chat, todavía no. Esta ruta trabaja justo eso: llevar lo que ya sabés hacer a la pantalla.']
+      : b1 && b2 ? ['Ya resolvés bien en los dos canales.', 'El hito 2 se acorta: podés rendir directamente su prueba de salida.']
+        : !b1 && b2 ? ['Por escrito resolviste bien.', 'Vamos a reforzar cómo se desescala un reclamo, que vale para cualquier canal.']
+          : ['Vamos de a poco.', 'Arrancamos por el hito 1 y practicamos cómo calmar un reclamo antes de pasar al chat.'];
+    const words = D.text.trim().split(/\s+/).filter(Boolean).length;
+    const greet = /^(hola|buen|buenas)/i.test(D.text.trim());
+    const step = /(cambi|envi|retir|devol|te mando|te paso|link|etiqueta)/i.test(D.text);
+    main = `<div class="fb info"><b style="font-weight:500">${insight[0]}</b><br><span class="small">${insight[1]}</span></div>
+      <div class="panel stack"><h2 class="h-sec">Tu mapa de habilidades transferibles</h2>
+        <table class="table"><thead><tr><th>Lo que hacés hoy</th><th>En atención remota se llama</th><th>Nivel</th></tr></thead><tbody>
+        ${[['Atender 6 mesas sin olvidarte de nadie', 'Manejar varios chats a la vez', 'd'], ['Calmar a una mesa que esperó demasiado', 'Desescalar un reclamo', b1 ? 's' : 'd'], ['Repetir el pedido para confirmarlo', 'Indagar y confirmar antes de resolver', 's'], ['Cerrar la caja y que cuadre', 'Seguir un procedimiento y registrar sin errores', 'd'], ['Pasarle un problema al encargado', 'Escalar con una buena nota interna', 'i'], ['Escribirle a un cliente', 'Lenguaje claro en chat y mail', b2 ? 'd' : 'i']].map(([a, b, l]) => `<tr><td>${a}</td><td>${b}</td><td><span class="lvl ${l}">${l === 's' ? 'Fuerte' : l === 'd' ? 'Medio' : 'Inicial'}</span></td></tr>`).join('')}
+        </tbody></table></div>
+      <div class="panel stack"><h2 class="h-sec">Tu respuesta escrita</h2>
+        ${words < 4 ? '<p class="small soft">No escribiste una respuesta: la practicamos en el hito 2.</p>' : `<div class="stack-sm small">
+          <div class="row"><i class="ph ${greet ? 'ph-check t-ok' : 'ph-x t-bad'}"></i>Saludo</div>
+          <div class="row"><i class="ph ${step ? 'ph-check t-ok' : 'ph-x t-bad'}"></i>Próximo paso concreto (cambio, envío, retiro)</div>
+          <div class="row"><i class="ph ph-info soft"></i>${words} palabras · evaluación simulada: en la app real la hace la IA con la rúbrica</div></div>`}
+      </div>
+      <div class="panel stack"><h2 class="h-sec">Cómo se ajusta tu roadmap</h2><ul class="stack-sm small" style="margin:0;padding-left:18px">
+        ${b1 ? '<li>Como el trato te sale fuerte, el roleplay del hito 3 arranca en el nivel 2.</li>' : ''}
+        <li>Cada prueba de salida vuelve a medir y reajusta el plan.</li>
+        <li>Aviso honesto: muchas búsquedas piden PC, buena conexión y un lugar silencioso. La práctica igual se puede hacer desde el celular.</li></ul></div>`;
+  } else {
+    const nerv = D.nerv;
+    main = `<div class="panel stack"><h2 class="h-sec">Tu fortaleza</h2><p class="lead">Tenés datos concretos: nombraste lo que hiciste y con quién. Es la base de una buena intervención.</p></div>
+      <div class="panel stack"><h2 class="h-sec">Dónde estás hoy</h2>
+        ${[['Estructura', 'd'], ['Claridad', 'd'], ['Fluidez', 'i'], ['Respuesta bajo presión', 'i']].map(([n, l]) => `<div class="stack-sm"><div class="row between"><span>${n}</span><span class="lvl ${l}">${LVL[l]}</span></div><div class="bar"><span style="width:${l === 's' ? 100 : l === 'd' ? 55 : 22}%"></span></div></div>`).join('')}
+        <span class="tiny muted">Sin puntaje numérico y nunca comparado con otras personas.</span></div>
+      <div class="panel stack"><h2 class="h-sec">Cómo se ajusta tu roadmap</h2><ul class="stack-sm small" style="margin:0;padding-left:18px">
+        ${nerv >= 7 ? '<li>Marcaste nervios altos: el hito 1 pasa de 5 a 7 sesiones, la primera semana es solo práctica privada y los desafíos reales empiezan chiquitos.</li>' : '<li>Tus nervios están en un rango manejable: los desafíos reales empiezan en la semana 1.</li>'}
+        <li>Fluidez inicial: sumamos un microejercicio de pausas a cada sesión.</li>
+        <li>Si un criterio se estanca 3 sesiones, la IA te propone un ejercicio específico.</li></ul></div>`;
+  }
+  return `<div class="stack" style="gap:18px">
+    ${onbDots(3)}
+    <div><div class="kicker">Resultado del diagnóstico</div><h1 class="h-page">Tu punto de partida</h1><p class="lead">Ruta ${esc(r.short)} · ${paceLabel()} por día · llegás en ${esc(r.eta[S.pace])}</p></div>
+    ${main}
+    <div class="row wrapx"><button class="btn btn-solid" data-act="start">Ver mi roadmap <i class="ph ph-arrow-right"></i></button></div>
+  </div>`;
+}
+
+/* ── Inicio: Mi roadmap ───────────────────────────────────────── */
+function home() {
+  const r = R(); const cur = r.cur; const total = r.hitos.length;
+  const pct = Math.round(((cur + 0.35) / total) * 100);
+  const sessDone = S.done[S.route];
+  const nodeIcon = (n) => n.s === 'done' ? `<i class="ph-fill ph-check-circle t-ok"></i>` : n.s === 'locked' ? `<i class="ph ph-lock-simple muted"></i>` : n.s === 'next' ? `<i class="ph-fill ph-circle-half" style="color:var(--color-accent-300)"></i>` : `<i class="ph ph-circle-dashed" style="color:var(--color-accent-300)"></i>`;
+  const newsNodes = (i) => (NEWS[r.id] || []).filter((n) => n.atHito === i && S.news[n.id] === 'added')
+    .map((n) => `<div class="node"><i class="ph ph-circle-dashed" style="color:var(--color-accent-300)"></i><span style="flex:1">${esc(n.nodo)}</span><span class="chip acc"><i class="ph ph-bell"></i>Novedad</span></div>`).join('');
+  return `<div class="wrap page stack" style="gap:18px">
+    ${S.banner ? `<div class="banner"><i class="ph ph-info"></i><span>Vista de demo: mostramos tu roadmap como estaría ${esc(r.demoWhen)}, para que se vea la práctica.</span><button class="btn btn-ghost btn-sm" data-act="banner" style="margin-left:auto">Entendido</button></div>` : ''}
+    <div class="panel row wrapx" style="gap:18px;align-items:flex-start">
+      <div class="icon-box" style="width:52px;height:52px;font-size:26px"><i class="ph ${r.icon}"></i></div>
+      <div style="flex:1;min-width:240px" class="stack-sm">
+        <div class="row wrapx" style="gap:8px"><span class="kicker">${r.kind}</span><span class="chip">Gratis</span></div>
+        <h1 class="h-page" style="margin:0">${esc(r.title)}</h1>
+        <p class="small soft" style="max-width:640px">${esc(r.meta)}</p>
+        <div class="row wrapx" style="margin-top:6px;gap:8px">
+          <span class="chip acc"><i class="ph ph-clock"></i>
+            <select class="sel" data-change="pace" style="height:22px;border:0;background:transparent;color:inherit;padding:0" aria-label="Ritmo">${PACES.map((p) => `<option value="${p.m}" ${p.m === S.pace ? 'selected' : ''}>${p.l} por día</option>`).join('')}</select>
+          </span>
+          <span class="chip"><i class="ph ph-flag-checkered"></i>Llegás en ${esc(r.eta[S.pace])}</span>
+          ${S.pace < r.recPace ? `<span class="chip warn" title="${esc(r.paceNote)}"><i class="ph ph-warning"></i>Con este ritmo, solo para explorar</span>` : ''}
+        </div>
+      </div>
+      <div style="min-width:220px;flex:0 1 260px" class="stack-sm">
+        <div class="row between small"><span>Hito ${cur + 1} de ${total}</span><span class="soft">${pct} %</span></div>
+        <div class="bar"><span style="width:${pct}%"></span></div>
+        <div class="row" style="gap:16px;margin-top:6px">
+          <div class="stat"><b><i class="ph-fill ph-fire" style="color:var(--warn);font-size:18px"></i> ${sessDone ? 10 : 9}</b><span class="tiny muted">días de racha</span></div>
+          <div class="stat"><b>${cur}</b><span class="tiny muted">evidencias</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel stack">
+        <div class="row between"><h2 class="h-sec">Tu hoja de ruta</h2><span class="tiny muted">Se ajusta con cada prueba</span></div>
+        <div class="path">
+        ${r.hitos.map((h, i) => {
+          const st = i < cur ? 'done' : i === cur ? 'cur' : 'lock';
+          return `<div class="hito ${st}"><div class="hito-dot">${st === 'done' ? '<i class="ph ph-check"></i>' : st === 'lock' ? (h.boss ? '<i class="ph ph-crown-simple"></i>' : '<i class="ph ph-lock-simple"></i>') : i + 1}</div>
+            <div class="hito-body">
+              <div class="row between" style="align-items:flex-start"><div><div class="tiny muted">Hito ${i + 1} · ${h.d}${h.boss ? ' · Prueba final en modo validación' : ''}</div><div style="font-size:15px">${esc(h.t)}</div></div>
+                ${st === 'done' ? '<span class="chip ok"><i class="ph ph-seal-check"></i>Evidencia</span>' : st === 'cur' ? '<span class="chip acc">En curso</span>' : ''}</div>
+              ${st === 'done' ? `<div class="tiny soft" style="margin-top:3px"><i class="ph ph-folder-simple"></i> ${esc(h.ev)}</div>` : ''}
+              ${st === 'done' && newsNodes(i) ? `<div class="stack-sm" style="margin-top:8px">${newsNodes(i)}</div>` : ''}
+              ${st === 'lock' ? `<div class="tiny muted" style="margin-top:3px">Al terminarlo: ${esc(h.ev)}</div>` : ''}
+              ${st === 'cur' ? `<div class="stack-sm" style="margin-top:10px">
+                ${r.curNodes.map((n) => `<div class="node">${nodeIcon(n)}<span style="flex:1">${esc(n.t)}</span>${n.real ? '<span class="chip ok tiny">Probado en la vida real</span>' : ''}${n.p ? `<span class="tiny muted">${n.p}</span>` : ''}${n.mech ? `<span class="chip acc"><i class="ph ${r.mech.icon}"></i>${esc(r.mech.name)}</span>` : ''}</div>`).join('')}
+                ${newsNodes(i)}
+                <div class="row wrapx" style="margin-top:6px"><button class="btn btn-solid btn-sm" data-act="nav" data-arg="session"><i class="ph ph-lightning"></i>${sessDone ? 'Repasar la sesión de hoy' : 'Sesión de hoy · 10 min'}</button><button class="btn btn-secondary btn-sm" data-act="nav" data-arg="mech"><i class="ph ${r.mech.icon}"></i>${esc(r.mech.name)}</button></div>
+                <div class="tiny muted">Al terminarlo: ${esc(h.ev)}</div>
+              </div>` : ''}
+            </div></div>`;
+        }).join('')}
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="panel stack-sm">
+          <div class="row between"><h2 class="h-sec">Sesión de hoy</h2><span class="chip"><i class="ph ph-clock"></i>10 min</span></div>
+          ${['Repaso de lo que fallaste', 'Microlección con su fuente', `Práctica: ${r.mech.name}`, r.session.challenge ? 'Cierre y desafío real' : 'Cierre y qué sigue'].map((t, k) => `<div class="node"><i class="ph ${sessDone ? 'ph-fill ph-check-circle t-ok' : 'ph-circle muted'}"></i><span class="small">${esc(t)}</span></div>`).join('')}
+          <button class="btn ${sessDone ? 'btn-secondary' : 'btn-solid'}" data-act="nav" data-arg="session" style="margin-top:6px">${sessDone ? 'Sesión completada · ver de nuevo' : 'Empezar'}</button>
+        </div>
+
+        ${challengeCard()}
+
+        <div class="panel stack-sm">
+          <div class="row between"><h2 class="h-sec"><i class="ph ph-sparkle" style="color:var(--color-accent-300)"></i> Tu coach</h2><button class="btn btn-ghost btn-sm" data-act="coach">Abrir</button></div>
+          ${r.coach.slice(0, 2).map((c) => coachItem(c)).join('')}
+        </div>
+
+        <div class="panel stack-sm">
+          <h2 class="h-sec">Lecturas y externos</h2>
+          <p class="tiny muted">Lo que no se puede traer adentro entra como lectura: se abre en la app, tocás «Ya lo leí» y te tomamos un caso de 2 minutos. Eso es lo que suma al nodo.</p>
+          ${r.reading.map((x) => `<div class="row" style="align-items:flex-start;padding:6px 0"><i class="ph ph-book-open soft" style="margin-top:3px"></i><div style="flex:1" class="stack-sm" ><span class="small">${esc(x.t)}</span><span class="tiny muted">${esc(x.type)} · ${esc(x.lic)}</span></div><span class="chip ${x.st === 'Check pendiente' ? 'warn' : ''}">${esc(x.st)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function coachItem(c) {
+  return `<div class="panel tight flat stack-sm"><div class="row" style="align-items:flex-start"><i class="ph ${c.icon}" style="color:var(--color-accent-300);margin-top:2px"></i><span class="small" style="flex:1">${esc(c.t)}</span></div>
+    ${c.tag ? `<span class="src" style="align-self:flex-start"><i class="ph ph-scales"></i>${esc(c.tag)}</span>` : ''}
+    <div class="row"><button class="btn btn-primary btn-sm" data-act="coachCta" data-arg="${esc(c.cta)}">${esc(c.cta)}</button><button class="btn btn-ghost btn-sm" data-act="toast" data-arg="Listo: te lo vuelvo a sugerir más adelante.">Más tarde</button></div></div>`;
+}
+function challengeCard() {
+  const c = R().challenge;
+  if (c.kind === 'tool') {
+    return `<div class="panel stack-sm"><div class="row between"><h2 class="h-sec">${esc(c.t)}</h2><i class="ph ph-github-logo" style="font-size:20px"></i></div><p class="small soft">${esc(c.d)}</p>
+      ${S.ghConnected ? '<span class="chip ok" style="align-self:flex-start"><i class="ph ph-check"></i>GitHub conectado · 14 commits verificados</span>' : `<button class="btn btn-secondary btn-sm" data-act="gh" style="align-self:flex-start"><i class="ph ph-github-logo"></i>${esc(c.cta)}</button>`}</div>`;
+  }
+  const ci = S.checkin;
+  return `<div class="panel stack-sm"><div class="row between"><h2 class="h-sec">${esc(c.t)}</h2><i class="ph ph-globe-hemisphere-west" style="font-size:20px;color:var(--color-accent-300)"></i></div><p class="small soft">${esc(c.d)}</p>
+    ${ci ? `<div class="fb ${ci === 'Lo hice' ? 'ok' : 'info'} small">${ci === 'Lo hice' ? 'Bien. El nodo queda marcado «probado en la vida real». ¿Cómo te fue? Contalo en una frase y lo sumamos a tu portfolio.' : ci === 'No me animé' ? 'No pasa nada, no te resta nada. Mañana te propongo una versión más chica.' : 'Ok, lo pasamos para la próxima oportunidad.'}</div>`
+    : `<span class="tiny muted">Check-in de hoy a las 18:</span><div class="row wrapx" style="gap:6px">${['Lo hice', 'No hubo oportunidad', 'No me animé'].map((o) => `<button class="chipbtn" data-act="checkin" data-arg="${o}">${o}</button>`).join('')}</div>`}</div>`;
+}
+
+/* ── Sesión de hoy ────────────────────────────────────────────── */
+function sessionScreen() {
+  const r = R(); const s = r.session; const st = S.sess; const done = S.done[S.route];
+  const names = ['Repaso', 'Microlección', 'Práctica', 'Cierre'];
+  let body = '';
+  if (st.step === 0) {
+    const card = s.repaso[st.card];
+    body = `<div class="panel stack"><div class="row between"><span class="kicker">Repaso espaciado · ${st.card + 1} de ${s.repaso.length}</span><span class="tiny muted">Vuelve lo que fallaste antes</span></div>
+      <p class="lead" style="color:var(--color-text)">${esc(card.q)}</p>
+      ${st.reveal ? `<div class="fb info">${esc(card.a)}</div><div class="row wrapx"><span class="small soft">¿Lo sabías?</span><button class="btn btn-secondary btn-sm" data-act="sessKnew" data-arg="1">Lo sabía</button><button class="btn btn-secondary btn-sm" data-act="sessKnew" data-arg="0">No lo sabía</button></div>` : '<button class="btn btn-primary" data-act="sessReveal" style="align-self:flex-start">Ver respuesta</button>'}
+    </div>`;
+  } else if (st.step === 1) {
+    const l = s.leccion;
+    body = `<div class="panel stack"><span class="kicker">Microlección · 2 min</span><h2 class="h-sec" style="font-size:21px">${esc(l.t)}</h2>
+      <ul class="stack-sm" style="margin:0;padding-left:18px">${l.b.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
+      ${l.code ? `<pre class="code">${esc(l.code)}</pre>` : ''}
+      <span class="src" style="align-self:flex-start"><i class="ph ph-book-open"></i>${esc(l.src)}</span>
+      <p class="tiny muted">La IA adapta y cita: no inventa el contenido. Cada tarjeta lleva su fuente.</p>
+      <button class="btn btn-solid" data-act="sessStep" data-arg="2" style="align-self:flex-start">Seguir a la práctica <i class="ph ph-arrow-right"></i></button></div>`;
+  } else if (st.step === 2) {
+    body = `<div class="panel stack"><div class="row" style="gap:14px"><div class="icon-box"><i class="ph ${r.mech.icon}"></i></div><div><span class="kicker">Práctica · ${esc(r.mech.where)}</span><h2 class="h-sec" style="font-size:21px">${esc(r.mech.name)}</h2></div></div>
+      <p class="soft">${esc(r.mech.desc)}</p>
+      ${done ? `<div class="fb ok">Práctica completada: ${esc(done.label)}.</div><button class="btn btn-solid" data-act="sessStep" data-arg="3" style="align-self:flex-start">Ir al cierre <i class="ph ph-arrow-right"></i></button>` : `<button class="btn btn-solid" data-act="startMech" data-arg="session" style="align-self:flex-start">Empezar la práctica <i class="ph ph-arrow-right"></i></button>`}</div>`;
+  } else {
+    body = `<div class="panel stack"><span class="kicker">Cierre</span><h2 class="h-sec" style="font-size:21px">Sesión completada</h2>
+      <div class="stack-sm"><div class="row between small"><span>${esc(s.node)}</span><span class="soft">${s.to} %</span></div><div class="bar ok"><span style="width:${s.to}%"></span></div><span class="tiny muted">Antes de hoy: ${s.from} %</span></div>
+      <div class="row wrapx" style="gap:8px"><span class="chip"><i class="ph-fill ph-fire" style="color:var(--warn)"></i>Racha: 10 días</span>${st.knew.includes(false) ? '<span class="chip warn">1 tarjeta vuelve en 2 días</span>' : '<span class="chip ok">Repaso al día</span>'}</div>
+      ${s.challenge ? `<div class="note"><i class="ph ph-globe-hemisphere-west"></i><span><b style="font-weight:500">Desafío en el mundo real:</b> ${esc(s.challenge)}</span></div>` : `<div class="note"><i class="ph ph-github-logo"></i><span>Afuera de la app: subí el arreglo a tu repo del hito 6. ${S.ghConnected ? 'Como conectaste GitHub, lo verificamos solos.' : 'Si conectás GitHub, lo verificamos solos.'}</span></div>`}
+      <div class="note"><i class="ph ph-calendar"></i><span><b style="font-weight:500">Mañana:</b> ${esc(s.tomorrow)}</span></div>
+      <button class="btn btn-solid" data-act="nav" data-arg="home" style="align-self:flex-start">Volver a mi roadmap</button></div>`;
+  }
+  return `<div class="narrow page stack" style="gap:18px">
+    <div><div class="kicker">Sesión de hoy · 10 min</div><h1 class="h-page">Hito ${r.cur + 1}: ${esc(r.hitos[r.cur].t)}</h1></div>
+    <div class="steps">${names.map((n, k) => `<span class="step ${k === st.step ? 'on' : k < st.step ? 'done' : ''}">${k < st.step ? '<i class="ph ph-check"></i>' : ''}${n}</span>`).join('')}</div>
+    ${body}
+  </div>`;
+}
+
+/* ── Mecánica: Ticket de bug ──────────────────────────────────── */
+function ticketScreen() {
+  const T = S.ticket;
+  const names = ['Ticket', 'Reproducir', 'Hipótesis', 'Confirmar', 'Arreglar', 'Comunicar', 'Resultado'];
+  const left = `<div class="panel stack">
+      <div class="row between"><span class="chip bad"><i class="ph ph-warning-circle"></i>Prioridad alta</span><span class="tiny muted">#142</span></div>
+      <h2 class="h-sec">El carrito suma mal</h2>
+      <div class="bub them" style="max-width:100%"><span class="tiny muted">Marta, dueña de «La Yerbera»</span><br>Agrego el mate y el total dice $01500. Agrego la bombilla y dice $015002300. ¡Tendría que decir $3800! Los clientes se asustan.</div>
+      <div class="tiny muted">index.html</div><pre class="code">${esc(TK_HTML)}</pre>
+      ${T.step < 4 ? `<div class="tiny muted">carrito.js</div><pre class="code">${esc(TK_JS)}</pre>` : ''}
+    </div>`;
+  let right = '';
+  if (T.step === 0) {
+    right = `<div class="panel stack"><span class="kicker">Qué entrena</span><p>El trabajo real de un junior: recibir un reporte, reproducir el error, formular una hipótesis, verificarla, arreglar, documentar y explicárselo a alguien no técnico.</p>
+      <div class="stack-sm small">${TK_PC.map((p) => `<div class="row" style="align-items:flex-start"><span class="chip acc">${p[0]}</span><span class="soft">${esc(p[1])}</span></div>`).join('')}</div>
+      <span class="tiny muted">Cada decisión está trazada a un punto clave y a su fuente en MDN, como en la v13.</span>
+      <button class="btn btn-solid" data-act="tkStep" data-arg="1" style="align-self:flex-start">Tomar el ticket <i class="ph ph-arrow-right"></i></button></div>`;
+  } else if (T.step <= 3) {
+    const d = TK_DEC[T.step]; const picks = T.picks[T.step]; const solved = picks.some((k) => d.opts[k].ok);
+    const last = picks[picks.length - 1];
+    right = `<div class="panel stack"><span class="kicker">Paso ${T.step} de 3</span><h2 class="h-sec" style="font-size:19px">${esc(d.q)}</h2>
+      <div class="stack-sm">${d.opts.map((o, k) => { const tried = picks.includes(k); const cls = tried ? (o.ok ? 'right' : o.partial ? 'partial' : 'wrong') : ''; return `<button class="choice ${cls}" data-act="tkPick" data-arg="${k}" ${tried || solved ? 'disabled' : ''}><span class="letter">${'ABCD'[k]}</span><span ${T.step === 3 ? 'style="font-family:ui-monospace,Consolas,monospace;font-size:12.5px"' : ''}>${esc(o.t)}</span></button>`; }).join('')}</div>
+      ${last !== undefined ? `<div class="fb ${d.opts[last].ok ? 'ok' : d.opts[last].partial ? 'warn' : 'bad'}">${esc(d.opts[last].fb)}</div>` : ''}
+      ${solved ? `<button class="btn btn-solid" data-act="tkStep" data-arg="${T.step + 1}" style="align-self:flex-start">Siguiente <i class="ph ph-arrow-right"></i></button>` : ''}</div>`;
+  } else if (T.step === 4) {
+    const tests = T.tests; const allOk = tests && tests.every((t) => t.ok);
+    right = `<div class="panel stack"><span class="kicker">Paso 4 · Arreglalo</span><p>Cambiá el JavaScript para que el total sume bien. No toques el HTML.</p>
+      <textarea class="codeedit" data-model="ticket.code" spellcheck="false" aria-label="Editor de JavaScript">${esc(T.code)}</textarea>
+      <div class="row wrapx"><button class="btn btn-solid" data-act="tkRun"><i class="ph-fill ph-play"></i>Correr tests</button><button class="btn btn-ghost" data-act="tkHint"><i class="ph ph-lightbulb"></i>Pista</button><button class="btn btn-ghost" data-act="tkResetCode">Restaurar código</button></div>
+      ${T.hint ? '<div class="fb info small">Pista: el precio llega como texto (PC1). Convertilo a número antes de sumarlo (PC3).</div>' : ''}
+      <div class="panel tight flat">${testList(tests)}</div>
+      ${T.testFb ? `<div class="fb ${allOk ? 'ok' : 'bad'}">${esc(T.testFb)}</div>` : ''}
+      ${allOk ? '<button class="btn btn-solid" data-act="tkStep" data-arg="5" style="align-self:flex-start">Siguiente <i class="ph ph-arrow-right"></i></button>' : ''}
+      <span class="tiny muted">Los tests corren de verdad en tu navegador. El feedback sale de un catálogo de errores frecuentes; la IA solo entra si tu respuesta no coincide con ninguno.</span></div>`;
+  } else if (T.step === 5) {
+    const ev = T.evald;
+    right = `<div class="panel stack"><span class="kicker">Paso 5 · Documentar y comunicar</span>
+      <div class="field"><label>Mensaje del commit</label><input class="input" data-model="ticket.commit" value="${esc(T.commit)}" placeholder="Ej.: fix: …" style="font-family:ui-monospace,Consolas,monospace"></div>
+      <div class="field"><label>Respuesta a Marta (2 o 3 líneas, sin palabras técnicas)</label><textarea class="input" data-model="ticket.marta" rows="4" placeholder="Hola, Marta…">${esc(T.marta)}</textarea></div>
+      <button class="btn btn-solid" data-act="tkEval" style="align-self:flex-start"><i class="ph ph-sparkle"></i>Evaluar</button>
+      ${ev ? `<div class="grid-half">
+        <div class="panel tight flat stack-sm"><b style="font-weight:500">Commit · ${ev.commitScore}/15</b>${ev.commit.map((c) => `<div class="row small" style="align-items:flex-start"><i class="ph ${c.ok ? 'ph-check t-ok' : c.bonus ? 'ph-minus muted' : 'ph-x t-bad'}" style="margin-top:3px"></i><span>${esc(c.l)}${!c.ok ? `<br><span class="tiny muted">${esc(c.tip)}</span>` : ''}</span></div>`).join('')}<span class="tiny muted">Modelo: fix: convertir el precio a número antes de sumarlo al total</span></div>
+        <div class="panel tight flat stack-sm"><b style="font-weight:500">Respuesta a Marta · ${ev.martaScore}/15</b>${ev.marta.map((c) => `<div class="row small" style="align-items:flex-start"><i class="ph ${c.ok ? 'ph-check t-ok' : 'ph-x t-bad'}" style="margin-top:3px"></i><span>${esc(c.l)}${!c.ok ? `<br><span class="tiny muted">${esc(c.tip)}</span>` : ''}</span></div>`).join('')}<span class="tiny muted">Modelo: «Hola, Marta. Ya está resuelto: el sistema leía los precios como texto y los pegaba en lugar de sumarlos. Probé con varios productos y el total da bien (mate + bombilla = $3800).»</span></div>
+      </div><span class="tiny muted">Evaluación simulada con reglas. En la app real la hace la IA con la rúbrica.</span>
+      <button class="btn btn-solid" data-act="tkStep" data-arg="6" style="align-self:flex-start">Ver resultado <i class="ph ph-arrow-right"></i></button>` : ''}</div>`;
+  } else {
+    const res = tkResult();
+    right = `<div class="panel stack"><span class="kicker">Resultado</span>
+      <div class="row" style="gap:16px"><b style="font-size:40px;font-weight:500">${res.total}</b><div><div>de 100 puntos</div><div class="tiny muted">Modo práctica · en validación tenés una sola chance por paso y sin pistas</div></div></div>
+      <table class="table"><tbody>${res.rows.map(([l, v, m]) => `<tr><td>${l}</td><td style="text-align:right">${v}/${m}</td></tr>`).join('')}</tbody></table>
+      <h3 class="h-sec" style="font-size:15px">Puntos clave y sus fuentes</h3>
+      <div class="stack-sm">${TK_PC.map((p, k) => { const failed = (k === 3 && T.score[1] !== 10) || (k === 1 && T.score[2] !== 10) || (k === 0 && T.score[3] !== 10); return `<div class="row small" style="align-items:flex-start"><i class="ph ${failed ? 'ph-arrow-counter-clockwise' : 'ph-check'} ${failed ? '' : 't-ok'}" style="margin-top:3px;${failed ? 'color:var(--warn)' : ''}"></i><span style="flex:1">${esc(p[1])}<br><a href="${p[3]}" target="_blank" rel="noopener" class="tiny">${esc(p[2])} · CC BY-SA 2.5</a>${failed ? '<span class="tiny" style="color:var(--warn)"> · vuelve en tu repaso en 2 días</span>' : ''}</span></div>`; }).join('')}</div>
+      ${mechActions(T.saved, 'tkSave', 'tkRetry')}</div>`;
+  }
+  return `<div class="wrap page stack" style="gap:18px">
+    <div class="row wrapx between"><div><div class="kicker">Práctica estrella · Hito 6 · Debugging metódico</div><h1 class="h-page">Ticket de bug</h1></div>
+      <div class="row" style="gap:8px"><span class="chip acc">Modo práctica</span><span class="chip"><i class="ph ph-star"></i>${tkXp()} XP</span></div></div>
+    <div class="steps">${names.map((n, k) => `<span class="step ${k === T.step ? 'on' : k < T.step ? 'done' : ''}">${k < T.step ? '<i class="ph ph-check"></i>' : ''}${n}</span>`).join('')}</div>
+    <div class="grid-half" style="align-items:start">${left}${right}</div>
+  </div>`;
+}
+function tkXp() { const T = S.ticket; return [1, 2, 3].reduce((a, k) => a + (T.score[k] || 0), 0) + (T.tests && T.tests.every((t) => t.ok) ? 40 : 0); }
+function testList(tests) {
+  const base = [['Al cargar la página, el total muestra 0'], ['Clic en Mate → 1500'], ['Clic en Mate y en Bombilla → 3800'], ['Clic en Mate, Mate y Bombilla → 5300'], ['Oculto: un producto nuevo de $850 y Mate → 2350', true], ['Oculto: total es un número después de dos clics', true]];
+  return base.map(([l, hidden], k) => { const t = tests && tests[k]; const ic = !t ? 'ph-circle t-wait' : t.ok ? 'ph-fill ph-check-circle t-ok' : 'ph-fill ph-x-circle t-bad'; return `<div class="test"><i class="ph ${ic}"></i><span style="flex:1">${hidden && !t ? 'Test oculto' : esc(l)}${t && !t.ok && t.got !== undefined ? `<br><span class="tiny muted">Obtenido: ${esc(t.got)}</span>` : ''}</span>${hidden ? '<span class="tiny muted">oculto</span>' : ''}</div>`; }).join('');
+}
+function runTicketTests(code) {
+  function env(prices) {
+    const totalEl = { textContent: '0' };
+    const buttons = prices.map((p) => ({ dataset: { precio: String(p) }, h: [], addEventListener(ev, fn) { if (ev === 'click') this.h.push(fn); }, click() { this.h.forEach((f) => f()); } }));
+    const doc = { querySelectorAll: (s) => (s === '.agregar' ? buttons : []), querySelector: (s) => (s === '#total' ? totalEl : null) };
+    const getTotal = new Function('document', `${code}\n;return function(){ try { return total; } catch (e) { return undefined; } };`)(doc);
+    return { buttons, totalEl, getTotal };
+  }
+  const shown = (e) => String(e.totalEl.textContent);
+  const out = [];
+  try {
+    let e = env([1500, 2300]); out.push({ ok: shown(e) === '0', got: shown(e) });
+    e = env([1500, 2300]); e.buttons[0].click(); out.push({ ok: shown(e) === '1500', got: shown(e) });
+    e = env([1500, 2300]); e.buttons[0].click(); e.buttons[1].click(); out.push({ ok: shown(e) === '3800', got: shown(e) });
+    e = env([1500, 2300]); e.buttons[0].click(); e.buttons[0].click(); e.buttons[1].click(); out.push({ ok: shown(e) === '5300', got: shown(e) });
+    e = env([1500, 2300, 850]); e.buttons[2].click(); e.buttons[0].click(); out.push({ ok: shown(e) === '2350', got: shown(e) });
+    e = env([1500, 2300]); e.buttons[0].click(); e.buttons[1].click(); const ty = typeof e.getTotal(); out.push({ ok: ty === 'number', got: `typeof total = ${ty}` });
+    return { tests: out };
+  } catch (err) {
+    return { tests: Array.from({ length: 6 }, () => ({ ok: false, got: 'El código no corre' })), error: err.message };
+  }
+}
+function ticketFeedback(code, res) {
+  if (res.error) return `El código tiene un error: ${res.error}. Revisá paréntesis y llaves.`;
+  const ok = res.tests.every((t) => t.ok);
+  const c = code.replace(/\s+/g, ' ');
+  if (/Number\(\s*total\s*\+/.test(c)) return 'La conversión llega tarde: primero se pegan los textos y después convertís el resultado. Convertí el precio antes de sumarlo.';
+  if (/textContent\s*===|"Mate de calabaza"|1500\s*;|\+=\s*1500/.test(c) && !res.tests[4].ok) return 'Funciona para estos dos productos, pero la tienda va a vender más. Usá el precio que ya trae cada botón.';
+  if (ok && /\+\s*\+?\s*\+boton\.dataset|=\s*\+boton\.dataset|\+=\s*\+boton/.test(c)) return 'Funciona. El + de adelante convierte a número, pero cuesta leerlo. En un equipo, Number(...) deja más clara la intención.';
+  if (ok && /parseInt\(\s*boton\.dataset\.precio\s*\)/.test(c)) return 'Funciona. Pero si un día hay precios con centavos ("1250.50"), parseInt los corta. Pensá si no te conviene Number.';
+  if (ok) return 'Funciona: convertiste el precio a número antes de sumarlo (PC3). Pasaron los 6 tests, incluidos los ocultos.';
+  if (!res.tests[1].ok && /01500|1500/.test(res.tests[1].got)) return 'Todavía se pegan los textos. Fijate de qué tipo es boton.dataset.precio (PC1).';
+  return 'Algunos tests no pasan. Revisá de qué tipo es lo que sumás (PC1 y PC2) o pedí una pista.';
+}
+function evalCommit(c) {
+  const t = c.trim(); const first = t.split('\n')[0]; const low = t.toLowerCase();
+  return [
+    { l: 'Dice qué cambió', ok: /(convert|número|numero|number|parse)/.test(low), tip: 'Nombrá el cambio: por ejemplo, «convertir el precio a número».' },
+    { l: 'Dice dónde o por qué', ok: /(antes|sum|total|carrito|precio)/.test(low), tip: 'Sumá dónde o para qué: «antes de sumarlo al total».' },
+    { l: 'Primera línea de 72 caracteres o menos', ok: first.length > 0 && first.length <= 72, tip: first.length ? `Tiene ${first.length} caracteres.` : 'Está vacío.' },
+    { l: 'Bonus: prefijo fix:', ok: /^fix(\(.+\))?:/i.test(first.trim()), bonus: true, tip: 'Opcional: «fix:» indica que es un arreglo (Conventional Commits).' },
+  ];
+}
+function evalMarta(m) {
+  const j = m.match(/(string|concaten\w*|typeof|dataset|number|parse\w*|variable|bug|código|codigo|javascript)/i);
+  return [
+    { l: 'Sin palabras técnicas', ok: m.trim().length > 0 && !j, tip: j ? `Apareció «${j[0]}». Probá con «leía los precios como texto».` : 'Está vacía.' },
+    { l: 'Dice que está resuelto', ok: /(resuelt|arregl|solucion|listo|corregi)/i.test(m), tip: 'Contale que ya funciona.' },
+    { l: 'Dice cómo se comprobó', ok: /(prob|3800|3\.800|verifi|chequ|revis)/i.test(m), tip: 'Contale cómo lo comprobaste: «probé con el mate y la bombilla y da $3800».' },
+    { l: 'Tono amable', ok: /(hola|gracias|disculp|perd[oó]n|saludos)/i.test(m), tip: 'Un saludo o un «gracias por avisar» suma.' },
+  ];
+}
+function tkResult() {
+  const T = S.ticket; const dec = [1, 2, 3].reduce((a, k) => a + (T.score[k] || 0), 0);
+  const ev = T.evald || { commitScore: 0, martaScore: 0 };
+  const rows = [['Decisiones (reproducir, hipótesis, confirmar)', dec, 30], ['Tests', T.testScore, 40], ['Mensaje del commit', ev.commitScore, 15], ['Respuesta a Marta', ev.martaScore, 15]];
+  return { rows, total: rows.reduce((a, r) => a + r[1], 0) };
+}
+function mechActions(saved, saveAct, retryAct) {
+  return `<div class="row wrapx">
+    ${saved ? '<span class="chip ok"><i class="ph ph-check"></i>Guardado en tu portfolio</span>' : `<button class="btn btn-primary" data-act="${saveAct}"><i class="ph ph-folder-simple-plus"></i>Guardar en mi portfolio</button>`}
+    <button class="btn btn-secondary" data-act="${retryAct}"><i class="ph ph-arrow-counter-clockwise"></i>Reintentar</button>
+    ${S.fromSession ? '<button class="btn btn-solid" data-act="backToSession">Seguir con la sesión <i class="ph ph-arrow-right"></i></button>' : '<button class="btn btn-ghost" data-act="nav" data-arg="home">Volver a mi roadmap</button>'}
+  </div>`;
+}
+
+/* ── Mecánica: Roleplay ───────────────────────────────────────── */
+function roleplayScreen() {
+  const P = S.rp; const turn = P.picks.length; const valid = P.mode === 'validacion';
+  if (P.ended) return rpResultScreen();
+  const t = RP_TURNS[turn];
+  const angerCol = P.anger >= 8 ? 'var(--bad)' : P.anger >= 5 ? 'var(--warn)' : 'var(--ok)';
+  return `<div class="wrap page stack" style="gap:16px">
+    <div class="row wrapx between"><div><div class="kicker">Práctica estrella · Hito 3 · Nivel 2</div><h1 class="h-page">Roleplay: cliente enojado</h1></div>
+      <div class="switch" title="${turn > 0 ? 'El modo se elige antes de empezar' : ''}">
+        <button class="${!valid ? 'on' : ''}" data-act="rpMode" data-arg="practica" ${turn > 0 ? 'disabled' : ''}>Práctica</button>
+        <button class="${valid ? 'on' : ''}" data-act="rpMode" data-arg="validacion" ${turn > 0 ? 'disabled' : ''}>Validación</button>
+      </div></div>
+    ${valid ? '<div class="note"><i class="ph ph-shield-check"></i><span>Modo validación: una sola chance, sin termómetro ni pistas. Es el intento que cuenta para tu portfolio, como el jefe final de la v14.</span></div>'
+      : `<div class="panel tight row" style="gap:14px"><i class="ph ph-thermometer-simple" style="font-size:20px;color:${angerCol}"></i><span class="small" style="width:110px">Enojo: <b style="font-weight:500;color:${angerCol}">${P.anger}/10</b></span><div class="thermo"><div class="thermo-mark" style="left:${P.anger * 10}%"></div></div><span class="tiny muted hide-sm">Primera respuesta: 0:42</span></div>`}
+    <div class="grid2">
+      <div class="panel stack">
+        <div class="row between"><div class="row" style="gap:8px"><div class="avatar" style="background:var(--color-neutral-800);color:var(--color-neutral-200)">MR</div><div><div class="small">Marcelo Ríos</div><div class="tiny muted">Chat · Tienda Andén</div></div></div><span class="tiny muted">Turno ${Math.min(turn + 1, 4)} de 4</span></div>
+        <div class="chat">
+          ${P.msgs.map((m) => m.who === 'tip' ? (valid ? '' : `<span class="bub-tip chip ${m.d > 0 ? 'bad' : m.d < 0 ? 'ok' : ''}">${m.d > 0 ? '+' : ''}${m.d} enojo · ${esc(m.t)}</span>`) : `<div class="bub ${m.who}">${esc(m.t)}</div>`).join('')}
+          ${P.typing ? '<div class="typing"><span></span><span></span><span></span></div>' : ''}
+        </div>
+        ${!P.typing && t ? `<div class="stack-sm"><span class="tiny muted">Elegí tu respuesta</span>${t.opts.map((o, k) => `<button class="choice" data-act="rpPick" data-arg="${k}" style="padding:11px 13px;font-size:13px"><span class="letter">${'ABC'[k]}</span><span>${esc(o.t)}</span></button>`).join('')}</div>` : ''}
+        <div class="row"><input class="input" disabled placeholder="En la app real escribís libre y la IA hace de Marcelo"><button class="btn btn-secondary btn-icon" disabled aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button></div>
+        <span class="tiny muted">En el mockup elegís entre respuestas de ejemplo. En la app, una IA hace de Marcelo con la persona y los hechos fijos, y otra distinta te evalúa con la rúbrica.</span>
+      </div>
+      <div class="stack">
+        <div class="panel tight stack-sm"><span class="kicker">Ficha del cliente</span><dl class="kv"><dt>Cliente</dt><dd>Marcelo Ríos, 47, Rosario</dd><dt>Compra</dt><dd>Hace 12 días · entrega prometida en 5 días hábiles</dd><dt>Contactos</dt><dd>2 mails sin respuesta (lunes y miércoles)</dd><dt>Nota</dt><dd>Corre 10 km el domingo. Hoy es jueves.</dd></dl></div>
+        <div class="panel tight stack-sm"><span class="kicker">Sistema de pedidos</span><dl class="kv"><dt>Pedido</dt><dd>#48213 · Zapatillas «Trote» negras, talle 43</dd><dt>Estado</dt><dd>En centro de distribución Rosario, desde el viernes</dd><dt>Correo</dt><dd>Sin fecha estimada</dd><dt>Stock</dt><dd>Retiro Rosario Centro: 1 par «Trote» talle 43, <b style="font-weight:500">gris</b></dd></dl></div>
+        <div class="panel tight stack-sm"><span class="kicker">Política de Tienda Andén</span><ul class="small soft stack-sm" style="margin:0;padding-left:16px"><li>Si la demora es culpa de la tienda, se puede cambiar el color sin costo.</li><li>Lo reservado en el punto de retiro está disponible al día siguiente desde las 14 h.</li><li>El reembolso vuelve al mismo medio de pago.</li><li>Cupón de hasta 10 %; para más, hace falta un supervisor.</li><li><b style="font-weight:500;color:var(--color-text)">Nunca:</b> prometer una fecha que el sistema no muestra, pedir los datos completos de una tarjeta ni desalentar un reclamo ante Defensa del Consumidor.</li></ul><span class="tiny muted">Empresa ficticia. En la versión empresas, acá van las políticas reales.</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+function rpCompute() {
+  const P = S.rp; const o = P.picks.map((k, i) => RP_TURNS[i].opts[k]);
+  let emp = o[0]?.fx.emp ?? 0; let cargo = o[0]?.fx.cargo ?? 0; let pol = o[1]?.fx.pol ?? 0; const clar = o[1]?.fx.clar ?? 0; const cierre = o[3]?.fx.cierre ?? 0;
+  if (o[2]?.fx.cargoAdj) cargo = Math.max(0, cargo + o[2].fx.cargoAdj);
+  if (o[3]?.fx.polCap !== undefined) pol = Math.min(pol, o[3].fx.polCap);
+  const autofail = o.some((x) => x.autofail); if (autofail) pol = 0;
+  const total = emp + cargo + pol + clar + cierre;
+  const pass = total >= 10 && pol >= 2 && !autofail;
+  const resolved = P.anger <= 4;
+  const faults = o.filter((x) => x.fault).map((x) => x.fault);
+  let bestI = 0; o.forEach((x, i) => { if (x.d < o[bestI].d) bestI = i; });
+  let worstI = -1; o.forEach((x, i) => { if (x.fault || x.d > 0) { if (worstI < 0 || x.autofail || (x.fault && !o[worstI].fault) || x.d > o[worstI].d) worstI = i; } });
+  return { o, emp, cargo, pol, clar, cierre, total, pass, resolved, faults, bestI, worstI, autofail };
+}
+function rpResultScreen() {
+  const P = S.rp; const c = rpCompute();
+  const W = 300, H = 90; const n = P.curve.length;
+  const pts = P.curve.map((v, i) => `${(i * (W - 20)) / (n - 1) + 10},${H - 10 - v * 7}`).join(' ');
+  const best = c.o[c.bestI]; const worst = c.worstI >= 0 ? c.o[c.worstI] : null; const better = c.worstI >= 0 ? RP_TURNS[c.worstI].opts.find((x) => x.best) : null;
+  const crit = [['Empatía específica', c.emp, c.emp >= 3 ? 'Nombraste lo que le pasó, sin exagerar las disculpas.' : 'Usaste una frase hecha o no reconociste lo concreto.'], ['Hacerse cargo', c.cargo, c.cargo >= 3 ? 'Te presentaste y avisaste la espera.' : 'Derivaste, culpaste a otro, pediste un dato de la ficha o te pusiste a la defensiva.'], ['Solución dentro de la política (bloqueante)', c.pol, c.pol >= 3 ? 'Usaste los datos del sistema y ofreciste opciones reales.' : c.faults.length ? c.faults.join(' ') : 'La solución no cubría lo que necesitaba.'], ['Claridad', c.clar, c.clar >= 3 ? 'Mensajes concretos, con horas y lugares.' : 'Faltaron datos concretos (hora, lugar, código).'], ['Cierre y seguimiento', c.cierre, c.cierre >= 3 ? 'Resumiste, diste el código y dijiste cuándo volvés a escribir.' : 'Faltó confirmar el código o cuándo hacés el seguimiento.']];
+  return `<div class="wrap page stack" style="gap:16px">
+    <div><div class="kicker">Roleplay · Resultado · ${P.mode === 'validacion' ? 'Modo validación' : 'Modo práctica'}</div><h1 class="h-page">${c.pass ? 'Aprobado' : 'Todavía no, pero cerca'} · ${c.total}/15</h1>
+      <p class="soft">${c.resolved ? `Marcelo terminó con enojo ${P.anger} y aceptó una opción.` : `Marcelo terminó con enojo ${P.anger}: no quedó resuelto.`} Se aprueba con 10/15 o más y al menos 2 en política.</p></div>
+    <div class="grid2">
+      <div class="stack">
+        <div class="panel stack-sm"><span class="kicker">Lo mejor</span><p>«${esc(best.t)}»</p><span class="small soft">${esc(best.tip)}${best.d < 0 ? ` (${best.d} de enojo)` : ''}.</span></div>
+        ${worst ? `<div class="panel stack-sm"><span class="kicker">Una cosa para mejorar</span><p>«${esc(worst.t)}»</p><span class="small soft">${esc(worst.fault || worst.tip)}</span>${better ? `<div class="fb info small">Probá con: «${esc(better.t)}»</div>` : ''}</div>` : '<div class="panel"><span class="kicker">Una cosa para mejorar</span><p class="small soft" style="margin-top:6px">Nada bloqueante. Probá el nivel 3: Marcelo escribe en ráfagas y tira un insulto leve, para practicar cómo poner un límite con respeto.</p></div>'}
+        <div class="panel stack-sm"><span class="kicker">Rúbrica</span>
+          <table class="table"><tbody>${crit.map(([l, v, d]) => `<tr><td><div>${l}</div><div class="tiny muted">${esc(d)}</div></td><td style="text-align:right;white-space:nowrap"><span class="lvl ${v >= 3 ? 's' : v >= 2 ? 'd' : 'i'}">${v}/3</span></td></tr>`).join('')}</tbody></table>
+          ${c.autofail ? '<div class="fb bad small">Falta automática: desalentar un reclamo ante Defensa del Consumidor.</div>' : ''}
+          <span class="src" style="align-self:flex-start"><i class="ph ph-book-open"></i>Política de envíos de Tienda Andén (ficticia), art. 3 · «Conocé tus derechos», argentina.gob.ar · CC BY 4.0</span></div>
+      </div>
+      <div class="stack">
+        <div class="panel stack-sm"><span class="kicker">Curva de enojo</span>
+          <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Curva de enojo por turno">
+            <line x1="10" x2="${W - 10}" y1="${H - 10 - 4 * 7}" y2="${H - 10 - 4 * 7}" stroke="var(--color-neutral-700)" stroke-dasharray="3 4"/>
+            <polyline fill="none" stroke="var(--color-accent-400)" stroke-width="2.5" stroke-linejoin="round" points="${pts}"/>
+            ${P.curve.map((v, i) => `<circle cx="${(i * (W - 20)) / (n - 1) + 10}" cy="${H - 10 - v * 7}" r="4" fill="${v >= 8 ? 'var(--bad)' : v >= 5 ? 'var(--warn)' : 'var(--ok)'}"/>`).join('')}
+          </svg>
+          <span class="tiny muted">${P.curve.join(' → ')} · la línea punteada es el umbral de «resuelto» (4)</span></div>
+        <div class="panel stack-sm"><span class="kicker">Qué queda</span>
+          <div class="small soft">${c.faults.length ? 'Lo que fallaste vuelve en tu repaso: mañana el caso arranca con una promesa sin dato.' : 'Sin errores para repasar.'}</div>
+          ${P.mode === 'practica' ? '<div class="note"><i class="ph ph-shield-check"></i><span>Para el portfolio cuenta el intento en modo validación. Cuando te sientas listo/a, probalo con una sola chance.</span></div>' : ''}
+          ${mechActions(P.saved, 'rpSave', 'rpRetry')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Mecánica: Ensayo ─────────────────────────────────────────── */
+function ensayoScreen() {
+  const E = S.ens;
+  const head = `<div class="row wrapx between"><div><div class="kicker">Práctica estrella · Hito 4 · Presentar un avance</div><h1 class="h-page">Ensayo con feedback</h1></div><span class="chip acc">Intento ${E.attempt}</span></div>`;
+  let body = '';
+  if (E.stage === 'consigna') {
+    body = `<div class="panel stack" style="max-width:760px"><span class="kicker">Consigna</span><h2 class="h-sec" style="font-size:21px">Presentá un avance en hasta 2 minutos</h2>
+      <p class="soft">Es la reunión de equipo del lunes. Contá en qué está una tarea o un proyecto tuyo, en tres partes:</p>
+      <div class="grid3">${[['Qué', 'dónde estamos'], ['Y entonces', 'por qué importa o qué riesgo hay'], ['Ahora qué', 'el próximo paso y qué necesitás']].map(([a, b]) => `<div class="panel tight flat"><b style="font-weight:500">${a}</b><div class="small soft">${b}</div></div>`).join('')}</div>
+      <div class="note"><i class="ph ph-crosshair"></i><span><b style="font-weight:500">Foco de este intento:</b> idea principal primero.</span></div>
+      <p class="tiny muted">¿No querés hablar de tu trabajo real? Usá el caso «Mudanza de la oficina al tercer piso». No uses nombres de clientes ni datos confidenciales.</p>
+      <div class="row wrapx"><button class="btn btn-solid" data-act="ensStage" data-arg="prep">Preparar (60 s)</button><button class="btn btn-ghost" data-act="ensRec">Grabar sin preparar</button></div></div>`;
+  } else if (E.stage === 'prep') {
+    body = `<div class="panel stack" style="max-width:760px"><span class="kicker">Preparación · hasta 60 s</span><p class="soft">Anotá hasta 4 palabras clave. Las vas a ver mientras grabás.</p>
+      <div class="grid4">${E.notes.map((n, k) => `<input class="input" data-model="ens.notes.${k}" value="${esc(n)}" placeholder="${['Qué', 'Y entonces', 'Ahora qué', 'Pedido'][k]}">`).join('')}</div>
+      <button class="btn btn-solid" data-act="ensRec" style="align-self:flex-start"><i class="ph-fill ph-microphone"></i>Grabar</button></div>`;
+  } else if (E.stage === 'preretry') {
+    body = `<div class="panel stack" style="max-width:760px"><span class="kicker">Antes de reintentar · 30 s</span><p class="lead" style="color:var(--color-text)">Decí solo tu primera oración y tu última oración.</p><p class="small soft">Tu foco: ${esc(ENS[1].focus)}</p><button class="btn btn-solid" data-act="ensRec" style="align-self:flex-start"><i class="ph-fill ph-microphone"></i>Grabar el intento 2</button></div>`;
+  } else if (E.stage === 'rec') {
+    const dur = ENS[E.attempt].dur;
+    body = `<div class="panel stack" style="max-width:760px;align-items:center;text-align:center;padding:30px">
+      <span class="row small"><span class="rec-dot"></span>Grabando · solo audio, video apagado</span>
+      ${ringSvg(E.t / 120, 'var(--color-accent)', `<b>${fmt(E.t)}</b><span class="tiny muted">de 2:00</span>`)}
+      ${wave(30)}
+      ${E.notes.some((n) => n.trim()) ? `<div class="row wrapx" style="justify-content:center">${E.notes.filter((n) => n.trim()).map((n) => `<span class="chip">${esc(n)}</span>`).join('')}</div>` : ''}
+      <button class="btn btn-secondary" data-act="ensStop"><i class="ph-fill ph-stop"></i>Detener</button>
+      <span class="tiny muted">Simulación: el mockup usa un intento de ejemplo de ${dur} segundos.</span></div>`;
+  } else if (E.stage === 'proc') {
+    const msgs = ['Transcribiendo…', 'Buscando la idea principal…', 'Revisando la estructura…'];
+    body = `<div class="panel stack" style="max-width:760px;align-items:center;padding:40px"><i class="ph ph-circle-notch" style="font-size:30px;animation:xpSpin .9s linear infinite;color:var(--color-accent-300)"></i>
+      <div class="stack-sm">${msgs.map((m, k) => `<div class="row small ${k <= E.proc ? '' : 'muted'}"><i class="ph ${k < E.proc ? 'ph-check t-ok' : 'ph-dot'}"></i>${m}</div>`).join('')}</div></div>`;
+  } else {
+    body = ensFeedback();
+  }
+  return `<div class="wrap page stack" style="gap:18px">${head}${body}</div>`;
+}
+function annotate(t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<mark class="mul">$1</mark>').replace(/«(.+?)»/g, '<span class="idea" title="Idea principal">$1</span>'); }
+function ensFeedback() {
+  const E = S.ens; const a = ENS[E.attempt]; const prev = E.attempt === 2 ? ENS[1] : null;
+  const metric = (l, v, sub) => `<div class="panel tight flat stat"><span class="tiny muted">${l}</span><b>${v}</b>${sub ? `<span class="tiny muted">${sub}</span>` : ''}</div>`;
+  return `<div class="grid2">
+    <div class="stack">
+      <div class="grid-half">
+        <div class="panel stack-sm" style="border-color:color-mix(in srgb,var(--ok) 35%,transparent)"><span class="kicker" style="color:var(--ok)">${E.attempt === 2 ? 'Lo que mejoró' : 'Lo que salió bien'}</span><p class="small">${esc(a.good)}</p></div>
+        <div class="panel stack-sm" style="border-color:var(--color-accent-700)"><span class="kicker">${E.attempt === 2 ? 'Próximo foco' : 'Tu foco para el próximo intento'}</span><p class="small">${esc(a.focus)}</p><span class="ts" style="align-self:flex-start">▶ ${a.focusTs}</span></div>
+      </div>
+      <div class="grid4">${metric('Duración', fmt(a.dur), `${a.words} palabras`)}${metric('Idea principal', `seg. ${a.idea}`, prev ? `antes: seg. ${prev.idea}` : '')}${metric('Muletillas/min', String(a.mpm).replace('.', ','), 'el conteo de «eh» es aproximado')}${metric('Ritmo', `${a.ppm} ppm`, 'cómodo: 120-180')}</div>
+      <details class="panel" ${E.attempt === 1 ? 'open' : ''}><summary><i class="ph ph-caret-right"></i><span class="h-sec" style="font-size:15px">Detalle por criterio</span></summary>
+        <table class="table" style="margin-top:10px"><tbody>${a.rows.map(([c, l, ev], k) => `<tr><td style="width:120px">${c}</td><td style="width:110px"><span class="lvl ${l}">${LVL[l]}</span></td><td><span class="small">${esc(ev)}</span><br><button class="btn btn-ghost btn-sm" data-act="toast" data-arg="Gracias: una persona del equipo revisa esta observación." style="padding-left:0;font-size:11px">Esto no es correcto</button></td></tr>`).join('')}</tbody></table>
+        ${a.extra ? `<div class="note" style="margin-top:8px"><i class="ph ph-info"></i><span>${esc(a.extra)}</span></div>` : ''}
+      </details>
+      <details class="panel" open><summary><i class="ph ph-caret-right"></i><span class="h-sec" style="font-size:15px">Transcripción anotada</span></summary>
+        <div class="row wrapx" style="gap:8px;margin:10px 0"><span class="tiny"><mark class="mul">muletilla</mark></span><span class="tiny"><span class="idea">idea principal</span></span></div>
+        <p class="transcript">${annotate(a.text)}</p></details>
+    </div>
+    <div class="stack">
+      ${prev ? `<div class="panel stack-sm"><span class="kicker">Intento 1 contra intento 2</span>
+        <table class="table"><thead><tr><th></th><th>Int. 1</th><th>Int. 2</th></tr></thead><tbody>
+        ${[['Duración', fmt(prev.dur), fmt(a.dur)], ['Idea principal', `seg. ${prev.idea}`, `seg. ${a.idea}`], ['Estructura', LVL[prev.rows[1][1]], LVL[a.rows[1][1]]], ['Claridad', LVL[prev.rows[2][1]], LVL[a.rows[2][1]]], ['Muletillas/min', String(prev.mpm).replace('.', ','), String(a.mpm).replace('.', ',')], ['Ritmo', `${prev.ppm} ppm`, `${a.ppm} ppm`], ['Cierre', LVL[prev.rows[5][1]], LVL[a.rows[5][1]]]].map(([l, x, y]) => `<tr><td>${l}</td><td class="soft">${x}</td><td>${y}</td></tr>`).join('')}
+        </tbody></table>
+        <span class="tiny muted">La IA no agregó datos: la frase que sugirió salía de lo que dijiste. Los nombres de los proveedores y la recomendación los sumaste vos.</span></div>
+        <div class="panel stack-sm"><span class="kicker">Entre días · muletillas por minuto</span>${spark([12.1, 10.3, 7.4, 5.0, 2.3])}<span class="tiny muted">Mejor intento de cada día (datos de ejemplo). Nunca te comparamos con otras personas.</span></div>` : ''}
+      <div class="panel stack-sm"><span class="kicker">Qué sigue</span>
+        ${E.attempt === 1 ? `<button class="btn btn-solid" data-act="ensRetry"><i class="ph ph-arrow-counter-clockwise"></i>Reintentar con este foco</button>` : ''}
+        ${E.saved ? '<span class="chip ok" style="align-self:flex-start"><i class="ph ph-check"></i>Guardado como mejor intento</span>' : `<button class="btn btn-primary" data-act="ensSave"><i class="ph ph-folder-simple-plus"></i>Guardar como mejor intento</button>`}
+        ${S.fromSession && E.attempt === 2 ? '<button class="btn btn-solid" data-act="backToSession">Seguir con la sesión <i class="ph ph-arrow-right"></i></button>' : E.attempt === 2 ? '<button class="btn btn-ghost" data-act="nav" data-arg="home">Volver a mi roadmap</button>' : ''}
+        <div class="note"><i class="ph ph-lock-simple"></i><span>Tu grabación es privada. Si tu empresa usa Xpedia, ve niveles agregados, nunca tu audio. El audio se borra a los 30 días.</span></div>
+        <span class="tiny muted">No comentamos acento, timbre ni apariencia, y no inferimos emociones.</span></div>
+    </div>
+  </div>`;
+}
+function spark(vals) {
+  const W = 300, H = 70, max = Math.max(...vals);
+  const pts = vals.map((v, i) => `${(i * (W - 20)) / (vals.length - 1) + 10},${H - 12 - (v / max) * (H - 24)}`).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Muletillas por minuto, últimos 5 días"><polyline fill="none" stroke="var(--color-accent-400)" stroke-width="2.5" points="${pts}"/>${vals.map((v, i) => `<circle cx="${(i * (W - 20)) / (vals.length - 1) + 10}" cy="${H - 12 - (v / max) * (H - 24)}" r="3.5" fill="var(--color-accent-300)"/><text x="${(i * (W - 20)) / (vals.length - 1) + 10}" y="${H - 1}" fill="var(--color-neutral-500)" font-size="9" text-anchor="middle">${String(v).replace('.', ',')}</text>`).join('')}</svg>`;
+}
+
+/* ── Progreso y portfolio ─────────────────────────────────────── */
+function progressScreen() {
+  const r = R();
+  const icon = { done: 'ph-fill ph-check-circle', real: 'ph-fill ph-seal-check', next: 'ph-fill ph-circle-half', rust: 'ph ph-warning', locked: 'ph ph-lock-simple' };
+  const counts = r.branches.flatMap((b) => b.nodes).reduce((a, [, s]) => { a[s] = (a[s] || 0) + 1; return a; }, {});
+  const ev = r.hitos.slice(0, r.cur).map((h, i) => ({ t: h.ev, h: `Hito ${i + 1}`, ext: false }));
+  const saved = S.saved.filter((x) => x.route === S.route);
+  return `<div class="wrap page stack" style="gap:18px">
+    <div><div class="kicker">${esc(r.short)}</div><h1 class="h-page">Progreso y portfolio</h1></div>
+    <div class="grid4">
+      <div class="panel tight stat"><span class="tiny muted">Racha</span><b><i class="ph-fill ph-fire" style="color:var(--warn);font-size:18px"></i> ${S.done[S.route] ? 10 : 9} días</b></div>
+      <div class="panel tight stat"><span class="tiny muted">Nodos dominados</span><b>${(counts.done || 0) + (counts.real || 0)}</b><span class="tiny muted">${counts.real || 0} probados en la vida real</span></div>
+      <div class="panel tight stat"><span class="tiny muted">Evidencias</span><b>${ev.length + saved.length}</b></div>
+      <div class="panel tight stat"><span class="tiny muted">Para repasar</span><b>${counts.rust || 0}</b><span class="tiny muted">nodos que se están oxidando</span></div>
+    </div>
+    <div class="panel stack">
+      <div class="row wrapx between"><h2 class="h-sec">Árbol de habilidades</h2>
+        <div class="row wrapx tiny soft" style="gap:12px"><span><i class="ph-fill ph-check-circle t-ok"></i> Dominado</span><span><i class="ph-fill ph-seal-check t-ok"></i> Probado en la vida real</span><span><i class="ph-fill ph-circle-half" style="color:var(--color-accent-300)"></i> Siguiente</span><span><i class="ph ph-warning" style="color:var(--warn)"></i> Se está oxidando</span><span><i class="ph ph-lock-simple"></i> Bloqueado</span></div></div>
+      <div class="tree">${r.branches.map((b) => `<div class="branch"><div class="branch-h">${esc(b.n)}</div>${b.nodes.map(([t, s]) => `<div class="tnode ${s}"><i class="${icon[s]}"></i><span>${esc(t)}</span></div>`).join('')}</div>`).join('')}</div>
+      <span class="tiny muted">Un nodo se oxida si fallás dos veces su repaso espaciado. Queda «probado en la vida real» cuando además completás su desafío afuera, con check-in.</span>
+    </div>
+    <div class="grid2">
+      <div class="panel stack">
+        <div class="row wrapx between"><h2 class="h-sec">Tu portfolio</h2><button class="btn btn-primary btn-sm" data-act="toast" data-arg="Link copiado: xpedia.app/p/vale-gomez (simulado)"><i class="ph ph-share-network"></i>Compartir perfil</button></div>
+        <p class="tiny muted">Evidencia de lo que sabés hacer, lista para mostrar en una búsqueda. Cada ítem dice cómo se evaluó.</p>
+        ${saved.map((x) => `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><i class="ph ph-star" style="color:var(--color-accent-300)"></i><div style="flex:1"><div class="small">${esc(x.t)}</div><div class="tiny muted">Hoy · ${esc(x.sub)}</div></div><span class="chip acc">Nuevo</span></div>`).join('')}
+        ${ev.slice().reverse().map((x) => `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><i class="ph ph-seal-check t-ok"></i><div style="flex:1"><div class="small">${esc(x.t)}</div><div class="tiny muted">${x.h} · evaluado con rúbrica</div></div><button class="btn btn-ghost btn-sm" data-act="toast" data-arg="Abre la evidencia con su rúbrica (simulado)">Ver</button></div>`).join('')}
+        ${S.route === 'oratoria' ? '<div class="note"><i class="ph ph-waveform"></i><span><b style="font-weight:500">Antes y después:</b> al terminar la ruta, tu grabación del diagnóstico queda al lado de la prueba final. Solo la compartís si querés.</span></div>' : ''}
+      </div>
+      <div class="stack">
+        <div class="panel stack-sm"><h2 class="h-sec">Evidencia de terceros</h2><p class="small soft">Certificados de otros sitios (freeCodeCamp, HubSpot, Coursera). Quedan marcados «de terceros», con link de verificación si el emisor lo ofrece.</p><button class="btn btn-secondary btn-sm" data-act="toast" data-arg="Subís el certificado y te tomamos un caso corto para validarlo (simulado)" style="align-self:flex-start"><i class="ph ph-upload-simple"></i>Subir certificado</button></div>
+        <div class="panel stack-sm"><h2 class="h-sec">Otras rutas</h2>${Object.values(ROUTES).filter((x) => x.id !== S.route).map((x) => `<button class="choice" data-act="switchRoute" data-arg="${x.id}" style="padding:10px 12px"><i class="ph ${x.icon}" style="color:var(--color-accent-300);font-size:18px"></i><span style="flex:1"><span class="small">${esc(x.short)}</span><br><span class="tiny muted">${x.kind}</span></span><i class="ph ph-arrow-right soft"></i></button>`).join('')}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Coach ────────────────────────────────────────────────────── */
+function coachDrawer() {
+  const r = R();
+  return `<aside class="drawer" aria-label="Coach IA">
+    <div class="row between" style="padding:14px 18px;border-bottom:1px solid var(--line)"><div class="row" style="gap:8px"><i class="ph ph-sparkle" style="color:var(--color-accent-300);font-size:18px"></i><b style="font-weight:500">Tu coach</b><span class="tiny muted">· ${esc(r.short)}</span></div><button class="btn btn-ghost btn-icon" data-act="coach" aria-label="Cerrar"><i class="ph ph-x"></i></button></div>
+    <div class="drawer-body coach-msgs">
+      <span class="tiny muted">Recomendaciones según cómo venís. Todo pasa adentro de la app: si te sugiero algo externo, entra como lectura y al volver te tomo un caso.</span>
+      ${r.coach.map((c) => coachItem(c)).join('')}
+      <div class="divider"></div>
+      <span class="tiny muted">Preguntale algo</span>
+      <div class="row wrapx" style="gap:6px">${r.faq.map(([q], k) => `<button class="chipbtn" data-act="ask" data-arg="${k}" style="font-size:12px">${esc(q)}</button>`).join('')}</div>
+      ${S.coachMsgs.map((m) => `<div class="bub ${m.who === 'me' ? 'me' : 'them'}" style="max-width:92%">${esc(m.t)}</div>`).join('')}
+    </div>
+    <div class="row" style="padding:12px 18px;border-top:1px solid var(--line)"><input class="input" id="coachIn" placeholder="Escribí tu pregunta…"><button class="btn btn-solid btn-icon" data-act="askFree" aria-label="Enviar"><i class="ph ph-paper-plane-right"></i></button></div>
+  </aside>`;
+}
+
+/* ── Empresa ──────────────────────────────────────────────────── */
+const EMP_HITOS = [
+  { id: 'h1', t: 'Trato y tono', cubre: ['Desescalar reclamos', 'Escritura clara en chat y mail'] },
+  { id: 'h2', t: 'Políticas y procesos', cubre: ['Política de envíos y reembolsos', 'Datos personales y verificación'] },
+  { id: 'h3', t: 'Canal telefónico', cubre: ['Atención telefónica'] },
+  { id: 'h4', t: 'Turno simulado · prueba final', cubre: ['Las 5 competencias juntas'], boss: true },
+];
+function empresaView() {
+  const L = S.empresaLoaded;
+  const B = S.empresaRoadmapBuilt;
+  const comp = [['Desescalar reclamos', 2, 2, 3], ['Escritura clara en chat y mail', 2, 1, 3], ['Política de envíos y reembolsos', 2, 2, 3], ['Datos personales y verificación', 2, 2, 3], ['Atención telefónica', 0, 2, 2]];
+  const people = [['Lucas M.', [2, 1, 1, 2, 0], 'Chat N1', 'Hito 3'], ['Sofía R.', [3, 2, 2, 2, 1], 'Chat N1', 'Listo/a para operar'], ['Diego P.', [1, 2, 1, 1, 0], 'Chat N1', 'Hito 2'], ['Ana T.', [2, 2, 3, 2, 2], 'Voz N1', 'Hito 5']];
+  const heat = (v, exp) => { const gap = v - exp; const bg = gap >= 0 ? 'color-mix(in srgb, var(--ok) 30%, transparent)' : gap === -1 ? 'color-mix(in srgb, var(--warn) 30%, transparent)' : 'color-mix(in srgb, var(--bad) 30%, transparent)'; return `<span class="heat" style="background:${bg}">${v}</span>`; };
+  return `<main class="main"><div class="wrap page stack" style="gap:18px">
+    <div class="banner"><i class="ph ph-buildings"></i><span>Vista previa de la versión empresas. El foco del piloto es la persona; esto muestra cómo se monetiza.</span></div>
+    <div><div class="kicker">Andén Store · Atención al cliente</div><h1 class="h-page">Rutas de tu empresa</h1><p class="lead">Subí tu matriz de competencias y tus documentos, armá la ruta junto con Xpedia y sumá acompañamiento humano. El roadmap de cada persona queda como la brecha entre el nivel esperado de su rol y el que midió.</p></div>
+    <div class="grid2">
+      <div class="panel stack">
+        <div class="row between"><h2 class="h-sec">1 · Matriz de competencias</h2>${L ? '<span class="chip ok"><i class="ph ph-check"></i>matriz-atencion.xlsx</span>' : ''}</div>
+        ${L ? `<table class="table"><thead><tr><th>Competencia</th><th>Chat N1</th><th>Voz N1</th><th>Escalamiento N2</th></tr></thead><tbody>${comp.map(([c, a, b, d]) => `<tr><td>${c}</td><td>${a}</td><td>${b}</td><td>${d}</td></tr>`).join('')}</tbody></table><span class="tiny muted">Nivel esperado de 0 a 3. Si no tenés matriz, partimos de O*NET y ESCO (CC BY 4.0).</span>`
+          : `<button class="choice" data-act="empLoad" style="flex-direction:column;align-items:center;padding:30px;border-style:dashed;text-align:center"><i class="ph ph-upload-simple" style="font-size:28px;color:var(--color-accent-300)"></i><span>Subí tu matriz (Excel o CSV) y tus documentos</span><span class="tiny muted">Políticas, macros, guía de tono, motivos de contacto frecuentes</span></button>`}
+      </div>
+      <div class="panel stack">
+        <h2 class="h-sec">2 · Lo que entendió Xpedia</h2>
+        ${L ? `<p class="small soft">Puntos clave de tus documentos, con su página. Reemplazan a la tienda ficticia de la ruta base.</p>
+          ${[['Política de envíos v4', 'pág. 3', 'Si el seguimiento no cambia en 72 h hábiles, abrir reclamo con el correo.'], ['Política de reembolsos', 'pág. 1', 'El reembolso vuelve al mismo medio de pago, en hasta 10 días hábiles.'], ['Macros de chat', 'macro 12', 'Demora de envío: reconocer, dar estado real, ofrecer opción.'], ['Guía de tono', 'pág. 2', 'Tuteo, sin diminutivos, sin «estimado cliente».']].map(([d, p, k]) => `<div class="row" style="align-items:flex-start;padding:4px 0"><span class="src" style="flex:none">${d} · ${p}</span><span class="small">${k}</span></div>`).join('')}`
+          : '<p class="small muted">Aparece cuando subas tus documentos.</p>'}
+      </div>
+    </div>
+    ${L ? `<div class="panel stack">
+      <div class="row between wrapx"><h2 class="h-sec">3 · Arma la ruta en conjunto</h2>${B ? '<span class="chip ok"><i class="ph ph-check"></i>Confirmada</span>' : ''}</div>
+      <p class="small soft">A partir de la matriz y tus documentos, Xpedia propone estos hitos. Marcá los que querés ajustar antes de confirmar — el orden y el contenido quedan abiertos hasta que lo aprueban juntos.</p>
+      <div class="stack-sm">
+        ${EMP_HITOS.map((h, i) => `<div class="row between wrapx" style="padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--color-bg)">
+          <div class="row" style="gap:10px"><span class="letter">${i + 1}</span><div class="stack-sm" style="gap:4px"><b style="font-weight:500;font-size:13.5px">${esc(h.t)}${h.boss ? ' <i class="ph-fill ph-crown" style="color:var(--warn)"></i>' : ''}</b><div class="row wrapx" style="gap:6px">${h.cubre.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div></div></div>
+          ${B ? `<span class="chip ${S.empresaHitosAjustados[h.id] ? 'warn' : 'ok'}">${S.empresaHitosAjustados[h.id] ? 'A ajustar' : 'De acuerdo'}</span>` : `<button class="btn btn-ghost btn-sm" data-act="empAjustar" data-arg="${h.id}">${S.empresaHitosAjustados[h.id] ? '<i class="ph ph-check"></i> Marcado para ajustar' : 'Ajustar'}</button>`}
+        </div>`).join('')}
+      </div>
+      ${B ? '<div class="note"><i class="ph ph-check-circle"></i><span>Ruta confirmada en conjunto. El roadmap de cada persona del equipo sale de estos hitos.</span></div>' : '<button class="btn btn-solid" data-act="empConfirmRoadmap" style="align-self:flex-start">Confirmar ruta <i class="ph ph-arrow-right"></i></button>'}
+    </div>` : ''}
+    ${B ? `<div class="panel stack">
+      <div class="row wrapx between"><h2 class="h-sec">4 · Tu equipo</h2><span class="tiny muted">Nivel medido contra el esperado del rol · verde: cumple · amarillo: le falta 1 · rojo: le faltan 2 o más</span></div>
+      <div style="overflow-x:auto"><table class="table"><thead><tr><th>Persona</th><th>Rol</th>${comp.map(([c]) => `<th style="min-width:90px">${c}</th>`).join('')}<th>Estado</th></tr></thead><tbody>
+        ${people.map(([n, lv, rol, st]) => `<tr><td>${n}</td><td class="soft">${rol}</td>${lv.map((v, k) => `<td>${heat(v, rol === 'Voz N1' ? comp[k][2] : comp[k][1])}</td>`).join('')}<td><span class="chip ${st.startsWith('Listo') ? 'ok' : ''}">${st}</span></td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+    <div class="panel stack">
+      <h2 class="h-sec">5 · Tutor de acompañamiento</h2>
+      <p class="small soft">Cada hito puede tener un tutor humano, además de la evaluación automática de la práctica. Todavía estamos definiendo cuál de los dos modelos conviene — en el piloto podés probar cualquiera.</p>
+      <div class="grid-half">
+        <button class="choice choice-big ${S.empresaTutor === 'empresa' ? 'picked' : ''}" data-act="empTutor" data-arg="empresa"><i class="ph ph-buildings" style="font-size:24px;color:var(--color-accent-300)"></i><b style="font-weight:500;font-size:14px">Tutor de la empresa</b><span class="small soft">Alguien de tu equipo — por ejemplo, un líder de turno — revisa el progreso y responde dudas.</span></button>
+        <button class="choice choice-big ${S.empresaTutor === 'comunidad' ? 'picked' : ''}" data-act="empTutor" data-arg="comunidad"><i class="ph ph-users-three" style="font-size:24px;color:var(--color-accent-300)"></i><b style="font-weight:500;font-size:14px">Tutor de la comunidad</b><span class="small soft">Una persona externa, calificada por otros usuarios de Xpedia, acompaña a tu equipo.</span></button>
+      </div>
+      ${S.empresaTutor ? `<div class="note"><i class="ph ph-check-circle"></i><span>${S.empresaTutor === 'empresa' ? 'Asignado: Marcos D., líder de turno · revisa el avance los lunes y jueves.' : 'Asignada: Noelia F. · 4,9/5 en 38 acompañamientos · responde dentro de 24 h.'}</span></div>` : ''}
+    </div>
+    <div class="grid2">
+      <div class="panel stack-sm"><h2 class="h-sec">Puntos clave más fallados</h2>
+        ${[['Reembolso a tarjeta', 41], ['Verificación de identidad antes de dar datos', 28], ['Cupón máximo sin supervisor', 17]].map(([t, p]) => `<div class="stack-sm" style="padding:4px 0"><div class="row between small"><span>${t}</span><span class="soft">${p} % de errores</span></div><div class="bar"><span style="width:${p}%;background:${p > 30 ? 'var(--bad)' : 'var(--warn)'}"></span></div></div>`).join('')}
+        <div class="note"><i class="ph ph-lightbulb"></i><span>Si el 41 % falla lo mismo, probablemente la política es confusa, no solo la gente. <a href="#" data-act="toast" data-arg="Abre la política de reembolsos en la página 1 para revisarla (simulado)">Revisar la política</a></span></div></div>
+      <div class="panel stack-sm"><h2 class="h-sec">Privacidad</h2><ul class="small soft stack-sm" style="margin:0;padding-left:16px"><li>La empresa nunca escucha ni lee las prácticas: ve niveles agregados de grupos de 5 personas o más.</li><li>De cada persona ve el estado de los hitos y el resultado de la prueba final.</li><li>Los resultados de la práctica no se usan para evaluar el desempeño.</li><li>No hay reconocimiento de emociones.</li></ul></div>
+    </div>` : ''}
+  </div></main>`;
+}
+
+/* ── Acciones ─────────────────────────────────────────────────── */
+const A = {
+  view(v) { S.view = v; S.coachOpen = false; clearTimer(); render(); window.scrollTo(0, 0); },
+  reset() { clearTimer(); S = initial(); render(); window.scrollTo(0, 0); },
+  goal(g) { S.goal = g; S.route = Object.values(ROUTES).find((r) => r.goal === g).id; S.onb = 1; render(); },
+  onbBack() { S.onb = Math.max(0, S.onb - 1); render(); },
+  pickRoute(id) { S.route = id; S.pace = ROUTES[id].recPace; S.onb = 2; render(); window.scrollTo(0, 0); },
+  pace(m) { S.pace = +m; render(); },
+  startDiag() { S.diag = initial().diag; go('diag'); },
+  skipDiag() { A.start(); },
+  diagPick(k) { S.diag.ans[S.diag.i] = +k; render(); },
+  diagKnew(v) { S.diag.knew[S.diag.i] = v === '1'; render(); },
+  diagChip(k) {
+    const q = DIAG[S.route][S.diag.i]; const cur = S.diag.chips[S.diag.i] || []; k = +k;
+    S.diag.chips[S.diag.i] = q.single ? [k] : (cur.includes(k) ? cur.filter((x) => x !== k) : [...cur, k]);
+    render();
+  },
+  diagRec() {
+    clearTimer(); S.diag.rec = 0.5; render();
+    const start = Date.now();
+    timer = setInterval(() => { S.diag.rec = Math.min(60, Math.max(0.5, Math.floor((Date.now() - start) / 55))); if (S.diag.rec >= 60) { clearTimer(); S.diag.recDone = true; } render(); }, 55);
+  },
+  diagNext() { clearTimer(); if (S.diag.i < DIAG[S.route].length - 1) { S.diag.i++; render(); } else go('diagResult'); },
+  diagBack() { clearTimer(); if (S.diag.i > 0) { S.diag.i--; render(); } else { S.onb = 2; go('onb'); } },
+  start() { S.started = true; S.banner = true; go('home'); },
+  banner() { S.banner = false; render(); },
+  nav(k) {
+    S.coachOpen = false;
+    if (k === 'mech') { S.fromSession = false; go(R().mech.key); return; }
+    go(k);
+  },
+  coach() { S.coachOpen = !S.coachOpen; render(); },
+  coachCta(label) {
+    if (/roleplay|ensayo/i.test(label)) { S.coachOpen = false; S.fromSession = false; go(R().mech.key); return; }
+    if (/nodo/i.test(label)) { S.coachOpen = false; go('progress'); return; }
+    toast(/Agregar/.test(label) ? 'Sumado a tu ruta como lectura. Al volver te tomamos un caso de 2 minutos.' : /prueba/i.test(label) ? 'Prueba de salto agendada para tu próxima sesión (simulado).' : 'Listo, lo ajusté en tu roadmap.');
+  },
+  ask(k) { const [q, a] = R().faq[+k]; S.coachMsgs.push({ who: 'me', t: q }, { who: 'ai', t: a }); render(); },
+  askFree() {
+    const el = document.getElementById('coachIn'); const q = (el && el.value.trim()) || ''; if (!q) return;
+    S.coachMsgs.push({ who: 'me', t: q }, { who: 'ai', t: 'En la app real te respondo con tu progreso y las fuentes de tu ruta. En este mockup probá con las preguntas sugeridas.' });
+    render();
+  },
+  toast(msg) { toast(msg); },
+  checkin(o) { S.checkin = o; render(); },
+  gh() { S.ghConnected = true; render(); toast(R().challenge.toast); },
+  route(id) { A.switchRoute(id); },
+  switchRoute(id) { clearTimer(); S.route = id; S.ticket = newTicket(); S.rp = newRp(); S.ens = newEns(); S.sess = initial().sess; S.checkin = null; S.coachMsgs = []; S.banner = true; go('home'); },
+  newRoute() { toast('Podés seguir varias rutas a la vez. En la demo, cambiá de ruta desde el selector de arriba.'); },
+  // sesión
+  sessReveal() { S.sess.reveal = true; render(); },
+  sessKnew(v) {
+    S.sess.knew.push(v === '1'); S.sess.reveal = false;
+    if (S.sess.card < R().session.repaso.length - 1) S.sess.card++; else S.sess.step = 1;
+    render();
+  },
+  sessStep(n) { S.sess.step = +n; render(); window.scrollTo(0, 0); },
+  startMech(from) { S.fromSession = from === 'session'; go(R().mech.key); },
+  backToSession() { S.sess.step = 3; S.fromSession = false; go('session'); },
+  // ticket
+  tkStep(n) { S.ticket.step = +n; render(); window.scrollTo(0, 0); },
+  tkPick(k) {
+    const T = S.ticket; const d = TK_DEC[T.step]; k = +k;
+    if (T.picks[T.step].length === 0) T.score[T.step] = d.opts[k].ok ? 10 : d.opts[k].partial ? 5 : 0;
+    T.picks[T.step].push(k); render();
+  },
+  tkRun() {
+    const T = S.ticket; const res = runTicketTests(T.code); T.tests = res.tests; T.testFb = ticketFeedback(T.code, res);
+    T.testScore = Math.max(T.testScore, Math.round((res.tests.filter((t) => t.ok).length / 6) * 40)); render();
+  },
+  tkHint() { S.ticket.hint = true; render(); },
+  tkResetCode() { S.ticket.code = TK_JS; S.ticket.tests = null; S.ticket.testFb = null; render(); },
+  tkEval() {
+    const T = S.ticket; const c = evalCommit(T.commit); const m = evalMarta(T.marta);
+    const commitScore = Math.min(15, c.slice(0, 3).filter((x) => x.ok).length * 4 + (c[3].ok ? 3 : 0));
+    const martaScore = Math.round((m.filter((x) => x.ok).length / 4) * 15);
+    T.evald = { commit: c, marta: m, commitScore, martaScore }; render();
+  },
+  tkSave() { S.ticket.saved = true; const r = tkResult(); S.saved.push({ route: 'sistemas', t: 'Ticket #142 · «El carrito suma mal» resuelto', sub: `${r.total}/100 · modo práctica` }); markDone(`Ticket de bug, ${r.total}/100`); render(); toast('Guardado en tu portfolio.'); },
+  tkRetry() { S.ticket = newTicket(); render(); window.scrollTo(0, 0); },
+  // roleplay
+  rpMode(m) { if (S.rp.picks.length === 0) { S.rp.mode = m; render(); } },
+  rpPick(k) {
+    const P = S.rp; if (P.typing || P.ended) return; const i = P.picks.length; const o = RP_TURNS[i].opts[+k];
+    P.picks.push(+k); P.msgs.push({ who: 'me', t: o.t }); P.typing = true; render();
+    timer = setTimeout(() => {
+      P.anger = Math.max(0, Math.min(10, P.anger + o.d)); P.curve.push(P.anger);
+      P.msgs.push({ who: 'tip', t: o.tip, d: o.d });
+      P.msgs.push({ who: 'them', t: o.reply + (P.anger >= 10 ? ' Si no me das una solución ya, quiero hablar con un supervisor.' : '') });
+      const next = RP_TURNS[i + 1];
+      if (next && next.sys) P.msgs.push({ who: 'sys', t: next.sys });
+      if (next && next.extra) P.msgs.push({ who: 'them', t: next.extra });
+      P.typing = false;
+      if (i === RP_TURNS.length - 1) { render(); timer = setTimeout(() => { P.ended = true; markDone(`Roleplay, ${rpCompute().total}/15`); render(); window.scrollTo(0, 0); }, 1100); return; }
+      render();
+    }, 850);
+  },
+  rpSave() { S.rp.saved = true; const c = rpCompute(); S.saved.push({ route: 'atencion', t: 'Roleplay con cliente enojado (Marcelo, nivel 2)', sub: `${c.total}/15 · ${S.rp.mode === 'validacion' ? 'modo validación' : 'modo práctica'}` }); render(); toast('Guardado en tu portfolio.'); },
+  rpRetry() { const mode = S.rp.mode; clearTimer(); S.rp = newRp(); S.rp.mode = mode; render(); window.scrollTo(0, 0); },
+  // ensayo
+  ensStage(s) { S.ens.stage = s; render(); },
+  ensRec() {
+    const E = S.ens; clearTimer(); E.stage = 'rec'; E.t = 0; render();
+    const dur = ENS[E.attempt].dur; const start = Date.now();
+    timer = setInterval(() => { E.t = Math.min(dur, Math.floor((Date.now() - start) / 60)); if (E.t >= dur) A.ensStop(); else render(); }, 60);
+  },
+  ensStop() {
+    const E = S.ens; clearTimer(); E.t = ENS[E.attempt].dur; E.stage = 'proc'; E.proc = 0; render();
+    const start = Date.now();
+    timer = setInterval(() => { E.proc = Math.floor((Date.now() - start) / 650); if (E.proc >= 3) { clearTimer(); E.stage = 'fb'; if (E.attempt === 2) markDone('Ensayo, intento 2: idea principal en el segundo 0'); } render(); }, 650);
+  },
+  ensRetry() { S.ens.attempt = 2; S.ens.saved = false; S.ens.stage = 'preretry'; render(); window.scrollTo(0, 0); },
+  ensSave() { S.ens.saved = true; const a = ENS[S.ens.attempt]; S.saved.push({ route: 'oratoria', t: `Avance de ${fmt(a.dur)} · intento ${S.ens.attempt}`, sub: `idea principal en el segundo ${a.idea} · ${String(a.mpm).replace('.', ',')} muletillas/min` }); render(); toast('Guardado como mejor intento.'); },
+  // empresa
+  empLoad() { S.empresaLoaded = true; render(); toast('Matriz y documentos cargados (ejemplo).'); },
+  empAjustar(id) { S.empresaHitosAjustados[id] = !S.empresaHitosAjustados[id]; render(); toast(S.empresaHitosAjustados[id] ? 'Marcado para ajustar antes de confirmar.' : 'Vuelve a la propuesta de Xpedia.'); },
+  empConfirmRoadmap() { S.empresaRoadmapBuilt = true; render(); window.scrollTo(0, 0); toast('Ruta confirmada en conjunto.'); },
+  empTutor(kind) { S.empresaTutor = kind; render(); toast(kind === 'empresa' ? 'Elegiste tutor puesto por la empresa.' : 'Elegiste tutor de la comunidad.'); },
+  // novedades
+  newsAdd(id) { const n = NEWS[S.route].find((x) => x.id === id); S.news[id] = 'added'; render(); toast(`Sumada a tu ruta, en el hito «${R().hitos[n.atHito].t}».`); },
+  newsDismiss(id) { S.news[id] = 'dismissed'; render(); },
+  newsUndo(id) { delete S.news[id]; render(); },
+};
+function markDone(label) { S.done[S.route] = { label }; }
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  const fn = A[el.dataset.act]; if (!fn) return;
+  e.preventDefault(); fn(el.dataset.arg, el);
+});
+document.addEventListener('input', (e) => {
+  const el = e.target; if (!el.dataset || !el.dataset.model) return;
+  setPath(el.dataset.model, el.type === 'range' ? +el.value : el.value);
+  if (el.dataset.out) document.getElementById(el.dataset.out).textContent = el.value;
+});
+document.addEventListener('change', (e) => {
+  const el = e.target.closest('[data-change]'); if (el && A[el.dataset.change]) A[el.dataset.change](el.value, el);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.id === 'coachIn') A.askFree(); });
+
+render();
+</script>
+</body>
+</html>
