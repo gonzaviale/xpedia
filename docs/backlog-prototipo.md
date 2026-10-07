@@ -1,60 +1,25 @@
-# Xpedia: backlog del prototipo (resumen)
+# Xpedia — Backlog del prototipo · Sprint 1
 
-> Borrador para discutir. Un **PBI** (Product Backlog Item) es cada funcionalidad de la lista de trabajo, con su número en la planilla. Los números de PBI y las horas salen de [backlog.md](backlog.md), la copia del 5/10/2026 de la planilla. Las horas son una primera propuesta.
+Este documento lista las funcionalidades del primer sprint del prototipo de Xpedia: la versión más simple que permite recorrer **un hito completo**. Una persona ve su ruta, lee una microlección, practica con un reto y recibe la devolución de un profesor de IA.
 
-## La idea
+El prototipo ya tiene el motor de la ruta (diagnóstico, ajuste, novedades e informe). Este sprint suma lo que falta para que la práctica sea real. Las tres funcionalidades son de prioridad **Alta**: sin ellas no hay un hito completo.
 
-Una app que **te guía para cambiar de rumbo**. Te orienta, te arma una ruta, la recorrés practicando con un profesor de IA y dejás pruebas de lo que sabés. Las rutas tienen un **sello de validación** y una comunidad que las afina. Te avisa lo nuevo del rubro cuando ya te sirve.
+| Funcionalidad | Descripción | Prioridad |
+|---|---|---|
+| Primera ruta: atención al cliente remota | Una ruta con sus hitos y temas, escrita por el equipo y cargada en la app. La persona ve en qué hito está y qué sigue. Incluye un diagnóstico corto para definir desde dónde arranca. | Alta |
+| Microlección con fuente | Material breve de cada tema, a nivel de la persona, con la fuente citada y su licencia. | Alta |
+| Reto con devolución del profesor de IA | La persona resuelve un reto escrito (por ejemplo, responderle a un cliente enojado). El profesor de IA lo evalúa con una rúbrica y explica qué estuvo bien y qué se puede mejorar. | Alta |
 
-## 1. Ya funciona en el prototipo
+**Estimación:** 92 h, según la planilla (PBI 5, 11 y 21). Escribir el contenido de la ruta lo hace el equipo y no está incluido en esas horas.
 
-Se mantiene. Falta pasarlo a un backend real. Hoy usa reglas en lugar de IA y guarda el progreso solo en el navegador.
+## Para los sprints siguientes
 
-| Funcionalidad | Qué hace |
-|---|---|
-| Diagnóstico y ruta personal | 5 preguntas (lo sabía, lo dudé, lo adiviné), una ruta por hitos y la fecha estimada de llegada. Hay una sola ruta, cargada a mano. |
-| Ruta que se ajusta | Después de cada práctica agrega repasos, saltea lo que ya sabés, abre ramas y explica el cambio. |
-| Sesión corta de práctica | 3 preguntas de opción múltiple con explicación. |
-| «Me interesa esto» | Decide si un tema entra ahora, se agenda, va como rama o se guarda. |
-| Informe semanal | Avance, lo que cuesta y ajustes para aceptar o rechazar. |
-| Radar de novedades | Filtra por la ruta: ahora, más adelante o ruido. Las novedades son ficticias. |
-| Racha y XP | Refuerzo de constancia. |
+Prueba final de hito y portfolio, profesor de IA para consultas, sello de validación de las rutas, cuentas, orientación («de dónde vengo y a qué puedo pasar»), rutas 2 y 3, roleplay, comunidad y noticias reales.
 
-## 2. Primero: el esqueleto con la ruta de oro
+## Fuera por ahora
 
-Un hito completo, de punta a punta. Son unas **200 h**, algo más de 2 sprints con la capacidad del ejemplo de la plantilla (95 h por sprint).
+Todo lo de empresa, la administración de Xpedia, la conexión con GitHub y el ensayo con audio.
 
-| Pieza | Qué hace | Tipo | PBI | Horas |
-|---|---|---|---|---|
-| Ruta de oro escrita a mano | Diagnóstico y un hito con microlección, reto, prueba final y evidencia. Propuesta: atención al cliente remota. | Contenido | Nuevo | sin estimar |
-| Ruta en la base de datos | Guardar la ruta y servirla a la app. | Código | 5 | 32 |
-| Microlección con fuente | Material breve con la fuente citada. | Código | 11 | 28 |
-| Práctica real con devolución de IA | Reto con rúbrica: la persona produce algo y la IA lo evalúa. | Código (IA) | 21 | 32 |
-| Profesor de IA | Responde dudas con la fuente del hito y explica los errores. | Código (IA) | 14 | 24 |
-| Prueba final de hito | Un solo intento por paso; su resultado cierra el hito. | Código | 24 | 24 |
-| Evidencia y portfolio | Cada hito deja evidencia en un portfolio compartible. | Código | 25 | 24 |
-| Sello de validación | Estados: borrador de IA, revisada por una persona. | Código | 17 | 20 |
-| Cuentas | Guardar el progreso en el servidor. | Código | 1 | 16 |
+---
 
-## 3. Después, en este orden
-
-1. **Orientación:** «de dónde vengo y a qué puedo pasar», con las habilidades transferibles (nuevo, extiende el PBI 4).
-2. **Rutas 2 y 3:** la IA las arma como borrador y un docente las revisa (PBI 16 y 17).
-3. **Roleplay con IA** para atención al cliente (PBI 19).
-4. **Comunidad mínima:** reseñas de rutas (nuevo) y tutor de pares, es decir un compañero avanzado que acompaña (PBI 44).
-5. **Noticias reales y newsletter por mail** (PBI 30 y Ap. P6).
-6. **Repaso espaciado** de verdad (PBI 12).
-
-## 4. Fuera por ahora
-
-- **Todo lo de empresa:** documentos, matriz de competencias, panel del equipo y puntos clave más fallados.
-- **Admin Xpedia.**
-- **Conexión con GitHub.**
-- **Sumar otra ruta** a una persona.
-- **Ensayo con audio.**
-
-## Para decidir
-
-1. ¿Cuántas personas somos y cuántas horas por sprint? Con eso se ordena por sprint.
-2. ¿Quién firma una ruta como «revisada»? Propuesta: un docente de la facultad.
-3. ¿La ruta de oro es atención al cliente? El prototipo hoy tiene «IA aplicada».
+*Pendiente: confirmar la capacidad del equipo por sprint y si la primera ruta es atención al cliente.*
