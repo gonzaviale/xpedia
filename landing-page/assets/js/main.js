@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  var prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ---------- Modo oscuro / claro ---------- */
   var root = document.body;
   var toggle = document.getElementById("themeToggle");
@@ -50,6 +52,7 @@
     navLinks.forEach(function (link, i) {
       link.classList.toggle("is-active", i === activeIndex);
       link.classList.toggle("is-passed", i < activeIndex);
+      if (sections[i]) sections[i].classList.toggle("is-reached", i <= activeIndex);
     });
 
     if (progressPath && activeIndex > -1) {
@@ -74,81 +77,190 @@
     setActive(navLinks[0].getAttribute("data-node"));
   }
 
-  /* ---------- Slider de capturas ---------- */
-  var slider = document.getElementById("gallerySlider");
-  if (slider) {
-    var track = slider.querySelector(".slider__track");
-    var slides = Array.prototype.slice.call(slider.querySelectorAll(".slider__slide"));
-    var dotsWrap = slider.querySelector(".slider__dots");
-    var prevBtn = slider.querySelector(".slider__arrow--prev");
-    var nextBtn = slider.querySelector(".slider__arrow--next");
-    var current = 0;
-
-    slides.forEach(function (_, i) {
-      var dot = document.createElement("button");
-      dot.type = "button";
-      dot.setAttribute("aria-label", "Ir a la captura " + (i + 1));
-      dot.addEventListener("click", function () { goTo(i); });
-      dotsWrap.appendChild(dot);
-    });
-    var dots = Array.prototype.slice.call(dotsWrap.children);
-
-    function goTo(index) {
-      current = (index + slides.length) % slides.length;
-      track.style.transform = "translateX(-" + (current * 100) + "%)";
-      dots.forEach(function (d, i) { d.classList.toggle("is-active", i === current); });
-    }
-
-    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(current + 1); });
-
-    slider.setAttribute("tabindex", "0");
-    slider.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowLeft") goTo(current - 1);
-      if (e.key === "ArrowRight") goTo(current + 1);
-    });
-
-    goTo(0);
+  /* ---------- Animaciones que arrancan una vez, al entrar en pantalla ---------- */
+  var inviewEls = Array.prototype.slice.call(document.querySelectorAll("[data-inview]"));
+  if ("IntersectionObserver" in window) {
+    var inviewObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-inview");
+          inviewObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.35 });
+    inviewEls.forEach(function (el) { inviewObserver.observe(el); });
+  } else {
+    inviewEls.forEach(function (el) { el.classList.add("is-inview"); });
   }
 
-  /* ---------- Hilo conector del mapa "Cómo funciona" ---------- */
-  var engineMap = document.getElementById("engineMap");
-  if (engineMap) {
-    var threadSvg = document.getElementById("engineThread");
-    var threadPath = document.getElementById("engineThreadPath");
-    var engineCards = Array.prototype.slice.call(engineMap.querySelectorAll(".engine__card"));
-
-    function drawThread() {
-      var mapRect = engineMap.getBoundingClientRect();
-      threadSvg.setAttribute("width", mapRect.width);
-      threadSvg.setAttribute("height", mapRect.height);
-      threadSvg.setAttribute("viewBox", "0 0 " + mapRect.width + " " + mapRect.height);
-
-      var points = engineCards.map(function (card) {
-        var r = card.getBoundingClientRect();
-        return {
-          x: r.left - mapRect.left + r.width / 2,
-          y: r.top - mapRect.top + r.height / 2
-        };
+  /* ---------- Pestañas accesibles: clic, flechas, Inicio y Fin ---------- */
+  function bindTabs(tabs, select) {
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener("click", function () { select(i, true); });
+      tab.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowRight") next = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") next = (i - 1 + tabs.length) % tabs.length;
+        else if (e.key === "Home") next = 0;
+        else if (e.key === "End") next = tabs.length - 1;
+        if (next === null) return;
+        e.preventDefault();
+        select(next, true);
+        tabs[next].focus();
       });
+    });
+  }
 
-      if (points.length < 2) return;
+  function markTabs(tabs, index) {
+    tabs.forEach(function (tab, i) {
+      tab.classList.toggle("is-active", i === index);
+      tab.setAttribute("aria-selected", i === index ? "true" : "false");
+      tab.tabIndex = i === index ? 0 : -1;
+    });
+  }
 
-      var d = "M " + points[0].x + " " + points[0].y;
-      for (var i = 1; i < points.length; i++) {
-        var p0 = points[i - 1], p1 = points[i];
-        var midX = (p0.x + p1.x) / 2;
-        d += " C " + midX + " " + p0.y + ", " + midX + " " + p1.y + ", " + p1.x + " " + p1.y;
+  /* ---------- Qué es: una pregunta de práctica real ---------- */
+  var quiz = document.getElementById("miniQuiz");
+  if (quiz) {
+    var quizOpts = Array.prototype.slice.call(quiz.querySelectorAll(".mini-quiz__opt"));
+    var quizFeedback = quiz.querySelector(".mini-quiz__feedback");
+    var quizInitial = quizFeedback.textContent;
+
+    var resetQuiz = function () {
+      quizOpts.forEach(function (o) {
+        o.disabled = false;
+        o.classList.remove("is-correct", "is-wrong", "is-muted");
+      });
+      quizFeedback.textContent = quizInitial;
+      quizOpts[0].focus();
+    };
+
+    quizOpts.forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        var right = opt.hasAttribute("data-correct");
+        quizOpts.forEach(function (o) {
+          o.disabled = true;
+          if (o.hasAttribute("data-correct")) o.classList.add("is-correct");
+          else if (o === opt) o.classList.add("is-wrong");
+          else o.classList.add("is-muted");
+        });
+        quizFeedback.innerHTML = right
+          ? '<span class="mini-quiz__xp">+10 XP</span>¡Correcta!'
+          : "Casi: la correcta quedó en verde.";
+        var retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "mini-quiz__retry";
+        retry.textContent = "Probar de nuevo";
+        retry.addEventListener("click", resetQuiz);
+        quizFeedback.appendChild(retry);
+        retry.focus();
+      });
+    });
+  }
+
+  /* ---------- Cómo funciona: cinco piezas sobre un mismo camino ---------- */
+  var engine = document.getElementById("engine");
+  if (engine) {
+    var engTrack = engine.querySelector(".engine__track");
+    var engSvg = engine.querySelector(".engine__line");
+    var engBg = engine.querySelector(".engine__line-bg");
+    var engFill = engine.querySelector(".engine__line-fill");
+    var engTabs = Array.prototype.slice.call(engine.querySelectorAll(".engine__step"));
+    var engPanels = Array.prototype.slice.call(engine.querySelectorAll(".engine__panel"));
+    var engActive = 0;
+    var engCum = [0];
+    var engTotal = 0;
+    var engAuto = !prefersReducedMotion;
+    var engTimer = null;
+    var engVisible = false;
+    var engHover = false;
+
+    /* Camino curvo que pasa por el centro de cada nodo; guarda el largo hasta cada uno */
+    var engLayout = function () {
+      var box = engTrack.getBoundingClientRect();
+      if (!box.width) return;
+      var pts = engTabs.map(function (tab) {
+        var r = tab.querySelector(".engine__dot").getBoundingClientRect();
+        return { x: r.left - box.left + r.width / 2, y: r.top - box.top + r.height / 2 };
+      });
+      engSvg.setAttribute("viewBox", "0 0 " + box.width + " " + box.height);
+      var d = "M" + pts[0].x + " " + pts[0].y;
+      var partials = [];
+      for (var i = 1; i < pts.length; i++) {
+        var a = pts[i - 1], b = pts[i], mx = (a.x + b.x) / 2;
+        d += " C" + mx + " " + a.y + " " + mx + " " + b.y + " " + b.x + " " + b.y;
+        partials.push(d);
       }
-      threadPath.setAttribute("d", d);
+      engCum = [0];
+      partials.forEach(function (pd) {
+        engFill.setAttribute("d", pd);
+        engCum.push(engFill.getTotalLength());
+      });
+      engTotal = engCum[engCum.length - 1];
+      engBg.setAttribute("d", d);
+      engFill.setAttribute("d", d);
+      engFill.style.transition = "none";
+      engFill.style.strokeDasharray = engTotal + " " + engTotal;
+      engFill.style.strokeDashoffset = engTotal - engCum[engActive];
+      engFill.getBoundingClientRect();
+      engFill.style.transition = "";
+    };
+
+    var engSchedule = function () {
+      clearTimeout(engTimer);
+      if (!engAuto) return;
+      engTimer = setTimeout(function () {
+        if (!engVisible || engHover || document.hidden) { engSchedule(); return; }
+        engSelect((engActive + 1) % engTabs.length, false);
+      }, 6000);
+    };
+
+    var engSelect = function (i, fromUser) {
+      if (fromUser) { engAuto = false; clearTimeout(engTimer); }
+      engActive = i;
+      markTabs(engTabs, i);
+      engTabs.forEach(function (tab, k) { tab.classList.toggle("is-passed", k < i); });
+      engPanels.forEach(function (panel, k) { panel.classList.toggle("is-active", k === i); });
+      if (engTotal) engFill.style.strokeDashoffset = engTotal - engCum[i];
+      engSchedule();
+    };
+
+    bindTabs(engTabs, engSelect);
+    engine.addEventListener("pointerenter", function () { engHover = true; });
+    engine.addEventListener("pointerleave", function () { engHover = false; });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        engVisible = entries[0].isIntersecting;
+        if (engVisible) engSchedule();
+      }, { threshold: 0.4 }).observe(engine);
+    } else {
+      engVisible = true;
     }
 
-    drawThread();
-    window.addEventListener("load", drawThread);
-    var resizeTimer;
+    engLayout();
+    engSelect(0, false);
+    window.addEventListener("load", engLayout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(engLayout);
+    var engResizeTimer;
     window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(drawThread, 150);
+      clearTimeout(engResizeTimer);
+      engResizeTimer = setTimeout(engLayout, 120);
+    });
+  }
+
+  /* ---------- La app: pestañas como las de la app, dentro de una ventana ---------- */
+  var showcase = document.getElementById("showcase");
+  if (showcase) {
+    var shotTabs = Array.prototype.slice.call(showcase.querySelectorAll(".showcase__tab"));
+    var shotImgs = Array.prototype.slice.call(showcase.querySelectorAll(".browser__screen img"));
+    var shotPath = document.getElementById("shotPath");
+    var shotCaption = document.getElementById("shotCaption");
+    bindTabs(shotTabs, function (i) {
+      markTabs(shotTabs, i);
+      shotImgs.forEach(function (img, k) { img.classList.toggle("is-active", k === i); });
+      shotPath.textContent = shotTabs[i].getAttribute("data-path");
+      shotCaption.textContent = shotTabs[i].getAttribute("data-caption");
     });
   }
 
