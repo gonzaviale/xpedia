@@ -8,7 +8,7 @@
   var toggle = document.getElementById("themeToggle");
   var stored = localStorage.getItem("xpedia-theme");
   var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-  var theme = stored || (prefersDark ? "dark" : "light");
+  var theme = stored || "light";
 
   function applyTheme(t) {
     root.setAttribute("data-theme", t);
@@ -399,11 +399,11 @@
       rcRoute.textContent = "Ruta: " + g.route;
       renderNodes(g, animate);
       drawRouteLines(animate, true);
-      rcAdjust.textContent = g.adjust;
+      if (rcAdjust) rcAdjust.textContent = g.adjust;
       rcProgress.textContent = g.current + " de " + g.nodes.length + " hitos";
       rcBar.style.width = (g.current / g.nodes.length * 100) + "%";
       rcEta.textContent = g.eta;
-      if (animate && !reduceMotion) {
+      if (rcXp && animate && !reduceMotion) {
         rcXp.classList.remove("is-pop");
         void rcXp.offsetWidth;
         rcXp.classList.add("is-pop");

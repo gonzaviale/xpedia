@@ -14,7 +14,7 @@
 <body data-theme="light">
 
 <header class="topbar">
-  <a href="#hero" class="brand"><span class="brand__mark">XP</span>edia</a>
+  <a href="#hero" class="brand"><span class="brand__mark">XP</span><span style="color: rgb(44, 44, 44);">ed</span>ia</a>
   <div class="topbar__actions">
   <a href="https://app.xpedia.com" class="topbar__link">Entrar</a>
   <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false">
@@ -50,11 +50,11 @@
   <!-- 1. HERO -->
   <section class="hero" id="hero">
     <div class="hero__content">
-      <h1 class="hero__title">Elegí a dónde querés llegar. Xpedia te arma el camino.</h1>
-      <p class="hero__sub">Mejorar en lo que ya hacés o pasarte a otro rubro: tu objetivo se convierte en una ruta de hitos. Practicás cada paso, demostrás lo que sabés y el camino se ajusta a cómo te va.</p>
+      <h1 class="hero__title">Elegí a dónde querés llegar. <span style="color: rgb(223, 137, 8);"></span> <span style="color: #2F6FED;">XPedia te arma el camino</span></h1>
+      <p class="hero__sub">Para mejorar en lo que hacés o pasarte a otro rubro. Paso a paso, practicando de verdad.</p>
 
       <div class="hero__goals">
-        <p class="hero__goals-label" id="goalsLabel">Probá con un destino</p>
+        <p class="hero__goals-label" id="goalsLabel">Por ejemplo</p>
         <div class="hero__pills" role="group" aria-labelledby="goalsLabel">
           <button type="button" class="goal-pill is-active" data-goal="0" aria-pressed="true">De gastronomía a tecnología</button>
           <button type="button" class="goal-pill" data-goal="1" aria-pressed="false">Usar IA en el trabajo</button>
@@ -88,11 +88,6 @@
           </ol>
         </div>
 
-        <div class="route-card__ai">
-          <span class="ai-badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5Z"/></svg>IA</span>
-          <p id="rcAdjust">Sumé un repaso de CSS: en la práctica te costaron los layouts.</p>
-        </div>
-
         <div class="route-card__foot">
           <div class="route-card__progress">
             <span id="rcProgress">2 de 5 hitos</span>
@@ -103,10 +98,6 @@
             <span id="rcEta">Llegás en 7 meses</span>
           </span>
         </div>
-
-        <span class="route-card__xp" id="rcXp" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2 4 13.5h6.5L9.5 22 20 9.5h-6.6L13.5 2Z"/></svg>+10 XP
-        </span>
       </div>
       <p class="sr-only" aria-live="polite" id="rcAnnounce"></p>
     </div>
@@ -117,7 +108,7 @@
     <div class="section__head">
       <p class="eyebrow"><span class="eyebrow__node">2</span>Qué es</p>
       <h2>No es otro catálogo de cursos.</h2>
-      <p class="section__intro">Son tres capas que trabajan juntas: un plan que apunta a algo concreto, práctica que simula el trabajo real y una prueba que podés mostrar.</p>
+      <p class="section__intro">Un plan, práctica y una forma de demostrar lo que aprendiste.</p>
     </div>
 
     <div class="pillars">
@@ -137,12 +128,12 @@
               <circle class="mini-route__node mini-route__node--todo" cx="218" cy="22" r="6"/>
               <path class="mini-route__pin" transform="translate(270 18)" d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/>
             </svg>
-            <span class="mini-route__note">Vas por el hito 3 de 5</span>
+            
           </div>
         </div>
         <div class="pillar__body">
           <h3>Plan</h3>
-          <p>Un roadmap personal hacia una meta concreta, que se reordena según cómo te va rindiendo. No es una lista fija de temas.</p>
+          <p>Tu camino hacia una meta concreta. Se acomoda a cómo te va.</p>
         </div>
       </article>
 
@@ -155,12 +146,12 @@
               <button type="button" class="mini-quiz__opt" data-correct="true"><span>B</span>Cuando inventa algo que suena convincente</button>
               <button type="button" class="mini-quiz__opt"><span>C</span>Cuando contesta en otro idioma</button>
             </div>
-            <p class="mini-quiz__feedback" aria-live="polite">Probala: elegí una respuesta.</p>
+            <p class="mini-quiz__feedback" aria-live="polite">Probala.</p>
           </div>
         </div>
         <div class="pillar__body">
           <h3>Práctica</h3>
-          <p>Material breve por hito, escenarios con decisiones, roleplay con IA y retos con proyecto real. Se aprende haciendo, no leyendo.</p>
+          <p>Ejercicios cortos y casos reales. Se aprende haciendo.</p>
         </div>
       </article>
 
@@ -177,16 +168,12 @@
                 <span>HTML y CSS</span>
               </div>
             </div>
-            <ul class="mini-proof__list">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Landing responsive publicada</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Formulario accesible</li>
-            </ul>
             <span class="mini-proof__share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>Portfolio listo para compartir</span>
           </div>
         </div>
         <div class="pillar__body">
           <h3>Prueba</h3>
-          <p>Evidencia real de lo que sabés: pruebas por hito y un portfolio que podés compartir con quien te tenga que evaluar.</p>
+          <p>Pruebas por hito y un portfolio para mostrar lo que sabés.</p>
         </div>
       </article>
     </div>
@@ -196,8 +183,8 @@
   <section class="section section--tint" id="como-funciona">
     <div class="section__head">
       <p class="eyebrow"><span class="eyebrow__node">3</span>Cómo funciona</p>
-      <h2>El motor, en cinco piezas.</h2>
-      <p class="section__intro">Todo lo demás (XP, racha, la versión para empresas) se monta sobre esto. Tocá cada pieza para ver qué hace.</p>
+      <h2>Cinco piezas, una ruta.</h2>
+      <p class="section__intro">Tocá cada una para ver qué hace.</p>
     </div>
 
     <div class="engine" id="engine">
@@ -214,7 +201,7 @@
         <div class="engine__panel is-active" role="tabpanel" id="eng-panel-1" aria-labelledby="eng-tab-1">
           <div class="engine__copy">
             <h3>Ruta como grafo</h3>
-            <p>Cada tema declara qué necesita saber antes. Eso permite adaptar, agendar y bifurcar sin romper nada.</p>
+            <p>Cada tema sabe qué necesitás antes. Así la ruta puede cambiar sin romperse.</p>
           </div>
           <div class="engine__demo" aria-hidden="true">
             <svg class="demo-graph" viewBox="0 0 320 196">
@@ -227,20 +214,19 @@
               <g class="demo-graph__node demo-graph__node--current"><rect x="170" y="80" width="140" height="30" rx="15"/><text x="240" y="99">Alucinaciones</text></g>
               <g class="demo-graph__node demo-graph__node--locked"><rect x="100" y="146" width="120" height="30" rx="15"/><text x="160" y="165">Pedir bien</text></g>
             </svg>
-            <p class="demo-caption">«Pedir bien» se desbloquea cuando dominás sus dos requisitos.</p>
+            
           </div>
         </div>
 
         <div class="engine__panel" role="tabpanel" id="eng-panel-2" aria-labelledby="eng-tab-2">
           <div class="engine__copy">
             <h3>Evaluación</h3>
-            <p>Preguntas de concepto, aplicación y detalle. Antes de ver la respuesta, decís si lo sabías, lo dudaste o lo adivinaste.</p>
+            <p>Antes de ver la respuesta, contás si lo sabías, lo dudaste o lo adivinaste.</p>
           </div>
           <div class="engine__demo" aria-hidden="true">
             <div class="demo-eval">
-              <span class="demo-tag">Pregunta de aplicación</span>
-              <p class="demo-eval__q">Tenés que resumir un contrato de 80 páginas. ¿Qué limita al modelo?</p>
-              <p class="demo-eval__hint">Antes de ver la respuesta, ¿qué tan seguro estás?</p>
+                            <p class="demo-eval__q">Tenés que resumir un contrato de 80 páginas. ¿Qué limita al modelo?</p>
+              
               <div class="demo-eval__chips">
                 <span class="demo-chip">Lo sabía</span>
                 <span class="demo-chip is-picked">Lo dudé</span>
@@ -253,15 +239,14 @@
         <div class="engine__panel" role="tabpanel" id="eng-panel-3" aria-labelledby="eng-tab-3">
           <div class="engine__copy">
             <h3>Perfil de rendimiento</h3>
-            <p>Dominio por tema y patrones: qué tipo de pregunta fallás, si adivinás, si vas lento, qué se está oxidando.</p>
+            <p>Qué dominás, qué te cuesta y qué se te está olvidando.</p>
           </div>
           <div class="engine__demo" aria-hidden="true">
             <div class="demo-profile">
               <div class="demo-profile__row"><span>Qué es un LLM</span><span class="demo-bar"><i style="--v:94%"></i></span><b>94%</b></div>
               <div class="demo-profile__row"><span>Tokens y contexto</span><span class="demo-bar"><i style="--v:88%"></i></span><b>88%</b></div>
               <div class="demo-profile__row is-rusty"><span>Pedir bien</span><span class="demo-bar"><i style="--v:41%"></i></span><b>41%</b></div>
-              <p class="demo-profile__flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v4.5M12 17.2v.3"/></svg>Se está oxidando: hace 12 días que no lo practicás.</p>
-              <p class="demo-profile__pattern">Patrón detectado: adivinás más en las preguntas de detalle.</p>
+              <p class="demo-profile__flag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2.5 20h19L12 3.5Z"/><path d="M12 10v4.5M12 17.2v.3"/></svg>Hace 12 días que no lo practicás.</p>
             </div>
           </div>
         </div>
@@ -269,13 +254,12 @@
         <div class="engine__panel" role="tabpanel" id="eng-panel-4" aria-labelledby="eng-tab-4">
           <div class="engine__copy">
             <h3>Adaptador</h3>
-            <p>Agrega repasos, saltea lo que ya dominás, reordena y abre ramas. Cada cambio queda explicado.</p>
+            <p>Suma repasos o saltea lo que ya sabés. Y te dice por qué.</p>
           </div>
           <div class="engine__demo" aria-hidden="true">
             <ul class="demo-log">
               <li><span class="demo-log__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><div><strong>Sumé un repaso de «Pedir bien»</strong><span>Tu dominio bajó a 41%.</span></div></li>
               <li><span class="demo-log__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16a8 8 0 0 1 14-6l2 2"/><path d="M20 6v6h-6"/></svg></span><div><strong>Salteé «Tokens y contexto»</strong><span>Ya lo dominabas desde el diagnóstico.</span></div></li>
-              <li><span class="demo-log__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span><div><strong>Abrí la rama «Automatizar sin código»</strong><span>Te interesó una novedad del Radar.</span></div></li>
             </ul>
           </div>
         </div>
@@ -283,13 +267,12 @@
         <div class="engine__panel" role="tabpanel" id="eng-panel-5" aria-labelledby="eng-tab-5">
           <div class="engine__copy">
             <h3>Radar e informe</h3>
-            <p>Entra lo que pasa en el rubro, filtrado por tu ruta. Sale un informe semanal con avance, dificultades y ajustes para aceptar.</p>
+            <p>Las novedades que te importan y un resumen de tu semana.</p>
           </div>
           <div class="engine__demo" aria-hidden="true">
             <div class="demo-report">
-              <div class="demo-report__head"><strong>Tu semana</strong><span class="ai-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5Z"/></svg>Generado por IA</span></div>
-              <p class="demo-report__line">4 sesiones, 58 minutos de práctica y 2 temas nuevos dominados.</p>
-              <div class="demo-report__item"><span class="demo-tag">Radar</span><p>Un estudio muestra que los asistentes siguen inventando citas. Tiene que ver con «Alucinaciones».</p></div>
+              <div class="demo-report__head"><strong>Tu semana</strong><span class="ai-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5Z"/></svg>IA</span></div>
+              <div class="demo-report__item"><span class="demo-tag">Radar</span><p>Los asistentes siguen inventando citas. Tiene que ver con lo que estás viendo.</p></div>
               <div class="demo-report__item demo-report__item--action"><p>Ajuste propuesto: repasar «Pedir bien» el martes.</p><span class="demo-report__btn">Aceptar</span></div>
             </div>
           </div>
@@ -302,17 +285,17 @@
   <section class="section" id="capturas">
     <div class="section__head">
       <p class="eyebrow"><span class="eyebrow__node">4</span>La app</p>
-      <h2>Así se ve la ruta por dentro.</h2>
-      <p class="section__intro">Capturas del prototipo. Recorré las pantallas como si estuvieras adentro.</p>
+      <h2>Así se ve por dentro.</h2>
+      <p class="section__intro">Capturas del prototipo.</p>
     </div>
 
     <div class="showcase" id="showcase">
       <div class="showcase__tabs" role="tablist" aria-label="Pantallas de la app">
-        <button type="button" class="showcase__tab is-active" role="tab" aria-selected="true" aria-controls="shotPanel" data-path="mi-ruta" data-caption="El mapa de hitos: qué dominás, qué sigue y qué todavía está bloqueado."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mi ruta</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="practicar" data-caption="Preguntas cortas con feedback al instante y XP por cada acierto."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 5l12 7-12 7V5Z"/></svg>Practicar</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="radar" data-caption="Novedades del rubro filtradas por tu ruta: solo lo que te cambia algo."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>Radar<span class="showcase__badge">3</span></button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="informe" data-caption="Tu semana en un vistazo, armada con tu práctica real."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7V3Z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Informe</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="como-funciona" data-caption="El motor explicado dentro de la app, con los números de tu sesión."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg>Cómo funciona</button>
+        <button type="button" class="showcase__tab is-active" role="tab" aria-selected="true" aria-controls="shotPanel" data-path="mi-ruta" data-caption="Tu mapa de hitos."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mi ruta</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="practicar" data-caption="Preguntas cortas, respuesta al instante."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 5l12 7-12 7V5Z"/></svg>Practicar</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="radar" data-caption="Solo las novedades que te sirven."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>Radar<span class="showcase__badge">3</span></button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="informe" data-caption="Tu semana en un vistazo."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7V3Z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Informe</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="como-funciona" data-caption="Cómo decide la app qué te toca."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg>Cómo funciona</button>
       </div>
 
       <div class="browser" id="shotPanel" role="tabpanel">
@@ -328,7 +311,7 @@
           <img src="assets/images/como-funciona.png" width="1873" height="922" loading="lazy" alt="Pantalla Cómo funciona: las cinco piezas del motor de Xpedia.">
         </div>
       </div>
-      <p class="showcase__caption" id="shotCaption" aria-live="polite">El mapa de hitos: qué dominás, qué sigue y qué todavía está bloqueado.</p>
+      <p class="showcase__caption" id="shotCaption" aria-live="polite">Tu mapa de hitos.</p>
     </div>
   </section>
 
@@ -337,7 +320,6 @@
     <div class="section__head">
       <p class="eyebrow"><span class="eyebrow__node">5</span>Video</p>
       <h2>Un recorrido de 90 segundos.</h2>
-      <p class="section__intro">Del objetivo al primer hito aprobado, dentro de la app.</p>
     </div>
 
     <div class="video-slot">
@@ -358,27 +340,12 @@
   <section class="section cta" id="empezar">
     <div class="cta__box">
       <p class="eyebrow"><span class="eyebrow__node eyebrow__node--pin"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/></svg></span>Empezar</p>
-      <h2>Tu ruta te espera del otro lado.</h2>
-      <p class="section__intro">Entrá a Xpedia, contanos qué querés mejorar y arrancá el primer hito hoy mismo.</p>
+      <h2>¿Arrancamos?</h2>
+      <p class="section__intro">Contanos qué querés mejorar y empezá hoy.</p>
 
-      <div class="launch-wrap" data-inview>
-        <span class="launch-ring" aria-hidden="true"></span>
-        <span class="launch-ring" aria-hidden="true"></span>
-        <span class="launch-ring" aria-hidden="true"></span>
-        <a href="https://app.xpedia.com" class="launch">
-          <span class="launch__trail" aria-hidden="true">
-            <span class="launch__dot"></span>
-            <span class="launch__dot"></span>
-            <span class="launch__dot"></span>
-          </span>
-          <span class="launch__pin" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/></svg>
-          </span>
-          <span class="launch__text">Entrar a Xpedia</span>
-        </a>
-      </div>
+      <a href="https://app.xpedia.com" class="launch">Entrar a Xpedia<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 
-      <p class="cta__note">Gratis para empezar. La versión para empresas arma la ruta junto con tu equipo.</p>
+      <p class="cta__note">Gratis para empezar.</p>
     </div>
   </section>
 
