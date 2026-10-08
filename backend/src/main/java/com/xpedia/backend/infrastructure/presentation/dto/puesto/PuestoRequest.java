@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.util.UUID;
 
 public record PuestoRequest(
-        /** null = puesto global de Xpedia. Se ignora al actualizar. */
         UUID organizacionId,
 
         @NotBlank(message = "El nombre es obligatorio")

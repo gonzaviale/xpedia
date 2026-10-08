@@ -17,11 +17,9 @@ public interface PuestoRepository {
 
     boolean existsById(UUID id);
 
-    /** organizacionId null = compara contra los puestos globales. */
     boolean existsByOrganizacionIdAndNombre(UUID organizacionId, String nombre);
 
     boolean existsByOrganizacionIdAndNombreAndIdNot(UUID organizacionId, String nombre, UUID id);
 
-    /** organizacionId null = devuelve los puestos globales de Xpedia. */
     Page<Puesto> findAll(UUID organizacionId, Pageable pageable);
 }

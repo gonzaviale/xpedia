@@ -39,7 +39,6 @@ public class PuestoController {
                         obtenerPuestoUseCase.execute(puestoPresentationMapper.toObtenerRequest(id))));
     }
 
-    /** Sin organizacionId devuelve los puestos globales de Xpedia. */
     @GetMapping
     public ResponseEntity<PuestoPageResponse> listar(
             @RequestParam(required = false) UUID organizacionId,

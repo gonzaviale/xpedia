@@ -4,7 +4,7 @@ Spring Boot 4 · Java 21 · PostgreSQL 17 (pgvector) · Flyway.
 
 ## Arquitectura
 
-Misma estructura que huly-tpi: Clean Architecture con dos capas. `domain` no depende de `infrastructure`.
+Clean Architecture con dos capas. `domain` no depende de `infrastructure`.
 
 ```
 com.xpedia.backend
