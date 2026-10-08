@@ -45,6 +45,7 @@ docker compose up -d postgres
 ./mvnw spring-boot:run
 ```
 
+- `docker compose up -d postgres` crea la base `xpedia` con pgvector. Flyway no crea bases: crea las tablas al arrancar la app. Si la base quedó a medias por un intento anterior, se borra el volumen con `docker compose down -v` y se vuelve a levantar.
 - El perfil por defecto es `dev`. Usa `localhost:5434/xpedia` con `xpedia_user` / `xpedia_pass`. Se puede sobrescribir con variables de entorno o con `application-xpedia-secrets.properties` (ver el `.example`).
 - Swagger: http://localhost:8080/swagger-ui.html
 
