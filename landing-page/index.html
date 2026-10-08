@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xpedia — Tu ruta para mejorar</title>
+<meta name="description" content="Xpedia te arma una ruta personalizada para mejorar una habilidad o cambiar de rubro, y te hace practicar y demostrar lo que sabés.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-theme="light">
+
+<!-- Mapa de nodos: navegación -->
+<nav class="route-nav" id="routeNav" aria-label="Navegación de la página">
+  <div class="route-nav__track" aria-hidden="true"></div>
+  <ol class="route-nav__nodes">
+    <li><a href="#hero" data-node="hero"><span class="node__dot">1</span><span class="node__label">Inicio</span></a></li>
+    <li><a href="#que-es" data-node="que-es"><span class="node__dot">2</span><span class="node__label">Qué es</span></a></li>
+    <li><a href="#como-funciona" data-node="como-funciona"><span class="node__dot">3</span><span class="node__label">Cómo funciona</span></a></li>
+    <li><a href="#capturas" data-node="capturas"><span class="node__dot">4</span><span class="node__label">La app</span></a></li>
+    <li><a href="#video" data-node="video"><span class="node__dot">5</span><span class="node__label">Video</span></a></li>
+    <li><a href="#empezar" data-node="empezar"><span class="node__dot">6</span><span class="node__label">Empezar</span></a></li>
+  </ol>
+</nav>
+
+<header class="topbar">
+  <a href="#hero" class="brand"><span class="brand__mark">XP</span>edia</a>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false">
+    <span class="theme-toggle__track">
+      <span class="theme-toggle__thumb"></span>
+    </span>
+    <span class="theme-toggle__text">Modo oscuro</span>
+  </button>
+</header>
+
+<main>
+
+  <!-- 1. HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__content">
+      <p class="hero__kicker">Plan · Práctica · Prueba</p>
+      <h1 class="hero__title">De "no sé por dónde<br>empezar" a una ruta<br>que se puede medir.</h1>
+      <p class="hero__sub">Xpedia convierte un objetivo — mejorar una habilidad o cambiar de rubro — en un camino de hitos con práctica real y pruebas de lo que sabés. Nada de cursos sueltos: un mapa que se ajusta a cómo vas rindiendo.</p>
+      <div class="hero__cta">
+        <a href="#empezar" class="btn btn--primary">Armar mi ruta</a>
+        <a href="#como-funciona" class="btn btn--ghost">Ver cómo funciona</a>
+      </div>
+    </div>
+    <div class="hero__visual" aria-hidden="true">
+      <svg class="hero__path" viewBox="0 0 420 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 480 C 60 400, 160 400, 160 330 C 160 260, 260 260, 260 190 C 260 120, 360 120, 360 50" stroke-dasharray="2 14" stroke-linecap="round" stroke-width="3" class="hero__path-line"/>
+        <circle cx="60" cy="480" r="9" class="hero__path-node hero__path-node--done"/>
+        <circle cx="160" cy="330" r="9" class="hero__path-node hero__path-node--done"/>
+        <circle cx="260" cy="190" r="12" class="hero__path-node hero__path-node--current"/>
+        <circle cx="360" cy="50" r="9" class="hero__path-node hero__path-node--locked"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2. QUE ES -->
+  <section class="section" id="que-es">
+    <div class="section__head">
+      <p class="eyebrow">Qué es</p>
+      <h2>No es otro catálogo de cursos.</h2>
+      <p class="section__intro">Son tres capas que trabajan juntas: un plan que apunta a algo concreto, práctica que simula el trabajo real, y una prueba que podés mostrar.</p>
+    </div>
+    <div class="pillars">
+      <article class="pillar">
+        <div class="pillar__icon pillar__icon--plan" aria-hidden="true"></div>
+        <h3>Plan</h3>
+        <p>Un roadmap personal hacia una meta concreta, que se reordena según cómo te va rindiendo — no una lista fija de temas.</p>
+      </article>
+      <article class="pillar">
+        <div class="pillar__icon pillar__icon--practica" aria-hidden="true"></div>
+        <h3>Práctica</h3>
+        <p>Material breve por hito y ejercicios con escenarios, roleplay con IA y retos de proyecto real. Se aprende haciendo, no leyendo.</p>
+      </article>
+      <article class="pillar">
+        <div class="pillar__icon pillar__icon--prueba" aria-hidden="true"></div>
+        <h3>Prueba</h3>
+        <p>Evidencia real de lo que sabés: pruebas por hito y un portfolio que podés compartir con quien te tenga que evaluar.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 3. COMO FUNCIONA -->
+  <section class="section section--tint" id="como-funciona">
+    <div class="section__head">
+      <p class="eyebrow">Cómo funciona</p>
+      <h2>El motor, en cinco piezas.</h2>
+      <p class="section__intro">Todo lo demás — XP, racha, empresa — se monta sobre esto.</p>
+    </div>
+    <div class="engine">
+      <article class="engine__card">
+        <span class="engine__num">01</span>
+        <h3>Ruta como grafo</h3>
+        <p>Cada tema declara qué necesita saber antes. Eso permite adaptar, agendar y bifurcar sin romper nada.</p>
+      </article>
+      <article class="engine__card">
+        <span class="engine__num">02</span>
+        <h3>Evaluación</h3>
+        <p>Preguntas de concepto, aplicación y detalle. Antes de ver la respuesta, decís si lo sabías, lo dudaste o lo adivinaste.</p>
+      </article>
+      <article class="engine__card">
+        <span class="engine__num">03</span>
+        <h3>Perfil de rendimiento</h3>
+        <p>Dominio por tema y patrones: qué tipo de pregunta fallás, si adivinás, si vas lento, qué se está oxidando.</p>
+      </article>
+      <article class="engine__card">
+        <span class="engine__num">04</span>
+        <h3>Adaptador</h3>
+        <p>Agrega repasos, saltea lo que ya dominás, reordena y abre ramas. Cada cambio queda explicado.</p>
+      </article>
+      <article class="engine__card engine__card--wide">
+        <span class="engine__num">05</span>
+        <h3>Radar e informe</h3>
+        <p>Entra lo que pasa en el rubro, filtrado por tu ruta. Sale un informe semanal con avance, dificultades y ajustes para aceptar.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4. CAPTURAS -->
+  <section class="section" id="capturas">
+    <div class="section__head">
+      <p class="eyebrow">La app</p>
+      <h2>Así se ve la ruta por dentro.</h2>
+      <p class="section__intro">Capturas directas del producto, no renders.</p>
+    </div>
+    <div class="gallery">
+      <figure class="gallery__item gallery__item--tall">
+        <img src="assets/images/mi-ruta.png" alt="Pantalla Mi ruta de Xpedia: mapa de hitos con nodos, progreso y recomendación del siguiente tema.">
+        <figcaption>Mi ruta — el mapa de hitos</figcaption>
+      </figure>
+      <figure class="gallery__item">
+        <img src="assets/images/practicar.png" alt="Pantalla de práctica con una pregunta de opción múltiple y feedback inmediato.">
+        <figcaption>Practicar — feedback al instante</figcaption>
+      </figure>
+      <figure class="gallery__item">
+        <img src="assets/images/radar.png" alt="Pantalla Radar con novedades del rubro filtradas por relevancia para la ruta del usuario.">
+        <figcaption>Radar — novedades sin ruido</figcaption>
+      </figure>
+      <figure class="gallery__item">
+        <img src="assets/images/informe.png" alt="Informe semanal generado por IA con avance, novedades y próximos pasos.">
+        <figcaption>Informe — tu semana en un vistazo</figcaption>
+      </figure>
+      <figure class="gallery__item">
+        <img src="assets/images/como-funciona.png" alt="Pantalla Cómo funciona con las cinco piezas del motor de Xpedia.">
+        <figcaption>Cómo funciona — el motor explicado</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 5. VIDEO -->
+  <section class="section section--tint" id="video">
+    <div class="section__head">
+      <p class="eyebrow">Mirá la ruta en acción</p>
+      <h2>Un recorrido de 90 segundos.</h2>
+    </div>
+    <div class="video-slot">
+      <div class="video-slot__frame">
+        <span class="video-slot__play" aria-hidden="true">▶</span>
+        <p class="video-slot__text">Acá iría el video</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CTA -->
+  <section class="section cta" id="empezar">
+    <div class="cta__box">
+      <p class="eyebrow">Empezar</p>
+      <h2>¿Qué querés mejorar?</h2>
+      <p class="section__intro">Contanos tu objetivo y Xpedia arma el primer borrador de tu ruta.</p>
+      <form class="cta__form" onsubmit="return false;">
+        <input type="text" placeholder="Ej.: quiero pasar a tecnología desde gastronomía" aria-label="Tu objetivo">
+        <button type="submit" class="btn btn--primary">Analizar</button>
+      </form>
+      <p class="cta__note">Gratis para empezar. La versión para empresas arma la ruta junto con tu equipo.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>Xpedia</span>
+  <span class="footer__dim">Plan, práctica y prueba — en una sola ruta.</span>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
