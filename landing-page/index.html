@@ -14,6 +14,8 @@
 
 <header class="topbar">
   <a href="#hero" class="brand"><span class="brand__mark">XP</span>edia</a>
+  <div class="topbar__actions">
+  <a href="https://app.xpedia.com" class="topbar__link">Entrar</a>
   <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false">
     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
       <circle cx="12" cy="12" r="4.2"/>
@@ -23,6 +25,7 @@
       <path d="M20.2 14.6A8.6 8.6 0 1 1 9.4 3.8a7 7 0 0 0 10.8 10.8Z"/>
     </svg>
   </button>
+  </div>
 </header>
 
 <!-- Mapa de nodos: mapita fijo que acompaña el scroll -->
@@ -46,22 +49,65 @@
   <!-- 1. HERO -->
   <section class="hero" id="hero">
     <div class="hero__content">
-      <p class="hero__kicker">Plan · Práctica · Prueba</p>
-      <h1 class="hero__title">De "no sé por dónde<br>empezar" a una ruta<br>que se puede medir.</h1>
-      <p class="hero__sub">Xpedia convierte un objetivo — mejorar una habilidad o cambiar de rubro — en un camino de hitos con práctica real y pruebas de lo que sabés. Nada de cursos sueltos: un mapa que se ajusta a cómo vas rindiendo.</p>
+      <h1 class="hero__title">Elegí a dónde querés llegar. Xpedia te arma el camino.</h1>
+      <p class="hero__sub">Mejorar en lo que ya hacés o pasarte a otro rubro: tu objetivo se convierte en una ruta de hitos. Practicás cada paso, demostrás lo que sabés y el camino se ajusta a cómo te va.</p>
+
+      <div class="hero__goals">
+        <p class="hero__goals-label" id="goalsLabel">Probá con un destino</p>
+        <div class="hero__pills" role="group" aria-labelledby="goalsLabel">
+          <button type="button" class="goal-pill is-active" data-goal="0" aria-pressed="true">De gastronomía a tecnología</button>
+          <button type="button" class="goal-pill" data-goal="1" aria-pressed="false">Usar IA en el trabajo</button>
+          <button type="button" class="goal-pill" data-goal="2" aria-pressed="false">Atención al cliente remota</button>
+          <button type="button" class="goal-pill" data-goal="3" aria-pressed="false">Hablar en público</button>
+        </div>
+      </div>
+
       <div class="hero__cta">
-        <a href="#empezar" class="btn btn--primary">Armar mi ruta</a>
+        <a href="https://app.xpedia.com" class="btn btn--primary">Armar mi ruta</a>
         <a href="#como-funciona" class="btn btn--ghost">Ver cómo funciona</a>
       </div>
     </div>
-    <div class="hero__visual" aria-hidden="true">
-      <svg class="hero__path" viewBox="0 0 420 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M60 480 C 60 400, 160 400, 160 330 C 160 260, 260 260, 260 190 C 260 120, 360 120, 360 50" stroke-dasharray="2 14" stroke-linecap="round" stroke-width="3" class="hero__path-line"/>
-        <circle cx="60" cy="480" r="9" class="hero__path-node hero__path-node--done"/>
-        <circle cx="160" cy="330" r="9" class="hero__path-node hero__path-node--done"/>
-        <circle cx="260" cy="190" r="12" class="hero__path-node hero__path-node--current"/>
-        <circle cx="360" cy="50" r="9" class="hero__path-node hero__path-node--locked"/>
-      </svg>
+
+    <div class="hero__visual">
+      <div class="route-card" id="routeCard">
+        <div class="route-card__head">
+          <span class="route-card__label">Tu objetivo</span>
+          <p class="route-card__goal">Quiero <span id="rcGoal">pasar de gastronomía a tecnología</span><span class="route-card__caret" aria-hidden="true"></span></p>
+          <span class="route-card__route" id="rcRoute">Ruta: Desarrollo web desde cero</span>
+        </div>
+
+        <div class="route-card__map" id="rcMap">
+          <svg class="route-card__lines" id="rcLines" aria-hidden="true"></svg>
+          <ol class="route-card__nodes" id="rcNodes">
+            <li class="rnode rnode--done" style="--x:6"><span class="rnode__dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="rnode__text"><span class="rnode__name">Lógica y algoritmos</span><span class="rnode__state">Dominado</span></span></li>
+            <li class="rnode rnode--done" style="--x:84"><span class="rnode__dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="rnode__text"><span class="rnode__name">HTML y CSS</span><span class="rnode__state">Dominado</span></span></li>
+            <li class="rnode rnode--current" style="--x:22"><span class="rnode__dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2 4 13.5h6.5L9.5 22 20 9.5h-6.6L13.5 2Z"/></svg></span><span class="rnode__text"><span class="rnode__name">JavaScript <em class="rnode__here">Estás acá</em></span><span class="rnode__state">En curso</span></span></li>
+            <li class="rnode rnode--available" style="--x:100"><span class="rnode__dot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5L8 5.5Z"/></svg></span><span class="rnode__text"><span class="rnode__name">Tu primer proyecto</span><span class="rnode__state">Disponible</span></span></li>
+            <li class="rnode rnode--locked" style="--x:40"><span class="rnode__dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span><span class="rnode__text"><span class="rnode__name">Portfolio</span><span class="rnode__state">Bloqueado</span></span></li>
+          </ol>
+        </div>
+
+        <div class="route-card__ai">
+          <span class="ai-badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9L12 2.5Z"/></svg>IA</span>
+          <p id="rcAdjust">Sumé un repaso de CSS: en la práctica te costaron los layouts.</p>
+        </div>
+
+        <div class="route-card__foot">
+          <div class="route-card__progress">
+            <span id="rcProgress">2 de 5 hitos</span>
+            <span class="route-card__bar"><i id="rcBar" style="width:40%"></i></span>
+          </div>
+          <span class="route-card__eta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg>
+            <span id="rcEta">Llegás en 7 meses</span>
+          </span>
+        </div>
+
+        <span class="route-card__xp" id="rcXp" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2 4 13.5h6.5L9.5 22 20 9.5h-6.6L13.5 2Z"/></svg>+10 XP
+        </span>
+      </div>
+      <p class="sr-only" aria-live="polite" id="rcAnnounce"></p>
     </div>
   </section>
 
