@@ -26,7 +26,7 @@
     });
   }
 
-  /* ---------- Mapa de nodos: resaltar sección activa ---------- */
+  /* ---------- Mapa de nodos: resaltar sección activa y pintar el camino recorrido ---------- */
   var navLinks = Array.prototype.slice.call(document.querySelectorAll(".route-nav__nodes a"));
   var sections = navLinks
     .map(function (link) {
@@ -35,10 +35,27 @@
     })
     .filter(Boolean);
 
+  var progressPath = document.getElementById("routeProgress");
+  var progressLength = progressPath ? progressPath.getTotalLength() : 0;
+  if (progressPath) {
+    progressPath.style.strokeDasharray = progressLength;
+    progressPath.style.strokeDashoffset = progressLength;
+  }
+
   function setActive(id) {
-    navLinks.forEach(function (link) {
-      link.classList.toggle("is-active", link.getAttribute("data-node") === id);
+    var activeIndex = navLinks.findIndex(function (link) {
+      return link.getAttribute("data-node") === id;
     });
+
+    navLinks.forEach(function (link, i) {
+      link.classList.toggle("is-active", i === activeIndex);
+      link.classList.toggle("is-passed", i < activeIndex);
+    });
+
+    if (progressPath && activeIndex > -1) {
+      var ratio = navLinks.length > 1 ? activeIndex / (navLinks.length - 1) : 0;
+      progressPath.style.strokeDashoffset = progressLength * (1 - ratio);
+    }
   }
 
   if ("IntersectionObserver" in window && sections.length) {
