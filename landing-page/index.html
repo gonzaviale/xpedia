@@ -37,7 +37,7 @@
     <li><a href="#como-funciona" data-node="como-funciona"><span class="node__dot">3</span><span class="node__label">Cómo funciona</span></a></li>
     <li><a href="#capturas" data-node="capturas"><span class="node__dot">4</span><span class="node__label">La app</span></a></li>
     <li><a href="#video" data-node="video"><span class="node__dot">5</span><span class="node__label">Video</span></a></li>
-    <li><a href="#empezar" data-node="empezar"><span class="node__dot">6</span><span class="node__label">Empezar</span></a></li>
+    <li><a href="#empezar" data-node="empezar" class="node--destination"><span class="node__dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/></svg></span><span class="node__label">Llegaste a destino</span></a></li>
   </ol>
 </nav>
 
@@ -98,28 +98,29 @@
       <h2>El motor, en cinco piezas.</h2>
       <p class="section__intro">Todo lo demás — XP, racha, empresa — se monta sobre esto.</p>
     </div>
-    <div class="engine">
-      <article class="engine__card">
+    <div class="engine" id="engineMap">
+      <svg class="engine__thread" id="engineThread" aria-hidden="true"><path id="engineThreadPath"/></svg>
+      <article class="engine__card engine__card--p1">
         <span class="engine__num">01</span>
         <h3>Ruta como grafo</h3>
         <p>Cada tema declara qué necesita saber antes. Eso permite adaptar, agendar y bifurcar sin romper nada.</p>
       </article>
-      <article class="engine__card">
+      <article class="engine__card engine__card--p2">
         <span class="engine__num">02</span>
         <h3>Evaluación</h3>
         <p>Preguntas de concepto, aplicación y detalle. Antes de ver la respuesta, decís si lo sabías, lo dudaste o lo adivinaste.</p>
       </article>
-      <article class="engine__card">
+      <article class="engine__card engine__card--p3">
         <span class="engine__num">03</span>
         <h3>Perfil de rendimiento</h3>
         <p>Dominio por tema y patrones: qué tipo de pregunta fallás, si adivinás, si vas lento, qué se está oxidando.</p>
       </article>
-      <article class="engine__card">
+      <article class="engine__card engine__card--p4">
         <span class="engine__num">04</span>
         <h3>Adaptador</h3>
         <p>Agrega repasos, saltea lo que ya dominás, reordena y abre ramas. Cada cambio queda explicado.</p>
       </article>
-      <article class="engine__card engine__card--wide">
+      <article class="engine__card engine__card--p5 engine__card--wide">
         <span class="engine__num">05</span>
         <h3>Radar e informe</h3>
         <p>Entra lo que pasa en el rubro, filtrado por tu ruta. Sale un informe semanal con avance, dificultades y ajustes para aceptar.</p>
@@ -134,27 +135,48 @@
       <h2>Así se ve la ruta por dentro.</h2>
       <p class="section__intro">Capturas directas del producto, no renders.</p>
     </div>
-    <div class="gallery">
-      <figure class="gallery__item gallery__item--tall">
-        <img src="assets/images/mi-ruta.png" alt="Pantalla Mi ruta de Xpedia: mapa de hitos con nodos, progreso y recomendación del siguiente tema.">
-        <figcaption>Mi ruta — el mapa de hitos</figcaption>
-      </figure>
-      <figure class="gallery__item">
-        <img src="assets/images/practicar.png" alt="Pantalla de práctica con una pregunta de opción múltiple y feedback inmediato.">
-        <figcaption>Practicar — feedback al instante</figcaption>
-      </figure>
-      <figure class="gallery__item">
-        <img src="assets/images/radar.png" alt="Pantalla Radar con novedades del rubro filtradas por relevancia para la ruta del usuario.">
-        <figcaption>Radar — novedades sin ruido</figcaption>
-      </figure>
-      <figure class="gallery__item">
-        <img src="assets/images/informe.png" alt="Informe semanal generado por IA con avance, novedades y próximos pasos.">
-        <figcaption>Informe — tu semana en un vistazo</figcaption>
-      </figure>
-      <figure class="gallery__item">
-        <img src="assets/images/como-funciona.png" alt="Pantalla Cómo funciona con las cinco piezas del motor de Xpedia.">
-        <figcaption>Cómo funciona — el motor explicado</figcaption>
-      </figure>
+    <div class="slider" id="gallerySlider">
+      <div class="slider__viewport">
+        <ul class="slider__track">
+          <li class="slider__slide">
+            <figure>
+              <img src="assets/images/mi-ruta.png" alt="Pantalla Mi ruta de Xpedia: mapa de hitos con nodos, progreso y recomendación del siguiente tema.">
+              <figcaption>Mi ruta — el mapa de hitos</figcaption>
+            </figure>
+          </li>
+          <li class="slider__slide">
+            <figure>
+              <img src="assets/images/practicar.png" alt="Pantalla de práctica con una pregunta de opción múltiple y feedback inmediato.">
+              <figcaption>Practicar — feedback al instante</figcaption>
+            </figure>
+          </li>
+          <li class="slider__slide">
+            <figure>
+              <img src="assets/images/radar.png" alt="Pantalla Radar con novedades del rubro filtradas por relevancia para la ruta del usuario.">
+              <figcaption>Radar — novedades sin ruido</figcaption>
+            </figure>
+          </li>
+          <li class="slider__slide">
+            <figure>
+              <img src="assets/images/informe.png" alt="Informe semanal generado por IA con avance, novedades y próximos pasos.">
+              <figcaption>Informe — tu semana en un vistazo</figcaption>
+            </figure>
+          </li>
+          <li class="slider__slide">
+            <figure>
+              <img src="assets/images/como-funciona.png" alt="Pantalla Cómo funciona con las cinco piezas del motor de Xpedia.">
+              <figcaption>Cómo funciona — el motor explicado</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </div>
+      <button class="slider__arrow slider__arrow--prev" type="button" aria-label="Captura anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="slider__arrow slider__arrow--next" type="button" aria-label="Captura siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="slider__dots" role="tablist" aria-label="Ir a una captura"></div>
     </div>
   </section>
 
@@ -176,12 +198,21 @@
   <section class="section cta" id="empezar">
     <div class="cta__box">
       <p class="eyebrow">Empezar</p>
-      <h2>¿Qué querés mejorar?</h2>
-      <p class="section__intro">Contanos tu objetivo y Xpedia arma el primer borrador de tu ruta.</p>
-      <form class="cta__form" onsubmit="return false;">
-        <input type="text" placeholder="Ej.: quiero pasar a tecnología desde gastronomía" aria-label="Tu objetivo">
-        <button type="submit" class="btn btn--primary">Analizar</button>
-      </form>
+      <h2>Tu ruta te espera del otro lado.</h2>
+      <p class="section__intro">Entrá a Xpedia, contanos qué querés mejorar y arrancá el primer hito hoy mismo.</p>
+
+      <a href="https://app.xpedia.com" class="launch">
+        <span class="launch__trail" aria-hidden="true">
+          <span class="launch__dot"></span>
+          <span class="launch__dot"></span>
+          <span class="launch__dot"></span>
+        </span>
+        <span class="launch__pin" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/></svg>
+        </span>
+        <span class="launch__text">Entrar a Xpedia</span>
+      </a>
+
       <p class="cta__note">Gratis para empezar. La versión para empresas arma la ruta junto con tu equipo.</p>
     </div>
   </section>
