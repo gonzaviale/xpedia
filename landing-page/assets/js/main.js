@@ -110,4 +110,45 @@
 
     goTo(0);
   }
+
+  /* ---------- Hilo conector del mapa "Cómo funciona" ---------- */
+  var engineMap = document.getElementById("engineMap");
+  if (engineMap) {
+    var threadSvg = document.getElementById("engineThread");
+    var threadPath = document.getElementById("engineThreadPath");
+    var engineCards = Array.prototype.slice.call(engineMap.querySelectorAll(".engine__card"));
+
+    function drawThread() {
+      var mapRect = engineMap.getBoundingClientRect();
+      threadSvg.setAttribute("width", mapRect.width);
+      threadSvg.setAttribute("height", mapRect.height);
+      threadSvg.setAttribute("viewBox", "0 0 " + mapRect.width + " " + mapRect.height);
+
+      var points = engineCards.map(function (card) {
+        var r = card.getBoundingClientRect();
+        return {
+          x: r.left - mapRect.left + r.width / 2,
+          y: r.top - mapRect.top + r.height / 2
+        };
+      });
+
+      if (points.length < 2) return;
+
+      var d = "M " + points[0].x + " " + points[0].y;
+      for (var i = 1; i < points.length; i++) {
+        var p0 = points[i - 1], p1 = points[i];
+        var midX = (p0.x + p1.x) / 2;
+        d += " C " + midX + " " + p0.y + ", " + midX + " " + p1.y + ", " + p1.x + " " + p1.y;
+      }
+      threadPath.setAttribute("d", d);
+    }
+
+    drawThread();
+    window.addEventListener("load", drawThread);
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawThread, 150);
+    });
+  }
 })();

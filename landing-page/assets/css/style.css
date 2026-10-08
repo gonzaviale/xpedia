@@ -277,7 +277,8 @@ main{ max-width:1180px; margin:0 auto; padding-left:120px; }
 =========================================================== */
 .engine{
   position:relative;
-  display:grid; grid-template-columns:repeat(12, 1fr); gap:28px 24px;
+  display:flex; flex-direction:column; gap:64px;
+  max-width:760px; margin:0 auto;
   padding-top:8px;
 }
 .engine__thread{
@@ -285,38 +286,28 @@ main{ max-width:1180px; margin:0 auto; padding-left:120px; }
   overflow:visible; pointer-events:none; z-index:0;
 }
 .engine__thread path{
-  fill:none; stroke:var(--primary); stroke-width:2;
-  stroke-dasharray:1 9; stroke-linecap:round;
-  opacity:.55;
+  fill:none; stroke:var(--primary); stroke-width:3;
+  stroke-linecap:round; stroke-linejoin:round;
 }
 .engine__card{
-  position:relative; z-index:1;
+  position:relative; z-index:1; width:72%;
   background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
   padding:26px; box-shadow:var(--shadow-md);
 }
-.engine__card--p1{ grid-column:1 / 5; }
-.engine__card--p2{ grid-column:5 / 9; transform:translateY(46px); }
-.engine__card--p3{ grid-column:9 / 13; transform:translateY(-14px); }
-.engine__card--p4{ grid-column:2 / 7; transform:translateY(18px); }
-.engine__card--p5.engine__card--wide{ grid-column:7 / 13; transform:translateY(-10px); }
+.engine__card--p1, .engine__card--p3{ align-self:flex-start; }
+.engine__card--p2, .engine__card--p4{ align-self:flex-end; }
+.engine__card--p5{ align-self:center; width:84%; }
 
 .engine__num{ font-family:var(--font-display); color:var(--primary); font-weight:700; font-size:1.1rem; }
 .engine__card--p2 .engine__num, .engine__card--p4 .engine__num{ color:var(--orange); }
 .engine__card h3{ font-size:1.05rem; margin-top:10px; }
 .engine__card p{ font-size:.95rem; margin-bottom:0; }
 
-@media (max-width: 880px){
-  .engine{ grid-template-columns:1fr 1fr; gap:20px; padding-top:0; }
-  .engine__card--p1{ grid-column:1 / 2; transform:none; }
-  .engine__card--p2{ grid-column:2 / 3; transform:none; }
-  .engine__card--p3{ grid-column:1 / 2; transform:none; }
-  .engine__card--p4{ grid-column:2 / 3; transform:none; }
-  .engine__card--p5.engine__card--wide{ grid-column:1 / 3; transform:none; }
-}
-@media (max-width: 560px){
-  .engine{ grid-template-columns:1fr; }
-  .engine__card--p1, .engine__card--p2, .engine__card--p3, .engine__card--p4, .engine__card--p5.engine__card--wide{
-    grid-column:1 / 2;
+@media (max-width: 640px){
+  .engine{ gap:48px; }
+  .engine__card{ width:100%; }
+  .engine__card--p1, .engine__card--p2, .engine__card--p3, .engine__card--p4, .engine__card--p5{
+    align-self:stretch;
   }
 }
 
