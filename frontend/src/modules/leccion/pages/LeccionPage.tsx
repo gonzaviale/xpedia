@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { SwordIcon } from '@phosphor-icons/react';
+import { useRutaActual } from '@/modules/ruta';
 import { formatearMinutos } from '@/shared/lib/format';
 import { Panel, PageHeading, buttonClasses } from '@/shared/ui';
 import { microleccionQuery } from '../api';
@@ -8,7 +9,8 @@ import { FuentesCitadas } from '../components/FuentesCitadas';
 import { LeccionBloques } from '../components/LeccionBloques';
 
 export function LeccionPage({ nodoId }: { nodoId: string }) {
-  const leccion = useSuspenseQuery(microleccionQuery(nodoId)).data;
+  const ruta = useRutaActual();
+  const leccion = useSuspenseQuery(microleccionQuery(ruta, nodoId)).data;
 
   return (
     <article className="mx-auto flex max-w-195 animate-fade-in flex-col gap-6">
