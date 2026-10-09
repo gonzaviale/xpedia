@@ -6,6 +6,32 @@ import org.springframework.data.repository.query.Param;
 import java.util.*;
 
 public interface IActividadJpaRepository extends JpaRepository<ActividadEntity, UUID> {
+    String RETOS_VISIBLES = """
+            SELECT a.* FROM actividad a
+            JOIN nodo n ON n.id = a.nodo_id AND n.ruta_id = a.ruta_id
+            LEFT JOIN hito h ON h.id = n.hito_id AND h.ruta_id = n.ruta_id
+            JOIN rubrica r ON r.id = a.rubrica_id AND r.organizacion_id IS NULL
+            WHERE a.ruta_id = :rutaId AND a.nodo_id = :nodoId
+              AND a.tipo IN ('ENSAYO', 'RETO_PROYECTO', 'DESAFIO_REAL') AND a.estado_revision = 'APROBADA'
+              AND (n.hito_id IS NULL OR h.id IS NOT NULL)
+              AND (a.hito_id IS NULL OR a.hito_id = n.hito_id)
+              AND jsonb_typeof(a.contenido -> 'consigna') = 'string'
+              AND (a.contenido ->> 'consigna') ~ '[^[:space:]]'
+              AND EXISTS (SELECT 1 FROM rubrica_criterio c WHERE c.rubrica_id = r.id)
+              AND NOT EXISTS (SELECT 1 FROM rubrica_criterio c WHERE c.rubrica_id = r.id AND c.peso <= 0)
+              AND r.puntaje_aprobacion BETWEEN 0 AND
+                  (SELECT SUM(c.puntaje_max * c.peso) FROM rubrica_criterio c WHERE c.rubrica_id = r.id)
+              AND NOT EXISTS (SELECT 1 FROM actividad_fuente af JOIN fuente f ON f.id = af.fuente_id
+                              WHERE af.actividad_id = a.id AND f.organizacion_id IS NOT NULL)
+            """;
+
+    @Query(value = RETOS_VISIBLES + " ORDER BY a.nivel, a.creado_en, a.id", nativeQuery = true)
+    List<ActividadEntity> findRetosAprobados(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId);
+
+    @Query(value = RETOS_VISIBLES + " AND a.id = :retoId", nativeQuery = true)
+    Optional<ActividadEntity> findRetoAprobadoById(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId,
+                                               @Param("retoId") UUID retoId);
+
     @Query(value = """
             SELECT a.* FROM actividad a
             JOIN nodo n ON n.id = a.nodo_id AND n.ruta_id = a.ruta_id

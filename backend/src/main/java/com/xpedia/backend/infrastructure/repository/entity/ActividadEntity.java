@@ -20,6 +20,7 @@ public class ActividadEntity {
     @Column(name = "ruta_id", nullable = false) private UUID rutaId;
     @Column(name = "nodo_id") private UUID nodoId;
     @Column(name = "hito_id") private UUID hitoId;
+    @Column(name = "rubrica_id") private UUID rubricaId;
     @Column(nullable = false, columnDefinition = "text") private String tipo;
     @Column(nullable = false, columnDefinition = "text") private String titulo;
     @Column(nullable = false) private Short nivel;

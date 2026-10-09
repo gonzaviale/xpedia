@@ -71,4 +71,25 @@ INSERT INTO actividad_fuente (actividad_id, fuente_id, ubicacion)
 VALUES ('b5000000-0000-4000-8000-000000000001', 'b6000000-0000-4000-8000-000000000001', 'Ejemplo ficticio de chat')
 ON CONFLICT (actividad_id, fuente_id) DO NOTHING;
 
+INSERT INTO rubrica (id, nombre, descripcion, puntaje_aprobacion)
+VALUES ('b7000000-0000-4000-8000-000000000001', '[DEMO] Escritura para clientes',
+        'Rúbrica ficticia para probar la API; no acredita revisión editorial.', 8)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO rubrica_criterio (id, rubrica_id, posicion, nombre, descripcion, puntaje_max, peso, eliminatorio)
+VALUES
+('b7100000-0000-4000-8000-000000000001', 'b7000000-0000-4000-8000-000000000001', 1, 'Claridad', 'Respuesta breve y comprensible.', 3, 1, false),
+('b7100000-0000-4000-8000-000000000002', 'b7000000-0000-4000-8000-000000000001', 2, 'Empatía y tono', 'Reconocer la consulta con respeto.', 3, 1, false),
+('b7100000-0000-4000-8000-000000000003', 'b7000000-0000-4000-8000-000000000001', 3, 'Próximo paso', 'Proponer una acción concreta.', 3, 1, false),
+('b7100000-0000-4000-8000-000000000004', 'b7000000-0000-4000-8000-000000000001', 4, 'Corrección y política', 'No prometer acciones fuera de la política del caso ficticio.', 3, 1, true)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO actividad (id, ruta_id, nodo_id, hito_id, rubrica_id, tipo, titulo, nivel, contenido, origen, estado_revision)
+VALUES ('b5000000-0000-4000-8000-000000000002', 'b1000000-0000-4000-8000-000000000001',
+        'b4000000-0000-4000-8000-000000000003', 'b2000000-0000-4000-8000-000000000002',
+        'b7000000-0000-4000-8000-000000000001', 'ENSAYO', '[DEMO] Responder una consulta por chat', 1,
+        '{"demo":true,"consigna":"Escribí una respuesta breve a un cliente que recibió otro talle de zapatillas.","contexto":"Caso ficticio: primero se necesita el número de pedido para revisar el cambio; no prometas un plazo antes de verificarlo.","formatoEntrega":"Respuesta escrita de tres o cuatro líneas."}'::jsonb,
+        'IA', 'APROBADA')
+ON CONFLICT (id) DO NOTHING;
+
 COMMIT;

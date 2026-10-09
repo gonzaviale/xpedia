@@ -106,6 +106,29 @@ nodoId: b4000000-0000-4000-8000-000000000003
 
 El resultado esperado es `200` con una microlección marcada como ficticia y una fuente interna de prueba. La marca `APROBADA` habilita la demostración técnica; no se declara revisión humana ni autorización comercial. Otro nodo del piloto sin material devuelve `[]`.
 
+### Retos y rúbricas
+
+- `GET /api/rutas/{rutaId}/nodos/{nodoId}/retos`: array de consignas aprobadas, de tipo `ENSAYO`, `RETO_PROYECTO` o `DESAFIO_REAL`.
+- `GET /api/rutas/{rutaId}/nodos/{nodoId}/retos/{retoId}`: detalle de una consigna visible, con el mismo formato que los elementos del listado.
+
+Cada reto incluye título, tipo, nivel, origen, fecha de revisión y `contenido`. Este último solo expone los campos de texto `consigna`, `contexto` y `formatoEntrega`; se omiten soluciones, respuestas esperadas y configuraciones internas. La consigna debe contener texto. Los dos campos opcionales se omiten si tienen otro tipo de dato.
+
+La rúbrica contiene nombre, descripción, `puntajeAprobacion`, `puntajeMaximo` y criterios ordenados por posición e ID. Cada criterio informa su máximo, peso y condición `eliminatorio`. El máximo total se calcula con decimales como la suma de `puntajeMax * peso`. La condición eliminatoria se entrega como metadato para la futura corrección; estos endpoints todavía no reciben ni califican respuestas.
+
+Solo aparecen rúbricas globales con criterios, pesos positivos y un umbral de aprobación entre cero y el máximo ponderado. Se excluyen rúbricas privadas, vacías o inconsistentes, actividades con fuentes privadas y actividades cuyo hito no coincide con el nodo. La ruta debe ser global publicada y el nodo debe pertenecer a ella. Ruta, nodo o reto oculto/inexistente devuelve `404`; UUID inválido, `400`; nodo válido sin retos, `200` con `[]`.
+
+El orden de los retos es por nivel, creación e ID. Rúbricas y criterios se cargan en lote: el recorrido con resultados requiere cinco consultas incluyendo las validaciones de ruta y nodo, sin aumentar por cada reto.
+
+Repetí `.\scripts\cargar-ruta-piloto.ps1` para agregar el reto DEMO y su rúbrica. En Swagger, sección **Retos**, usá **Try it out** y estos parámetros, sin cuerpo JSON:
+
+```text
+rutaId: b1000000-0000-4000-8000-000000000001
+nodoId: b4000000-0000-4000-8000-000000000003
+retoId: b5000000-0000-4000-8000-000000000002 (solo en el detalle)
+```
+
+El listado devuelve un reto de escritura y el detalle devuelve ese mismo reto. La rúbrica DEMO tiene cuatro criterios, máximo 12 y aprobación 8; el criterio de política es eliminatorio. Son datos ficticios para comprobar la API. La carga conserva las ediciones existentes y no crea intentos ni evaluaciones.
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
