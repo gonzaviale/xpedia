@@ -119,3 +119,5 @@ Para ejecutar solo las pruebas del catálogo en PowerShell, desde la carpeta `ba
 ```
 
 La versión objetivo de Java es 21. Usar un JDK compatible en `JAVA_HOME`.
+
+Para ejecutar pruebas, generar el informe JaCoCo y exigir cobertura por clase: `.\mvnw.cmd clean verify`. La matriz de pruebas y los límites exactos están en [TESTING.md](TESTING.md).
