@@ -62,3 +62,25 @@ con usuarios existentes y colisiones de email sin perder datos.
 `usuarios-test.sql` elimina usuarios y sesiones solo en los contenedores de pruebas.
 Nunca ejecutarlo en la base de desarrollo. H2 inicializa únicamente las tablas de
 sesión de su contexto aislado; en PostgreSQL Flyway es el único dueño del esquema.
+
+## Inscripción y progreso inicial
+
+Las clases de inscripción tienen pruebas de reglas puras, servicios, casos de uso,
+mappers, adaptadores, controladores, validación y configuración. El lector del
+ritmo exige un número JSON entero, sin conversiones implícitas ni redondeo.
+
+`IInscripcionJpaRepositoryTest` comprueba abiertas ACTIVA/PAUSADA, selección de
+la más reciente con desempate estable, unicidad y reinscripción después de TERMINADA.
+`IProgresoNodoJpaRepositoryTest` verifica orden, aislamiento por clave compuesta,
+precisión y restricciones reales de PostgreSQL.
+
+`InscripcionPostgresIntegrationTest` comprueba POST/GET, sesión y CSRF, usuario
+tomado de la sesión, suspensión, catálogo oculto, recorrido no preparado, llegada,
+duplicados sin reiniciar progreso, concurrencia y rollback de inscripción cuando
+falla un progreso. También verifica contratos OpenAPI.
+`InscripcionesMigrationPostgresIntegrationTest` verifica V2 → V3 con una inscripción
+y progreso existentes, incluyendo diagnóstico/repaso anteriores y checksums V1/V2.
+
+`rutas-test.sql` elimina primero inscripciones por sus referencias a rutas.
+`inscripciones-test.sql` e `inscripciones-cleanup.sql`, como los otros fixtures,
+solo se ejecutan en el PostgreSQL temporal, nunca en la base local.

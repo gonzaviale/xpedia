@@ -25,7 +25,8 @@ tener varias rutas abiertas. Sin inscripción activa o con ruta oculta devuelve 
 
 - Solo rutas globales PUBLICADAS y nodos visibles del catálogo.
 - La ruta debe tener hitos, nodos y al menos un nodo disponible asociado a un hito.
-- Se conserva el primer hito ordenado por posición/ID como punto de partida.
+- Se selecciona el primer hito ordenado por posición/ID que contiene un nodo
+  disponible como punto de partida.
 - Un progreso por nodo visible; dominio y nivel iniciales 0. Sin prerrequisitos
   visibles de su recorrido: DISPONIBLE; con prerrequisitos: BLOQUEADO.
   Se respeta la misma proyección de pertenencia que el catálogo: referencias

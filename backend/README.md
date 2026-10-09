@@ -50,7 +50,7 @@ GET http://localhost:8080/api/rutas?tipo=CAMBIO_RUBRO&objetivo=CAMBIAR&page=0&si
 GET http://localhost:8080/api/rutas/{id}
 ```
 
-El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto ni incluye todavía inscripciones.
+El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto; las inscripciones autenticadas se describen más abajo.
 
 ### Hitos, nodos y prerrequisitos
 
@@ -133,7 +133,7 @@ El listado devuelve un reto de escritura y el detalle devuelve ese mismo reto. L
 
 El acceso usa Spring Security y sesiones JDBC persistidas en PostgreSQL. El registro
 crea una cuenta `PERSONA`, `ACTIVO`; no inicia sesión ni permite elegir rol o estado.
-Las inscripciones, el diagnóstico y los intentos siguen pendientes.
+Las inscripciones autenticadas se describen más abajo. El diagnóstico y los intentos siguen pendientes.
 
 | Endpoint | Cuerpo | Resultado |
 |---|---|---|
@@ -193,6 +193,89 @@ V2 agrega unicidad por `lower(trim(email))` y tablas de sesiones. Si existen ema
 que colisionan, la migración falla sin borrar ni fusionar usuarios: hay que resolver
 el conflicto explícitamente antes de reintentar. V1 conserva su contenido y checksum.
 
+## Elegir ruta y ritmo: inscripción y progreso inicial
+
+`POST /api/inscripciones` crea una inscripción para el usuario de la sesión; exige
+login y CSRF. No recibe ni permite elegir `usuarioId`, estado, dominio ni hito inicial.
+
+```json
+{
+  "rutaId": "b1000000-0000-4000-8000-000000000001",
+  "objetivo": "CAMBIAR",
+  "metaPersonal": "Conseguir trabajo en atención remota",
+  "ritmoMin": 20
+}
+```
+
+- `rutaId` es el UUID de la versión elegida en el catálogo, no el slug.
+- `objetivo` es obligatorio: `ARRANCAR`, `CAMBIAR` o `MEJORAR`.
+- `metaPersonal` es opcional, admite hasta 2000 caracteres y se recorta.
+- `ritmoMin` es un número JSON entero entre 1 y 1440; no se redondean decimales
+  ni se convierten cadenas como `"20"`.
+
+Devuelve **201** con `id`, `rutaId`, `rutaSlug`, `objetivo`, `metaPersonal`, `estado`,
+`hitoActualId`, `ritmoMin`, `fechaLlegadaEstimada` y `progreso`. Cada progreso contiene
+`nodoId`, `estado` y `dominio`. La ruta debe ser global PUBLICADA y tener un hito
+con algún nodo disponible. Se selecciona el primer hito con un nodo sin
+prerrequisitos, según el orden del catálogo.
+
+Se crea un progreso por nodo visible del catálogo: sin prerrequisitos visibles de
+ese recorrido queda `DISPONIBLE`; el resto, `BLOQUEADO`. `DISPONIBLE` corresponde
+al "SIGUIENTE" de la historia. Se incluyen temas visibles sin hito, pero un tema
+aislado no basta para iniciar una ruta. Se conserva la proyección del catálogo:
+nodos con hitos ajenos y prerrequisitos de otra ruta quedan fuera del recorrido.
+Dominio y nivel comienzan en cero, sin diagnóstico ni aprobación de actividades.
+
+La fecha estimada es la fecha UTC de inicio más
+`ceil(horasEstimadas * 60 / ritmoMin)` días, suponiendo práctica todos los días.
+Si la duración no está informada se devuelve `null`; si es cero/negativa se rechaza
+la inscripción. Es una estimación inicial, no una garantía de aprendizaje.
+
+Inscripción y progresos se guardan en una sola transacción. Otra inscripción
+ACTIVA o PAUSADA de la misma persona y versión de ruta devuelve **409**, también
+ante dos solicitudes simultáneas. Una anterior TERMINADA permite inscribirse otra
+vez sin reiniciar su progreso histórico. Se pueden tener varias rutas abiertas.
+
+`GET /api/inscripciones/actual` devuelve **200** con el mismo contrato y los
+progresos persistidos. Elige la ACTIVA más reciente de la persona, por fecha de
+inicio e ID descendentes. No devuelve inscripciones de otros usuarios. Sin activa,
+o si su ruta fue ocultada, devuelve **404**; no busca una ruta anterior como sustituto.
+Los registros previos a V3 pueden tener `objetivo = null`: no se inventa esa elección.
+Ambas respuestas exitosas llevan `Cache-Control: no-store`.
+
+Errores: **400** datos inválidos o recorrido sin inicio; **401** sin sesión válida
+o cuenta suspendida; **403** CSRF ausente/incorrecto; **404** ruta oculta/inexistente;
+**409** inscripción abierta o restricción de persistencia. Usan `ErrorResponse`.
+
+### Probar en Swagger
+
+Con el backend actualizado y el piloto local cargado:
+
+1. Iniciar sesión con una cuenta propia usando `/api/auth/login`.
+2. Obtener un token nuevo en `/api/auth/csrf` y pegarlo en **Authorize → csrf**.
+   La cookie de sesión la gestiona el navegador.
+3. Ejecutar `POST /api/inscripciones` con el JSON de arriba: **201**.
+4. Ejecutar `GET /api/inscripciones/actual`: **200**, misma inscripción y progresos.
+5. Repetir el POST: **409**, sin duplicar ni reiniciar datos.
+
+La app que estaba ejecutándose antes de esta etapa requiere reiniciarse para cargar
+el código nuevo. V3 se aplica al arrancar y conserva los datos. No se debe borrar
+el volumen ni editar V1/V2 para hacerlo funcionar.
+
+### Integración pendiente del frontend
+
+Esta etapa solo modifica backend. El frontend vigente todavía usa MSW para
+inscripciones/diagnóstico y envía `rutaSlug` + `respuestas`; espera un resultado
+`diagnostico` que esta API no genera. Antes de conectar el POST real, debe usar el
+`rutaId` resuelto desde el catálogo, enviar cookies y CSRF, y adaptar sus schemas
+para llegada/objetivo desconocidos y diagnóstico pendiente. El supuesto del mock
+es seis días de práctica por semana; la estimación inicial real usa práctica diaria.
+No se deben presentar los datos del mock como resultados del backend.
+
+El diagnóstico y la personalización, cambios de ritmo, selección explícita entre
+varias inscripciones, respuestas e intentos quedan para etapas posteriores. El estado
+para compañeros y asistentes está en [CONTINUIDAD.md](docs/CONTINUIDAD.md).
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
@@ -214,7 +297,7 @@ docker compose up -d postgres
 ./mvnw test
 ```
 
-El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del catálogo usa Testcontainers con PostgreSQL 17 y pgvector: aplica V1, valida las entities JPA y prueba consultas HTTP y OpenAPI. **Docker debe estar funcionando** para ejecutar la suite completa. El contenedor y los datos de prueba son descartables; no se conecta a la base local `xpedia`.
+El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del catálogo usa Testcontainers con PostgreSQL 17 y pgvector: aplica las migraciones versionadas, valida las entities JPA y prueba consultas HTTP y OpenAPI. **Docker debe estar funcionando** para ejecutar la suite completa. El contenedor y los datos de prueba son descartables; no se conecta a la base local `xpedia`.
 
 Para ejecutar solo las pruebas del catálogo en PowerShell, desde la carpeta `backend`:
 
