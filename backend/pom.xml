@@ -161,19 +161,6 @@
 							<rules>
 								<rule>
 									<element>CLASS</element>
-									<includes>
-										<include>com/xpedia/backend/domain/service/*/*Service</include>
-										<include>com/xpedia/backend/domain/useCase/*/*UseCase</include>
-										<include>com/xpedia/backend/domain/mapper/*/*Mapper</include>
-										<include>com/xpedia/backend/infrastructure/presentation/mapper/*/*Mapper</include>
-										<include>com/xpedia/backend/infrastructure/repository/mapper/*RepositoryMapper</include>
-										<include>com/xpedia/backend/infrastructure/repository/jpaRepository/implementation/*RepositoryImpl</include>
-									</includes>
-									<excludes>
-										<exclude>*/puesto/*</exclude>
-										<exclude>*/PuestoRepositoryMapper</exclude>
-										<exclude>*/PuestoRepositoryImpl</exclude>
-									</excludes>
 									<limits>
 										<limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>1.0</minimum></limit>
 										<limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>1.0</minimum></limit>

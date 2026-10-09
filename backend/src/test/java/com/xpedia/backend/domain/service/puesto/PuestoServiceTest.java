@@ -74,6 +74,44 @@ class PuestoServiceTest {
     }
 
     // --- arrange ---
+    @Test
+    void actualizarConservaOrganizacionYNormalizaNombre() {
+        var existing = nuevoPuesto("Anterior"); existing.setId(PUESTO_ID);
+        when(puestoRepository.findById(PUESTO_ID)).thenReturn(Optional.of(existing));
+        when(puestoRepository.save(existing)).thenReturn(existing);
+        var changes = nuevoPuesto("  Nuevo  "); changes.setOrganizacionId(UUID.randomUUID());
+        var result = puestoService.actualizar(PUESTO_ID, changes);
+        assertThat(result.getNombre()).isEqualTo("Nuevo");
+        assertThat(result.getOrganizacionId()).isEqualTo(ORGANIZACION_ID);
+        verify(puestoRepository).existsByOrganizacionIdAndNombreAndIdNot(ORGANIZACION_ID, "Nuevo", PUESTO_ID);
+    }
+
+    @Test
+    void actualizarDuplicadoNoGuardaCambios() {
+        var existing = nuevoPuesto("Anterior"); existing.setId(PUESTO_ID);
+        when(puestoRepository.findById(PUESTO_ID)).thenReturn(Optional.of(existing));
+        when(puestoRepository.existsByOrganizacionIdAndNombreAndIdNot(ORGANIZACION_ID, NOMBRE, PUESTO_ID)).thenReturn(true);
+        assertThatThrownBy(() -> puestoService.actualizar(PUESTO_ID, nuevoPuesto(NOMBRE))).isInstanceOf(DuplicateResourceException.class);
+        assertThat(existing.getNombre()).isEqualTo("Anterior"); verify(puestoRepository, never()).save(any());
+    }
+
+    @Test
+    void eliminarExistenteInvocaRepositorio() {
+        when(puestoRepository.existsById(PUESTO_ID)).thenReturn(true);
+        puestoService.eliminar(PUESTO_ID); verify(puestoRepository).deleteById(PUESTO_ID);
+    }
+
+    @Test
+    void obtenerYListarConservanResultado() {
+        var item = nuevoPuesto(NOMBRE);
+        when(puestoRepository.findById(PUESTO_ID)).thenReturn(Optional.of(item));
+        assertThat(puestoService.obtener(PUESTO_ID)).isSameAs(item);
+        var pageable = org.springframework.data.domain.PageRequest.of(1, 5);
+        var page = new org.springframework.data.domain.PageImpl<Puesto>(java.util.List.of(item), pageable, 10);
+        when(puestoRepository.findAll(ORGANIZACION_ID, pageable)).thenReturn(page);
+        assertThat(puestoService.listar(ORGANIZACION_ID, pageable)).isSameAs(page);
+    }
+
     private void givenNombreIsFree() {
         when(puestoRepository.existsByOrganizacionIdAndNombre(ORGANIZACION_ID, NOMBRE)).thenReturn(false);
     }

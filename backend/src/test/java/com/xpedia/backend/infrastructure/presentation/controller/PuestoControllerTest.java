@@ -2,6 +2,9 @@ package com.xpedia.backend.infrastructure.presentation.controller;
 
 import com.xpedia.backend.domain.dto.puesto.CrearPuestoRequest;
 import com.xpedia.backend.domain.dto.puesto.CrearPuestoResponse;
+import com.xpedia.backend.domain.dto.puesto.ActualizarPuestoResponse;
+import com.xpedia.backend.domain.dto.puesto.ObtenerPuestoResponse;
+import com.xpedia.backend.domain.dto.puesto.ListarPuestosResponse;
 import com.xpedia.backend.domain.useCase.puesto.*;
 import com.xpedia.backend.infrastructure.presentation.exception.GlobalExceptionHandler;
 import com.xpedia.backend.infrastructure.presentation.mapper.puesto.PuestoPresentationMapper;
@@ -18,6 +21,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,16 +32,24 @@ class PuestoControllerTest {
 
     private MockMvc mockMvc;
     private CrearPuestoUseCase crearPuestoUseCase;
+    private ActualizarPuestoUseCase actualizar;
+    private EliminarPuestoUseCase eliminar;
+    private ObtenerPuestoUseCase obtener;
+    private ListarPuestosUseCase listar;
 
     @BeforeEach
     void setUp() {
         crearPuestoUseCase = mock(CrearPuestoUseCase.class);
+        actualizar = mock(ActualizarPuestoUseCase.class);
+        eliminar = mock(EliminarPuestoUseCase.class);
+        obtener = mock(ObtenerPuestoUseCase.class);
+        listar = mock(ListarPuestosUseCase.class);
         PuestoController controller = new PuestoController(
                 crearPuestoUseCase,
-                mock(ActualizarPuestoUseCase.class),
-                mock(EliminarPuestoUseCase.class),
-                mock(ObtenerPuestoUseCase.class),
-                mock(ListarPuestosUseCase.class),
+                actualizar,
+                eliminar,
+                obtener,
+                listar,
                 new PuestoPresentationMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalExceptionHandler())
@@ -67,6 +79,25 @@ class PuestoControllerTest {
     }
 
     // --- arrange ---
+    @Test
+    void obtenerActualizarListarYEliminarConservanEstadosYSusContratos() throws Exception {
+        when(obtener.execute(any())).thenReturn(new ObtenerPuestoResponse(PUESTO_ID, null, NOMBRE, null, null));
+        when(actualizar.execute(any())).thenReturn(new ActualizarPuestoResponse(PUESTO_ID, null, "Nuevo", null, null));
+        when(listar.execute(any())).thenReturn(new ListarPuestosResponse(java.util.List.of(),0,20,0,0,true,true));
+        mockMvc.perform(get("/api/puestos/" + PUESTO_ID)).andExpect(status().isOk()).andExpect(jsonPath("$.nombre").value(NOMBRE));
+        mockMvc.perform(put("/api/puestos/" + PUESTO_ID).contentType(MediaType.APPLICATION_JSON).content(puestoJson("Nuevo")))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.nombre").value("Nuevo"));
+        mockMvc.perform(get("/api/puestos")).andExpect(status().isOk()).andExpect(jsonPath("$.content").isEmpty());
+        mockMvc.perform(delete("/api/puestos/" + PUESTO_ID)).andExpect(status().isNoContent());
+        verify(eliminar).execute(new com.xpedia.backend.domain.dto.puesto.EliminarPuestoRequest(PUESTO_ID));
+    }
+
+    @Test
+    void actualizarInvalidoNoInvocaCasoDeUso() throws Exception {
+        mockMvc.perform(put("/api/puestos/" + PUESTO_ID).contentType(MediaType.APPLICATION_JSON).content(puestoJson("")))
+                .andExpect(status().isBadRequest()); verifyNoInteractions(actualizar);
+    }
+
     private void givenUseCaseCreatesPuesto() {
         when(crearPuestoUseCase.execute(any(CrearPuestoRequest.class)))
                 .thenReturn(new CrearPuestoResponse(PUESTO_ID, null, NOMBRE, null, null));
