@@ -52,4 +52,23 @@ VALUES
 ('b4000000-0000-4000-8000-000000000006', 'b4000000-0000-4000-8000-000000000005')
 ON CONFLICT (nodo_id, prerrequisito_id) DO NOTHING;
 
+-- Contenido sintético para probar JSON y citas. APROBADA solo habilita esta DEMO.
+-- No se declara revisión humana ni permiso comercial.
+INSERT INTO fuente (id, titulo, licencia, uso, permite_uso_comercial)
+VALUES ('b6000000-0000-4000-8000-000000000001', 'Material sintético de demostración Xpedia',
+        'Material de prueba; sin licencia editorial asignada', 'ADAPTABLE', false)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO actividad (id, ruta_id, nodo_id, hito_id, tipo, titulo, nivel, contenido, origen, estado_revision)
+VALUES ('b5000000-0000-4000-8000-000000000001', 'b1000000-0000-4000-8000-000000000001',
+        'b4000000-0000-4000-8000-000000000003', 'b2000000-0000-4000-8000-000000000002',
+        'MICROLECCION', '[DEMO] Una respuesta breve por chat', 1,
+        '{"demo":true,"texto":"Ejemplo ficticio para verificar la API. Una respuesta puede reconocer la consulta y proponer un próximo paso concreto.","ejemplo":"Hola, gracias por avisarnos. ¿Podés compartir el número de pedido para revisar el caso?","nota":"No es contenido validado para capacitación."}'::jsonb,
+        'IA', 'APROBADA')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO actividad_fuente (actividad_id, fuente_id, ubicacion)
+VALUES ('b5000000-0000-4000-8000-000000000001', 'b6000000-0000-4000-8000-000000000001', 'Ejemplo ficticio de chat')
+ON CONFLICT (actividad_id, fuente_id) DO NOTHING;
+
 COMMIT;

@@ -89,6 +89,23 @@ En Swagger, abrí cada endpoint, elegí **Try it out**, completá los parámetro
 
 Los UUID que usa `rutas-test.sql` pertenecen a una base temporal; para Swagger local usá los del piloto. **No ejecutes `rutas-test.sql` en tu base local:** ese archivo elimina y reconstruye fixtures para las pruebas.
 
+### Microlecciones con fuentes
+
+`GET /api/rutas/{rutaId}/nodos/{nodoId}/microlecciones` devuelve un array de actividades `MICROLECCION` aprobadas. Cada una incluye título, nivel, contenido JSON, origen, fecha de revisión y fuentes (título, URL, licencia, uso, permiso comercial y ubicación).
+
+La ruta debe ser global y publicada, y el nodo debe pertenecer a esa ruta con un hito compatible. La consulta excluye actividades pendientes/rechazadas, de otros tipos, con hito diferente al del nodo, sin fuentes o con alguna fuente privada. Los permisos y licencias se muestran como están registrados; este endpoint no verifica licencias ni genera o personaliza material.
+
+Una ruta/nodo oculto o inexistente devuelve `404`, un UUID inválido devuelve `400`, y un nodo válido sin material visible devuelve `200` con `[]`. El orden es por nivel, creación e ID; las fuentes se ordenan por título e ID y se consultan en lote.
+
+Para probar la microlección DEMO, repetí `.\scripts\cargar-ruta-piloto.ps1` si cargaste el piloto antes de agregar este módulo. En Swagger usá:
+
+```text
+rutaId: b1000000-0000-4000-8000-000000000001
+nodoId: b4000000-0000-4000-8000-000000000003
+```
+
+El resultado esperado es `200` con una microlección marcada como ficticia y una fuente interna de prueba. La marca `APROBADA` habilita la demostración técnica; no se declara revisión humana ni autorización comercial. Otro nodo del piloto sin material devuelve `[]`.
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.

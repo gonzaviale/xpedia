@@ -9,6 +9,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class INodoJpaRepositoryTest extends PostgresRepositoryTestSupport {
     @Autowired private INodoJpaRepository repository;
     private final UUID ruta = UUID.fromString("00000000-0000-0000-0000-000000000201");
+    @Test void visibilidadRechazaNodoAjenoAusenteYConHitoIncompatible() {
+        assertThat(repository.existsVisibleByIdAndRutaId(UUID.fromString("00000000-0000-0000-0000-000000000501"), ruta)).isTrue();
+        assertThat(repository.existsVisibleByIdAndRutaId(UUID.fromString("00000000-0000-0000-0000-000000000504"), ruta)).isTrue();
+        assertThat(repository.existsVisibleByIdAndRutaId(UUID.fromString("00000000-0000-0000-0000-000000000505"), ruta)).isFalse();
+        assertThat(repository.existsVisibleByIdAndRutaId(UUID.fromString("00000000-0000-0000-0000-000000000507"), ruta)).isFalse();
+        assertThat(repository.existsVisibleByIdAndRutaId(UUID.randomUUID(), ruta)).isFalse();
+    }
     @Test void ordenaYExcluyeNodosConHitosAjenos() {
         assertThat(repository.findByRutaId(ruta, null)).extracting("codigo").containsExactly("A1", "A2", "B1", "T1");
         assertThat(repository.findByRutaId(ruta, UUID.fromString("00000000-0000-0000-0000-000000000402"))).extracting("codigo").containsExactly("B1");

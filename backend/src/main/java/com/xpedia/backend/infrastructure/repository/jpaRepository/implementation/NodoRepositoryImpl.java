@@ -22,6 +22,11 @@ public class NodoRepositoryImpl implements NodoRepository {
     private final NodoRepositoryMapper mapper;
 
     @Override
+    public boolean existsVisibleByIdAndRutaId(UUID id, UUID rutaId) {
+        return jpa.existsVisibleByIdAndRutaId(id, rutaId);
+    }
+
+    @Override
     public List<Nodo> findByRutaId(UUID rutaId, UUID hitoId) {
         List<NodoEntity> nodos = jpa.findByRutaId(rutaId, hitoId);
         if (nodos.isEmpty()) {

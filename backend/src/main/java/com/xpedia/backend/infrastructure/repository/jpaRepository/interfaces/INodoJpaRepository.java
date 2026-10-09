@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.UUID;
 
 public interface INodoJpaRepository extends JpaRepository<NodoEntity, UUID> {
+    @Query("""
+            SELECT COUNT(n) > 0 FROM NodoEntity n
+            LEFT JOIN HitoEntity h ON h.id = n.hitoId AND h.rutaId = n.rutaId
+            WHERE n.id = :id AND n.rutaId = :rutaId AND (n.hitoId IS NULL OR h.id IS NOT NULL)
+            """)
+    boolean existsVisibleByIdAndRutaId(@Param("id") UUID id, @Param("rutaId") UUID rutaId);
+
     interface ReferenciasVisibles {
         UUID getNodoId();
         UUID getRamaId();

@@ -20,6 +20,8 @@ Desde `backend`, con Docker funcionando:
 | Controladores | Pruebas MVC y `RutaPostgresIntegrationTest` | JSON HTTP, validación, estados, OpenAPI y número de consultas |
 | Configuración, entidades, modelos y DTOs | Integración/contexto y contratos de mappers | wiring, Flyway V1, validación del esquema y serialización; no se duplican getters generados por Lombok con pruebas sin comportamiento |
 | Datos piloto | Integración PostgreSQL | doble carga, fechas, ediciones, registros ajenos, rollback y UUID de Swagger |
+| Microlecciones | Una clase de pruebas por servicio, caso de uso, mapper, adaptador, interfaz JPA y controlador | JSONB anidado, fuentes con licencia, material no aprobado, fuentes privadas, referencias cruzadas, nodo sin hito, array vacío, UUID inválidos, OpenAPI y cuatro consultas con 22 actividades |
+| Errores comunes | `GlobalExceptionHandlerTest` | errores de campo/objeto, estados HTTP, trazas y mensajes sin detalles internos |
 
 JaCoCo exige **100% de líneas y ramas por clase** en servicios, casos de uso, mappers y adaptadores implementados para estos módulos. El CRUD de ejemplo `puesto` mantiene sus pruebas existentes y queda fuera de ese umbral hasta su revisión. El umbral no afirma 100% de todo el proyecto ni demuestra por sí solo ausencia de errores.
 

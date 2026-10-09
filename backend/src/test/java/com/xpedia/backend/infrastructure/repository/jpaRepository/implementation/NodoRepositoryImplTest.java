@@ -14,6 +14,13 @@ class NodoRepositoryImplTest {
     private final INodoPrerrequisitoJpaRepository edges = mock(INodoPrerrequisitoJpaRepository.class);
     private final NodoRepositoryImpl repository = new NodoRepositoryImpl(jpa, edges, new NodoRepositoryMapper());
 
+    @Test void propagaVisibilidadConOrdenDeIdsCorrecto() {
+        var ruta = UUID.randomUUID(); var id = UUID.randomUUID();
+        when(jpa.existsVisibleByIdAndRutaId(id, ruta)).thenReturn(true, false);
+        assertThat(repository.existsVisibleByIdAndRutaId(id, ruta)).isTrue();
+        assertThat(repository.existsVisibleByIdAndRutaId(id, ruta)).isFalse();
+    }
+
     @Test void resultadoVacioEvitaConsultasAuxiliares() {
         var ruta = UUID.randomUUID(); when(jpa.findByRutaId(ruta, null)).thenReturn(List.of());
         assertThat(repository.findByRutaId(ruta, null)).isEmpty();
