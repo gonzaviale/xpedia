@@ -129,6 +129,70 @@ retoId: b5000000-0000-4000-8000-000000000002 (solo en el detalle)
 
 El listado devuelve un reto de escritura y el detalle devuelve ese mismo reto. La rúbrica DEMO tiene cuatro criterios, máximo 12 y aprobación 8; el criterio de política es eliminatorio. Son datos ficticios para comprobar la API. La carga conserva las ediciones existentes y no crea intentos ni evaluaciones.
 
+## Cuentas y acceso con email y contraseña
+
+El acceso usa Spring Security y sesiones JDBC persistidas en PostgreSQL. El registro
+crea una cuenta `PERSONA`, `ACTIVO`; no inicia sesión ni permite elegir rol o estado.
+Las inscripciones, el diagnóstico y los intentos siguen pendientes.
+
+| Endpoint | Cuerpo | Resultado |
+|---|---|---|
+| `GET /api/auth/csrf` | ninguno | 200, `token` y `headerName` |
+| `POST /api/auth/registro` | `nombre`, `email`, `contrasenia` | 201, usuario creado |
+| `POST /api/auth/login` | `email`, `contrasenia` | 200, usuario y cookie de sesión |
+| `GET /api/auth/actual` | ninguno | 200, usuario de la sesión; 401 sin sesión válida |
+| `POST /api/auth/logout` | ninguno | 204, sesión invalidada y cookie eliminada |
+
+El usuario público contiene únicamente `id`, `nombre`, `email` y `tipo`. Nunca se
+devuelve el hash ni la contraseña. Las respuestas de acceso no se almacenan en caché.
+El email se recorta y normaliza a minúsculas, incluso para detectar duplicados de
+cuentas anteriores. Un duplicado devuelve 409. El nombre admite hasta 100 caracteres
+y el email hasta 254. La contraseña de registro exige al menos 12 caracteres y
+hasta 72 bytes UTF-8; no se recorta. Se guarda con BCrypt y salt, en formato delegable.
+Login acepta contraseñas anteriores más cortas, con el mismo máximo de 72 bytes.
+
+Datos inválidos o JSON mal formado devuelven 400. Email desconocido, contraseña
+incorrecta, cuenta sin hash y cuenta suspendida usan el mismo error 401 genérico.
+Una suspensión posterior al login invalida el acceso en la siguiente petición.
+Todas las escrituras de acceso exigen CSRF: un token ausente o incorrecto devuelve
+403 con `ErrorResponse`. El registro no autentica: luego se debe ejecutar login.
+
+La cookie `SESSION` es HttpOnly y SameSite=Lax. Se rota al iniciar sesión y vence
+después de 30 minutos de inactividad (`SESSION_TIMEOUT`, configurable). Las sesiones
+persisten en las tablas de V2; su esquema lo administra Flyway. `SESSION_COOKIE_SECURE`
+es true por defecto y false para HTTP local con perfil dev. En HTTPS debe ser true.
+El despliegue de web y API en sitios distintos requiere revisar cookies y CORS.
+
+El catálogo público de rutas y contenidos sigue disponible sin login. `/api/puestos`
+requiere un usuario `ADMIN_XPEDIA`. El registro público no crea administradores.
+
+Para probar en Swagger: ejecutar `GET /api/auth/csrf`, copiar el token y cargarlo en
+**Authorize → csrf**. Usar después registro/login. La cookie se gestiona en el navegador;
+volver a obtener y autorizar un token nuevo después de login y después de logout.
+No copiar la cookie HttpOnly al campo de autorización de Swagger.
+
+Ejemplo en PowerShell, con el backend levantado (crea una cuenta si se ejecuta):
+
+```powershell
+$csrf = Invoke-RestMethod http://localhost:8080/api/auth/csrf -SessionVariable sesion
+$headers = @{ 'X-CSRF-TOKEN' = $csrf.token }
+$registro = @{ nombre = 'Persona de prueba'; email = 'prueba@example.com'; contrasenia = 'Una contraseña segura' }
+Invoke-RestMethod http://localhost:8080/api/auth/registro -Method Post -WebSession $sesion -Headers $headers -ContentType 'application/json' -Body ($registro | ConvertTo-Json)
+$login = @{ email = 'prueba@example.com'; contrasenia = 'Una contraseña segura' }
+Invoke-RestMethod http://localhost:8080/api/auth/login -Method Post -WebSession $sesion -Headers $headers -ContentType 'application/json' -Body ($login | ConvertTo-Json)
+Invoke-RestMethod http://localhost:8080/api/auth/actual -WebSession $sesion
+$csrf = Invoke-RestMethod http://localhost:8080/api/auth/csrf -WebSession $sesion
+Invoke-RestMethod http://localhost:8080/api/auth/logout -Method Post -WebSession $sesion -Headers @{ 'X-CSRF-TOKEN' = $csrf.token }
+```
+
+El frontend deberá enviar cookies (`credentials: 'include'`) y el header CSRF cuando
+se integre. Esta etapa solo modifica el backend. Google, recuperación de contraseña
+y verificación por email se incorporarán por separado.
+
+V2 agrega unicidad por `lower(trim(email))` y tablas de sesiones. Si existen emails
+que colisionan, la migración falla sin borrar ni fusionar usuarios: hay que resolver
+el conflicto explícitamente antes de reintentar. V1 conserva su contenido y checksum.
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
@@ -140,7 +204,7 @@ docker compose up -d postgres
 ./mvnw spring-boot:run
 ```
 
-- `docker compose up -d postgres` crea la base `xpedia` con pgvector. Flyway no crea bases: crea las tablas al arrancar la app. Si la base quedó a medias por un intento anterior, se borra el volumen con `docker compose down -v` y se vuelve a levantar.
+- `docker compose up -d postgres` levanta la base `xpedia` con pgvector y conserva el volumen existente. Flyway aplica las migraciones al arrancar la app. Si hay un error de migración, revisar su causa y corregirla conservando los datos; no borrar el volumen para recuperarlo.
 - El perfil por defecto es `dev`. Usa `localhost:5434/xpedia` con `xpedia_user` / `xpedia_pass`. Se puede sobrescribir con variables de entorno o con `application-xpedia-secrets.properties` (ver el `.example`).
 - Swagger: http://localhost:8080/swagger-ui.html
 

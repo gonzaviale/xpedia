@@ -87,7 +87,7 @@ onboarding actual.
 
 ## Pruebas y etapas de entrega
 
-1. Trabajar en backlog-Brian actualizada con main, conservar los refactors y
+1. Trabajar en sesiones-Brian basada en main, conservar los refactors y
    restaurar el check de JaCoCo de LINE y BRANCH al 100% por clase. Completar los
    casos faltantes de la base actual sin relajar reglas ni excluir clases nuevas.
 2. Registro: pruebas de modelo, servicio, use case, mappers, adaptador y repositorio
@@ -99,7 +99,7 @@ onboarding actual.
    siendo público y que los errores sean JSON, sin redirecciones a un formulario.
 4. Ejecutar clean verify antes de cada commit de código y publicar únicamente las
    etapas validadas. Commits separados con títulos y descripciones concretos;
-   confirmar el hash remoto de backlog-Brian después de subirlos.
+   confirmar el hash remoto de sesiones-Brian después de subirlos.
 
 Los tests de PostgreSQL usan contenedores temporales; nunca la base local.
 Xpedia.sql y .agents no se agregan a los commits. No detener el servidor del usuario

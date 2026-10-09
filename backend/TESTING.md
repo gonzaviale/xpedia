@@ -43,3 +43,22 @@ Los contenedores de pruebas son temporales e independientes del `xpedia` local. 
 ## Al agregar funcionalidad
 
 Incorporar pruebas por clase con comportamiento (caso de uso, servicio, mapper, adaptador), consultas de repositorio contra PostgreSQL y casos HTTP positivos y negativos; ejecutar `clean verify` antes del commit y describir los resultados reales en el mensaje.
+
+JaCoCo exige **100% de líneas y ramas por clase de producción**, mediante
+`check-modulos` en la fase verify. Un informe agregado al 100% no reemplaza este
+control; no se excluyen las clases nuevas para alcanzar el límite.
+
+## Cuentas y sesiones
+
+Las clases de usuario y acceso cuentan con pruebas de modelo, servicios, casos de
+uso, mappers, adaptadores, controladores, DTOs con validación y configuración.
+`IUsuarioJpaRepositoryTest` verifica consultas y restricciones reales.
+`AuthPostgresIntegrationTest` prueba registro/login/actual/logout, CSRF por sesión,
+rotación, cookies, persistencia, expiración, suspensión posterior, CORS, OpenAPI,
+permisos de puestos y registros simultáneos. `UsuariosMigrationPostgresIntegrationTest`
+crea bases independientes dentro del contenedor temporal para verificar V1 → V2
+con usuarios existentes y colisiones de email sin perder datos.
+
+`usuarios-test.sql` elimina usuarios y sesiones solo en los contenedores de pruebas.
+Nunca ejecutarlo en la base de desarrollo. H2 inicializa únicamente las tablas de
+sesión de su contexto aislado; en PostgreSQL Flyway es el único dueño del esquema.

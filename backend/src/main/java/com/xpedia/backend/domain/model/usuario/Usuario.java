@@ -1,0 +1,43 @@
+package com.xpedia.backend.domain.model.usuario;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.OffsetDateTime;
+import java.util.Locale;
+import java.util.UUID;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Usuario {
+
+    private UUID id;
+
+    private String nombre;
+
+    private String email;
+
+    private String hashContrasenia;
+
+    private String tipo;
+
+    private String estado;
+
+    private OffsetDateTime creadoEn;
+
+    private OffsetDateTime actualizadoEn;
+
+    public boolean estaActivo() {
+        return "ACTIVO".equals(estado);
+    }
+
+    public static String normalizarEmail(String email) {
+        return email.trim().toLowerCase(Locale.ROOT);
+    }
+}
