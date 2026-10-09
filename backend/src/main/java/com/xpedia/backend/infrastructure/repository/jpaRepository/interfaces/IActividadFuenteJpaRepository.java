@@ -1,20 +1,31 @@
 package com.xpedia.backend.infrastructure.repository.jpaRepository.interfaces;
 
 import com.xpedia.backend.infrastructure.repository.entity.ActividadEntity;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
-import java.util.*;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface IActividadFuenteJpaRepository extends Repository<ActividadEntity, UUID> {
+
     interface FuenteVisible {
+
         UUID getActividadId();
+
         UUID getId();
+
         String getTitulo();
+
         String getUrl();
+
         String getLicencia();
+
         String getUso();
+
         boolean getPermiteUsoComercial();
+
         String getUbicacion();
     }
 

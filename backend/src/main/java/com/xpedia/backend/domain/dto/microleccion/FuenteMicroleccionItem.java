@@ -1,8 +1,8 @@
-package com.xpedia.backend.infrastructure.presentation.dto.microleccion;
+package com.xpedia.backend.domain.dto.microleccion;
 
 import java.util.UUID;
 
-public record FuenteMicroleccionResponse(
+public record FuenteMicroleccionItem(
         UUID id,
         String titulo,
         String url,

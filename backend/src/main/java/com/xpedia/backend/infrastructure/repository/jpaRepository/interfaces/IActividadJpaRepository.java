@@ -1,11 +1,31 @@
 package com.xpedia.backend.infrastructure.repository.jpaRepository.interfaces;
 
 import com.xpedia.backend.infrastructure.repository.entity.ActividadEntity;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import java.util.*;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+/**
+ * Reglas de visibilidad pública que implementan las consultas nativas de este repositorio.
+ *
+ * <p>Comunes a retos y microlecciones: la actividad está APROBADA, pertenece al nodo y a la ruta indicados
+ * y no tiene asociada ninguna fuente propia de una organización. Si el nodo tiene hito, ese hito debe existir
+ * dentro de la misma ruta, y la actividad solo puede declarar un hito igual al del nodo (o ninguno).
+ * El orden es por nivel, fecha de creación e id.</p>
+ *
+ * <p>Retos (ENSAYO, RETO_PROYECTO y DESAFIO_REAL): la rúbrica es global (sin organización) y válida, o sea,
+ * tiene al menos un criterio, todos los criterios tienen peso positivo y el puntaje de aprobación está entre 0
+ * y el puntaje máximo (suma de puntaje máximo por peso de cada criterio). Además, {@code contenido.consigna}
+ * es un texto con algún carácter que no sea espacio en blanco.</p>
+ *
+ * <p>Microlecciones (MICROLECCION): tienen al menos una fuente global asociada.</p>
+ */
 public interface IActividadJpaRepository extends JpaRepository<ActividadEntity, UUID> {
+
     String RETOS_VISIBLES = """
             SELECT a.* FROM actividad a
             JOIN nodo n ON n.id = a.nodo_id AND n.ruta_id = a.ruta_id
@@ -29,8 +49,9 @@ public interface IActividadJpaRepository extends JpaRepository<ActividadEntity, 
     List<ActividadEntity> findRetosAprobados(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId);
 
     @Query(value = RETOS_VISIBLES + " AND a.id = :retoId", nativeQuery = true)
-    Optional<ActividadEntity> findRetoAprobadoById(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId,
-                                               @Param("retoId") UUID retoId);
+    Optional<ActividadEntity> findRetoAprobadoById(@Param("rutaId") UUID rutaId,
+                                                   @Param("nodoId") UUID nodoId,
+                                                   @Param("retoId") UUID retoId);
 
     @Query(value = """
             SELECT a.* FROM actividad a
