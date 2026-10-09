@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { diagnostico, reto } from '@/mocks/db/atencion';
+import { diagnostico, reto, ruta } from '@/mocks/db/atencion';
 import { estado } from '@/mocks/db/estado';
 import { crearInscripcion } from '@/mocks/diagnosticar';
 import { renderApp } from '@/test/render-app';
@@ -9,16 +9,19 @@ import { renderApp } from '@/test/render-app';
 const ESPERA = { timeout: 5000 };
 
 function sembrarInscripcion() {
-  estado.inscripcion = crearInscripcion({
-    rutaSlug: 'atencion-al-cliente-remota',
-    objetivo: 'CAMBIAR',
-    ritmoMin: 20,
-    respuestas: diagnostico.preguntas.map((pregunta) => ({
-      preguntaId: pregunta.id,
-      elegida: 1,
-      confianza: 'SABIA' as const,
-    })),
-  });
+  estado.inscripcion = crearInscripcion(
+    {
+      rutaSlug: 'atencion-al-cliente-remota',
+      objetivo: 'CAMBIAR',
+      ritmoMin: 20,
+      respuestas: diagnostico.preguntas.map((pregunta) => ({
+        preguntaId: pregunta.id,
+        elegida: 1,
+        confianza: 'SABIA' as const,
+      })),
+    },
+    ruta,
+  );
 }
 
 describe('flujo de la primera ruta', () => {

@@ -1,5 +1,5 @@
-import type { Intento, PuntajeCriterio } from '@/modules/reto';
-import { fuentesDelReto, reto } from './db/atencion';
+import type { Intento, PuntajeCriterio, Reto } from '@/modules/reto';
+import { fuentesDelReto } from './db/atencion';
 
 type Nivel = 0 | 1 | 2 | 3;
 type CriterioId = 'empatia' | 'cargo' | 'politica' | 'claridad' | 'cierre';
@@ -110,7 +110,7 @@ function puntuar(respuesta: string): {
   };
 }
 
-export function evaluarReto(actividadId: string, respuesta: string): Intento {
+function evaluarRetoDelSeed(reto: Reto, respuesta: string): Intento {
   const { niveles, faltaAutomatica } = puntuar(respuesta);
 
   const puntajePorCriterio: PuntajeCriterio[] = reto.rubrica.criterios.map((criterio) => {
@@ -133,7 +133,7 @@ export function evaluarReto(actividadId: string, respuesta: string): Intento {
 
   return {
     id: crypto.randomUUID(),
-    actividadId,
+    actividadId: reto.id,
     nodoId: reto.nodoId,
     respuesta,
     puntaje,
@@ -153,4 +153,62 @@ export function evaluarReto(actividadId: string, respuesta: string): Intento {
     fuentes: fuentesDelReto,
     creadoEn: new Date().toISOString(),
   };
+}
+
+const PALABRAS_MINIMAS = 10;
+const PALABRAS_CORTAS = 25;
+const PALABRAS_MAXIMAS = 150;
+const AVISO_SIMULADA = 'Evaluación simulada: todavía no hay un profesor de IA conectado.';
+
+function factorGenerico(respuesta: string) {
+  const palabras = respuesta.trim().split(/\s+/).filter(Boolean).length;
+  if (palabras < PALABRAS_MINIMAS) return 0;
+  if (palabras < PALABRAS_CORTAS) return 1 / 3;
+  return palabras <= PALABRAS_MAXIMAS ? 1 : 2 / 3;
+}
+
+// Para retos que vienen del backend real: la rúbrica es distinta a la del seed, así que se puntúa
+// solo por largo de la respuesta, avisando que no es una evaluación de verdad.
+function evaluarRetoGenerico(reto: Reto, respuesta: string): Intento {
+  const factor = factorGenerico(respuesta);
+
+  const puntajePorCriterio: PuntajeCriterio[] = reto.rubrica.criterios.map((criterio) => ({
+    criterioId: criterio.id,
+    nombre: criterio.nombre,
+    puntaje: Math.round(criterio.puntajeMax * factor),
+    puntajeMax: criterio.puntajeMax,
+    eliminatorio: criterio.eliminatorio,
+    comentario: AVISO_SIMULADA,
+  }));
+
+  const puntaje = puntajePorCriterio.reduce((total, criterio) => total + criterio.puntaje, 0);
+  const puntajeMax = puntajePorCriterio.reduce((total, criterio) => total + criterio.puntajeMax, 0);
+  const eliminatorioEnCero = puntajePorCriterio.some(
+    (criterio) => criterio.eliminatorio && criterio.puntaje === 0,
+  );
+
+  return {
+    id: crypto.randomUUID(),
+    actividadId: reto.id,
+    nodoId: reto.nodoId,
+    respuesta,
+    puntaje,
+    puntajeMax,
+    puntajeAprobacion: reto.rubrica.puntajeAprobacion,
+    aprobado: !eliminatorioEnCero && puntaje >= reto.rubrica.puntajeAprobacion,
+    faltaAutomatica: null,
+    puntajePorCriterio,
+    feedback: {
+      loBueno: AVISO_SIMULADA,
+      aMejorar: 'Cuando exista el profesor de IA vas a recibir una devolución por cada criterio.',
+      alternativa: null,
+    },
+    fuentes: [],
+    creadoEn: new Date().toISOString(),
+  };
+}
+
+export function evaluarReto(reto: Reto, respuesta: string): Intento {
+  const esDelSeed = reto.rubrica.criterios.every((criterio) => criterio.id in COMENTARIOS);
+  return esDelSeed ? evaluarRetoDelSeed(reto, respuesta) : evaluarRetoGenerico(reto, respuesta);
 }

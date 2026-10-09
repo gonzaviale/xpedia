@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { reto } from './db/atencion';
 import { evaluarReto } from './evaluar-reto';
 
 const RESPUESTA_COMPLETA =
@@ -8,17 +9,14 @@ const RESPUESTA_COMPLETA =
 
 describe('evaluarReto', () => {
   it('aprueba una respuesta que reconoce, resuelve dentro de la política y cierra', () => {
-    const intento = evaluarReto('act-reto-a3', RESPUESTA_COMPLETA);
+    const intento = evaluarReto(reto, RESPUESTA_COMPLETA);
 
     expect(intento.aprobado).toBe(true);
     expect(intento.puntaje).toBeGreaterThanOrEqual(intento.puntajeAprobacion);
   });
 
   it('no aprueba si promete una fecha que el sistema no muestra', () => {
-    const intento = evaluarReto(
-      'act-reto-a3',
-      `${RESPUESTA_COMPLETA} Seguramente llegue el lunes.`,
-    );
+    const intento = evaluarReto(reto, `${RESPUESTA_COMPLETA} Seguramente llegue el lunes.`);
 
     const politica = intento.puntajePorCriterio.find((c) => c.criterioId === 'politica');
     expect(politica?.puntaje).toBe(0);
@@ -26,10 +24,7 @@ describe('evaluarReto', () => {
   });
 
   it('marca falta automática si desalienta el reclamo', () => {
-    const intento = evaluarReto(
-      'act-reto-a3',
-      `${RESPUESTA_COMPLETA} No hace falta reclamar en Defensa.`,
-    );
+    const intento = evaluarReto(reto, `${RESPUESTA_COMPLETA} No hace falta reclamar en Defensa.`);
 
     expect(intento.faltaAutomatica).not.toBeNull();
     expect(intento.aprobado).toBe(false);
@@ -37,7 +32,7 @@ describe('evaluarReto', () => {
 
   it('penaliza las frases hechas en la empatía', () => {
     const intento = evaluarReto(
-      'act-reto-a3',
+      reto,
       `Lamentamos las molestias ocasionadas. ${RESPUESTA_COMPLETA}`,
     );
 
