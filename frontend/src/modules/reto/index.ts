@@ -1,4 +1,6 @@
-export { intentoQuery, retoQuery } from './api';
+export { intentoQuery, retoQuery, type DestinoIntento } from './api';
+export { aReto } from './adaptadores';
+export { retoBackendSchema } from './contrato';
 export {
   enviarIntentoSchema,
   intentoSchema,

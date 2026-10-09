@@ -2,17 +2,18 @@ import { useForm } from '@tanstack/react-form';
 import { PaperPlaneTiltIcon } from '@phosphor-icons/react';
 import { ApiError } from '@/shared/api';
 import { Button, Feedback, Spinner, TextareaField } from '@/shared/ui';
-import { useEnviarIntento } from '../api';
+import { useEnviarIntento, type DestinoIntento } from '../api';
 import { enviarIntentoSchema, type Intento } from '../model';
 import { useBorradoresStore } from '../store';
 
-type FormularioRetoProps = { actividadId: string; onEnviado: (intento: Intento) => void };
+type FormularioRetoProps = { destino: DestinoIntento; onEnviado: (intento: Intento) => void };
 
-export function FormularioReto({ actividadId, onEnviado }: FormularioRetoProps) {
+export function FormularioReto({ destino, onEnviado }: FormularioRetoProps) {
+  const actividadId = destino.retoId;
   const borrador = useBorradoresStore((s) => s.porActividad[actividadId] ?? '');
   const guardar = useBorradoresStore((s) => s.guardar);
   const descartar = useBorradoresStore((s) => s.descartar);
-  const enviar = useEnviarIntento(actividadId);
+  const enviar = useEnviarIntento(destino);
 
   const form = useForm({
     defaultValues: { respuesta: borrador },

@@ -10,17 +10,19 @@ export const criterioSchema = z.object({
   eliminatorio: z.boolean(),
 });
 
+export const contextoSchema = z.object({
+  cliente: z.object({ nombre: z.string(), descripcion: z.string() }).optional(),
+  mensaje: z.string().optional(),
+  hechos: z.array(z.string()).default([]),
+  politica: z.array(z.string()).default([]),
+});
+
 export const retoSchema = z.object({
   id: z.string(),
   nodoId: z.string(),
   titulo: z.string(),
   consigna: z.string(),
-  contexto: z.object({
-    cliente: z.object({ nombre: z.string(), descripcion: z.string() }),
-    mensaje: z.string(),
-    hechos: z.array(z.string()),
-    politica: z.array(z.string()),
-  }),
+  contexto: contextoSchema,
   rubrica: z.object({
     nombre: z.string(),
     puntajeAprobacion: z.number(),
