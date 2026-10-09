@@ -4,6 +4,7 @@ import type { Hito, Nodo, Ruta, TipoActividad } from './model';
 export type ContenidoNodo = {
   nodoId: string;
   tieneMicroleccion: boolean;
+  tieneCuestionario: boolean;
   reto: RetoResumenBackend | null;
 };
 
@@ -20,6 +21,7 @@ const porPosicion = (a: { posicion?: number | null }, b: { posicion?: number | n
 function actividadesDe(contenido: ContenidoNodo | undefined): TipoActividad[] {
   const actividades: TipoActividad[] = [];
   if (contenido?.tieneMicroleccion) actividades.push('MICROLECCION');
+  if (contenido?.tieneCuestionario) actividades.push('CUESTIONARIO');
   if (contenido?.reto) actividades.push('RETO');
   return actividades;
 }

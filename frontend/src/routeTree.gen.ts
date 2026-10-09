@@ -16,6 +16,7 @@ import { Route as AppRutaRouteImport } from './routes/_app/ruta'
 import { Route as DiagnosticoIndexRouteImport } from './routes/diagnostico.index'
 import { Route as DiagnosticoResultadoRouteImport } from './routes/diagnostico.resultado'
 import { Route as AppIntentosIntentoIdRouteImport } from './routes/_app/intentos.$intentoId'
+import { Route as AppNodosNodoIdCuestionarioRouteImport } from './routes/_app/nodos.$nodoId.cuestionario'
 import { Route as AppNodosNodoIdLeccionRouteImport } from './routes/_app/nodos.$nodoId.leccion'
 import { Route as AppNodosNodoIdRetoRouteImport } from './routes/_app/nodos.$nodoId.reto'
 
@@ -53,6 +54,12 @@ const AppIntentosIntentoIdRoute = AppIntentosIntentoIdRouteImport.update({
   path: '/intentos/$intentoId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNodosNodoIdCuestionarioRoute =
+  AppNodosNodoIdCuestionarioRouteImport.update({
+    id: '/nodos/$nodoId/cuestionario',
+    path: '/nodos/$nodoId/cuestionario',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppNodosNodoIdLeccionRoute = AppNodosNodoIdLeccionRouteImport.update({
   id: '/nodos/$nodoId/leccion',
   path: '/nodos/$nodoId/leccion',
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/diagnostico/resultado': typeof DiagnosticoResultadoRoute
   '/diagnostico/': typeof DiagnosticoIndexRoute
   '/intentos/$intentoId': typeof AppIntentosIntentoIdRoute
+  '/nodos/$nodoId/cuestionario': typeof AppNodosNodoIdCuestionarioRoute
   '/nodos/$nodoId/leccion': typeof AppNodosNodoIdLeccionRoute
   '/nodos/$nodoId/reto': typeof AppNodosNodoIdRetoRoute
 }
@@ -81,6 +89,7 @@ export interface FileRoutesByTo {
   '/diagnostico/resultado': typeof DiagnosticoResultadoRoute
   '/diagnostico': typeof DiagnosticoIndexRoute
   '/intentos/$intentoId': typeof AppIntentosIntentoIdRoute
+  '/nodos/$nodoId/cuestionario': typeof AppNodosNodoIdCuestionarioRoute
   '/nodos/$nodoId/leccion': typeof AppNodosNodoIdLeccionRoute
   '/nodos/$nodoId/reto': typeof AppNodosNodoIdRetoRoute
 }
@@ -93,6 +102,7 @@ export interface FileRoutesById {
   '/diagnostico/resultado': typeof DiagnosticoResultadoRoute
   '/diagnostico/': typeof DiagnosticoIndexRoute
   '/_app/intentos/$intentoId': typeof AppIntentosIntentoIdRoute
+  '/_app/nodos/$nodoId/cuestionario': typeof AppNodosNodoIdCuestionarioRoute
   '/_app/nodos/$nodoId/leccion': typeof AppNodosNodoIdLeccionRoute
   '/_app/nodos/$nodoId/reto': typeof AppNodosNodoIdRetoRoute
 }
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/diagnostico/resultado'
     | '/diagnostico/'
     | '/intentos/$intentoId'
+    | '/nodos/$nodoId/cuestionario'
     | '/nodos/$nodoId/leccion'
     | '/nodos/$nodoId/reto'
   fileRoutesByTo: FileRoutesByTo
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/diagnostico/resultado'
     | '/diagnostico'
     | '/intentos/$intentoId'
+    | '/nodos/$nodoId/cuestionario'
     | '/nodos/$nodoId/leccion'
     | '/nodos/$nodoId/reto'
   id:
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
     | '/diagnostico/resultado'
     | '/diagnostico/'
     | '/_app/intentos/$intentoId'
+    | '/_app/nodos/$nodoId/cuestionario'
     | '/_app/nodos/$nodoId/leccion'
     | '/_app/nodos/$nodoId/reto'
   fileRoutesById: FileRoutesById
@@ -189,6 +202,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntentosIntentoIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/nodos/$nodoId/cuestionario': {
+      id: '/_app/nodos/$nodoId/cuestionario'
+      path: '/nodos/$nodoId/cuestionario'
+      fullPath: '/nodos/$nodoId/cuestionario'
+      preLoaderRoute: typeof AppNodosNodoIdCuestionarioRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/nodos/$nodoId/leccion': {
       id: '/_app/nodos/$nodoId/leccion'
       path: '/nodos/$nodoId/leccion'
@@ -209,6 +229,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppRutaRoute: typeof AppRutaRoute
   AppIntentosIntentoIdRoute: typeof AppIntentosIntentoIdRoute
+  AppNodosNodoIdCuestionarioRoute: typeof AppNodosNodoIdCuestionarioRoute
   AppNodosNodoIdLeccionRoute: typeof AppNodosNodoIdLeccionRoute
   AppNodosNodoIdRetoRoute: typeof AppNodosNodoIdRetoRoute
 }
@@ -216,6 +237,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppRutaRoute: AppRutaRoute,
   AppIntentosIntentoIdRoute: AppIntentosIntentoIdRoute,
+  AppNodosNodoIdCuestionarioRoute: AppNodosNodoIdCuestionarioRoute,
   AppNodosNodoIdLeccionRoute: AppNodosNodoIdLeccionRoute,
   AppNodosNodoIdRetoRoute: AppNodosNodoIdRetoRoute,
 }

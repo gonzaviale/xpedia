@@ -47,6 +47,8 @@ export type NodoBackend = z.infer<typeof nodoBackendSchema>;
 // Lo mínimo que la ruta necesita saber de las actividades de cada nodo.
 export const microleccionResumenBackendSchema = z.object({ id: z.string() });
 
+export const cuestionarioResumenBackendSchema = z.object({ id: z.string() });
+
 export const retoResumenBackendSchema = z.object({
   id: z.string(),
   titulo: z.string(),

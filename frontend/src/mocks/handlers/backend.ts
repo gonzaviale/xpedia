@@ -1,6 +1,8 @@
 import { HttpResponse, delay, http } from 'msw';
-import { ruta } from '../db/atencion';
+import { enviarCuestionarioSchema } from '@/modules/cuestionario';
+import { cuestionario, ruta } from '../db/atencion';
 import {
+  cuestionariosDto,
   hitosDto,
   microleccionesDto,
   nodosDto,
@@ -8,6 +10,7 @@ import {
   rutaDto,
   rutaResumenDto,
 } from '../db/contrato-backend';
+import { RespuestasInvalidas, corregirCuestionario } from '../corregir-cuestionario';
 import { errorResponse } from '../errores';
 import { LATENCIA_BACKEND_MS, api } from './comun';
 
@@ -58,6 +61,36 @@ export const handlersBackend = [
       return errorResponse(404, RUTA_INEXISTENTE, new URL(request.url).pathname);
     }
     return HttpResponse.json(microleccionesDto(String(params.nodoId)));
+  }),
+
+  http.get(api('/rutas/:rutaId/nodos/:nodoId/cuestionarios'), async ({ params, request }) => {
+    await delay(LATENCIA_BACKEND_MS);
+    if (params.rutaId !== ruta.id) {
+      return errorResponse(404, RUTA_INEXISTENTE, new URL(request.url).pathname);
+    }
+    return HttpResponse.json(cuestionariosDto(String(params.nodoId)));
+  }),
+
+  http.post(api('/intentos'), async ({ request }) => {
+    await delay(LATENCIA_BACKEND_MS);
+    const path = new URL(request.url).pathname;
+    const cuerpo = enviarCuestionarioSchema.safeParse(await request.json());
+    if (!cuerpo.success) {
+      return errorResponse(400, 'Error de validación en los datos enviados', path);
+    }
+    if (cuerpo.data.actividadId !== cuestionario.id) {
+      return errorResponse(
+        404,
+        `No se encontró un cuestionario con id ${cuerpo.data.actividadId}`,
+        path,
+      );
+    }
+    try {
+      return HttpResponse.json(corregirCuestionario(cuestionario, cuerpo.data), { status: 201 });
+    } catch (error) {
+      if (error instanceof RespuestasInvalidas) return errorResponse(400, error.message, path);
+      throw error;
+    }
   }),
 
   http.get(api('/rutas/:rutaId/nodos/:nodoId/retos'), async ({ params, request }) => {

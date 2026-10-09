@@ -10,8 +10,10 @@ const ETIQUETAS: Record<Pregunta['tipo'], string> = {
 
 const LETRAS = 'abcdefghij';
 
+type PreguntaVisible = Pick<Pregunta, 'tipo' | 'enunciado' | 'opciones' | 'cita'>;
+
 type PreguntaCardProps = {
-  pregunta: Pregunta;
+  pregunta: PreguntaVisible;
   elegida?: number;
   confianza?: Confianza;
   onElegir: (opcion: number) => void;

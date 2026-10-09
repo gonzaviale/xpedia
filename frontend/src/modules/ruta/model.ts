@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const objetivoSchema = z.enum(['ARRANCAR', 'CAMBIAR', 'MEJORAR']);
 export const estadoNodoSchema = z.enum(['BLOQUEADO', 'DISPONIBLE', 'EN_CURSO', 'DOMINADO']);
-export const tipoActividadSchema = z.enum(['MICROLECCION', 'RETO']);
+export const tipoActividadSchema = z.enum(['MICROLECCION', 'RETO', 'CUESTIONARIO']);
 export const validacionSchema = z.enum(['BORRADOR_IA', 'REVISADA']);
 export const nivelHabilidadSchema = z.enum(['INICIAL', 'MEDIO', 'FUERTE']);
 
