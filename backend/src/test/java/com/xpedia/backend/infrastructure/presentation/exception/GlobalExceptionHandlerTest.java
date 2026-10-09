@@ -1,52 +1,178 @@
 package com.xpedia.backend.infrastructure.presentation.exception;
 
-import com.xpedia.backend.domain.exception.*;
+import com.xpedia.backend.domain.exception.BusinessRuleException;
+import com.xpedia.backend.domain.exception.DuplicateResourceException;
+import com.xpedia.backend.domain.exception.ResourceNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.validation.*;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class GlobalExceptionHandlerTest {
-    private final GlobalExceptionHandler handler = new GlobalExceptionHandler();
-    private final MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/rutas");
 
-    @Test void erroresDeDominioTienenEstadoMensajeRutaYTraza() {
-        var absent = handler.handleNotFound(new ResourceNotFoundException("ruta", "id", "x"), request);
-        var duplicate = handler.handleDuplicate(new DuplicateResourceException("ruta", "slug", "x"), request);
-        var business = handler.handleBusinessRule(new BusinessRuleException("Regla incumplida"), request);
-        assertThat(absent.getStatusCode().value()).isEqualTo(404);
-        assertThat(duplicate.getStatusCode().value()).isEqualTo(409);
-        assertThat(business.getStatusCode().value()).isEqualTo(400);
-        assertThat(absent.getBody().getPath()).isEqualTo("/api/rutas");
-        assertThat(absent.getBody().getTimestamp()).isNotNull();
-        assertThat(UUID.fromString(absent.getBody().getTraceId())).isNotNull();
-        assertThat(business.getBody().getMessage()).isEqualTo("Regla incumplida");
+    private static final String PATH = "/api/rutas";
+    private static final String SECRET = "password-secreto";
+    private static final String CAUSE_SECRET = "secreto";
+    private static final String BUSINESS_MESSAGE = "Regla incumplida";
+
+    private GlobalExceptionHandler handler;
+    private MockHttpServletRequest request;
+
+    @BeforeEach
+    void setUp() {
+        handler = new GlobalExceptionHandler();
+        request = new MockHttpServletRequest("GET", PATH);
     }
-    @Test void validacionDeCampoYDeObjetoNoProduceErrorInterno() {
-        var binding = new BeanPropertyBindingResult(new Object(), "query");
-        binding.addError(new FieldError("query", "size", "Debe ser positivo"));
-        binding.addError(new ObjectError("query", "Combinación inválida"));
-        var result = handler.handleValidationExceptions(new MethodArgumentNotValidException(null, binding), request);
-        assertThat(result.getStatusCode().value()).isEqualTo(400);
-        assertThat(result.getBody().getErrors()).containsEntry("size", "Debe ser positivo").containsEntry("query", "Combinación inválida");
+
+    @Test
+    @DisplayName("Responde 404 con el mensaje de la excepción cuando no se encuentra el recurso")
+    void handleNotFoundShouldReturnNotFoundWithMessage() {
+        ResourceNotFoundException exception = new ResourceNotFoundException("ruta", "id", "x");
+
+        ResponseEntity<ErrorResponse> response = handler.handleNotFound(exception, request);
+
+        thenResponseHasStatusAndMessage(response, 404, exception.getMessage());
     }
-    @Test void tipoInvalidoIdentificaParametroSinExponerCausa() {
-        var error = new MethodArgumentTypeMismatchException("texto", UUID.class, "rutaId", null, new IllegalArgumentException("secreto"));
-        var result = handler.handleTypeMismatch(error, request);
-        assertThat(result.getStatusCode().value()).isEqualTo(400);
-        assertThat(result.getBody().getErrors()).containsKey("rutaId");
-        assertThat(result.getBody().getMessage()).doesNotContain("secreto");
+
+    @Test
+    @DisplayName("Responde 409 con el mensaje de la excepción cuando el recurso está duplicado")
+    void handleDuplicateShouldReturnConflictWithMessage() {
+        DuplicateResourceException exception = new DuplicateResourceException("ruta", "slug", "x");
+
+        ResponseEntity<ErrorResponse> response = handler.handleDuplicate(exception, request);
+
+        thenResponseHasStatusAndMessage(response, 409, exception.getMessage());
     }
-    @Test void erroresTecnicosNoExponenDetallesDeBaseNiSecretos() {
-        var integrity = handler.handleDataIntegrity(new DataIntegrityViolationException("password-secreto"), request);
-        var generic = handler.handleGeneric(new IllegalStateException("password-secreto"), request);
-        assertThat(integrity.getStatusCode().value()).isEqualTo(409);
-        assertThat(generic.getStatusCode().value()).isEqualTo(500);
-        assertThat(integrity.getBody().getMessage()).doesNotContain("password-secreto");
-        assertThat(generic.getBody().getMessage()).doesNotContain("password-secreto");
+
+    @Test
+    @DisplayName("Responde 400 con el mensaje de la regla de negocio incumplida")
+    void handleBusinessRuleShouldReturnBadRequestWithMessage() {
+        BusinessRuleException exception = new BusinessRuleException(BUSINESS_MESSAGE);
+
+        ResponseEntity<ErrorResponse> response = handler.handleBusinessRule(exception, request);
+
+        thenResponseHasStatusAndMessage(response, 400, BUSINESS_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Incluye la ruta, la fecha y un identificador de traza UUID en la respuesta")
+    void handleNotFoundShouldIncludePathTimestampAndTraceId() {
+        ResourceNotFoundException exception = new ResourceNotFoundException("ruta", "id", "x");
+
+        ResponseEntity<ErrorResponse> response = handler.handleNotFound(exception, request);
+
+        thenResponseHasPathTimestampAndTraceId(response);
+    }
+
+    @Test
+    @DisplayName("Responde 400 con el error por campo cuando falla la validación de un campo")
+    void handleValidationExceptionsShouldMapFieldErrorByFieldName() {
+        MethodArgumentNotValidException exception = validationExceptionWith(
+                new FieldError("query", "size", "Debe ser positivo"));
+
+        ResponseEntity<ErrorResponse> response = handler.handleValidationExceptions(exception, request);
+
+        thenResponseIsBadRequestWithError(response, "size", "Debe ser positivo");
+    }
+
+    @Test
+    @DisplayName("Responde 400 con el error por nombre de objeto cuando falla la validación del objeto")
+    void handleValidationExceptionsShouldMapObjectErrorByObjectName() {
+        MethodArgumentNotValidException exception = validationExceptionWith(
+                new ObjectError("query", "Combinación inválida"));
+
+        ResponseEntity<ErrorResponse> response = handler.handleValidationExceptions(exception, request);
+
+        thenResponseIsBadRequestWithError(response, "query", "Combinación inválida");
+    }
+
+    @Test
+    @DisplayName("Responde 400 identificando el parámetro cuando el tipo es inválido")
+    void handleTypeMismatchShouldReturnBadRequestWithParameterName() {
+        MethodArgumentTypeMismatchException exception = typeMismatchOnRutaId();
+
+        ResponseEntity<ErrorResponse> response = handler.handleTypeMismatch(exception, request);
+
+        thenResponseIsBadRequestWithError(response, "rutaId", "El valor no tiene el formato esperado");
+    }
+
+    @Test
+    @DisplayName("No expone la causa del error cuando el tipo del parámetro es inválido")
+    void handleTypeMismatchShouldNotExposeCause() {
+        MethodArgumentTypeMismatchException exception = typeMismatchOnRutaId();
+
+        ResponseEntity<ErrorResponse> response = handler.handleTypeMismatch(exception, request);
+
+        thenMessageDoesNotContain(response, CAUSE_SECRET);
+    }
+
+    @Test
+    @DisplayName("Responde 409 sin exponer detalles de la base cuando se viola la integridad de datos")
+    void handleDataIntegrityShouldReturnConflictWithoutDatabaseDetails() {
+        DataIntegrityViolationException exception = new DataIntegrityViolationException(SECRET);
+
+        ResponseEntity<ErrorResponse> response = handler.handleDataIntegrity(exception, request);
+
+        thenResponseHasStatusWithoutSecret(response, 409);
+    }
+
+    @Test
+    @DisplayName("Responde 500 sin exponer detalles cuando ocurre un error no controlado")
+    void handleGenericShouldReturnInternalServerErrorWithoutDetails() {
+        IllegalStateException exception = new IllegalStateException(SECRET);
+
+        ResponseEntity<ErrorResponse> response = handler.handleGeneric(exception, request);
+
+        thenResponseHasStatusWithoutSecret(response, 500);
+    }
+
+    // --- arrange ---
+    private MethodArgumentNotValidException validationExceptionWith(ObjectError error) {
+        BeanPropertyBindingResult binding = new BeanPropertyBindingResult(new Object(), "query");
+        binding.addError(error);
+        return new MethodArgumentNotValidException(null, binding);
+    }
+
+    private MethodArgumentTypeMismatchException typeMismatchOnRutaId() {
+        return new MethodArgumentTypeMismatchException(
+                "texto", UUID.class, "rutaId", null, new IllegalArgumentException(CAUSE_SECRET));
+    }
+
+    // --- assert ---
+    private void thenResponseHasStatusAndMessage(ResponseEntity<ErrorResponse> response, int status, String message) {
+        assertThat(response.getStatusCode().value()).isEqualTo(status);
+        assertThat(response.getBody().getMessage()).isEqualTo(message);
+    }
+
+    private void thenResponseHasPathTimestampAndTraceId(ResponseEntity<ErrorResponse> response) {
+        ErrorResponse body = response.getBody();
+        assertThat(body.getPath()).isEqualTo(PATH);
+        assertThat(body.getTimestamp()).isNotNull();
+        assertThat(UUID.fromString(body.getTraceId())).isNotNull();
+    }
+
+    private void thenResponseIsBadRequestWithError(ResponseEntity<ErrorResponse> response, String key, String detail) {
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(response.getBody().getErrors()).containsEntry(key, detail);
+    }
+
+    private void thenMessageDoesNotContain(ResponseEntity<ErrorResponse> response, String secret) {
+        assertThat(response.getBody().getMessage()).doesNotContain(secret);
+    }
+
+    private void thenResponseHasStatusWithoutSecret(ResponseEntity<ErrorResponse> response, int status) {
+        assertThat(response.getStatusCode().value()).isEqualTo(status);
+        thenMessageDoesNotContain(response, SECRET);
     }
 }

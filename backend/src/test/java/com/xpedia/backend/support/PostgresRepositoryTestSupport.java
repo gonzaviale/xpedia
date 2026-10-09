@@ -12,10 +12,15 @@ import org.testcontainers.utility.DockerImageName;
 @ActiveProfiles("postgres-test")
 @Sql("/db/rutas-test.sql")
 public abstract class PostgresRepositoryTestSupport {
+
     // Contenedor compartido por estas clases durante la JVM; Ryuk lo elimina al finalizar.
     private static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer(
             DockerImageName.parse("pgvector/pgvector:pg17").asCompatibleSubstituteFor("postgres"));
-    static { POSTGRES.start(); }
+
+    static {
+        POSTGRES.start();
+    }
+
     @DynamicPropertySource
     static void database(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
