@@ -14,7 +14,7 @@
 <body data-theme="light">
 
 <header class="topbar">
-  <a href="#hero" class="brand"><span class="brand__mark">XP</span><span style="color: rgb(44, 44, 44);">ed</span>ia</a>
+  <a href="#hero" class="brand"><span class="brand__mark">XP</span><span class="brand__mid">ed</span>ia</a>
   <div class="topbar__actions">
   <a href="https://app.xpedia.com" class="topbar__link">Entrar</a>
   <button class="theme-toggle" id="themeToggle" type="button" aria-label="Cambiar a modo oscuro" aria-pressed="false">
@@ -31,16 +31,17 @@
 
 <!-- Mapa de nodos: mapita fijo que acompaña el scroll -->
 <nav class="route-nav" id="routeNav" aria-label="Navegación de la página">
-  <svg class="route-nav__track" width="60" height="380" viewBox="0 0 60 380" aria-hidden="true">
-    <path class="route-nav__track-bg" d="M30,26 L44,88 L16,150 L44,212 L16,274 L30,336" />
-    <path class="route-nav__track-progress" id="routeProgress" d="M30,26 L44,88 L16,150 L44,212 L16,274 L30,336" />
+  <svg class="route-nav__track" width="60" height="430" viewBox="0 0 60 430" aria-hidden="true">
+    <path class="route-nav__track-bg" d="M30,26 L44,88 L16,150 L44,212 L16,274 L44,336 L30,398" />
+    <path class="route-nav__track-progress" id="routeProgress" d="M30,26 L44,88 L16,150 L44,212 L16,274 L44,336 L30,398" />
   </svg>
   <ol class="route-nav__nodes">
     <li><a href="#hero" data-node="hero"><span class="node__dot">1</span><span class="node__label">Inicio</span></a></li>
     <li><a href="#que-es" data-node="que-es"><span class="node__dot">2</span><span class="node__label">Qué es</span></a></li>
     <li><a href="#como-funciona" data-node="como-funciona"><span class="node__dot">3</span><span class="node__label">Cómo funciona</span></a></li>
     <li><a href="#capturas" data-node="capturas"><span class="node__dot">4</span><span class="node__label">La app</span></a></li>
-    <li><a href="#video" data-node="video"><span class="node__dot">5</span><span class="node__label">Video</span></a></li>
+    <li><a href="#planes" data-node="planes"><span class="node__dot">5</span><span class="node__label">Planes</span></a></li>
+    <li><a href="#opiniones" data-node="opiniones"><span class="node__dot">6</span><span class="node__label">Opiniones</span></a></li>
     <li><a href="#empezar" data-node="empezar" class="node--destination"><span class="node__dot"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C7.8 2 4.5 5.3 4.5 9.5 4.5 15 12 22 12 22s7.5-7 7.5-12.5C19.5 5.3 16.2 2 12 2Zm0 10.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/></svg></span><span class="node__label">Llegaste a destino</span></a></li>
   </ol>
 </nav>
@@ -286,53 +287,95 @@
     <div class="section__head">
       <p class="eyebrow"><span class="eyebrow__node">4</span>La app</p>
       <h2>Así se ve por dentro.</h2>
-      <p class="section__intro">Capturas del prototipo.</p>
+      <p class="section__intro">Recorré cada parte de la app en video.</p>
     </div>
 
     <div class="showcase" id="showcase">
-      <div class="showcase__tabs" role="tablist" aria-label="Pantallas de la app">
-        <button type="button" class="showcase__tab is-active" role="tab" aria-selected="true" aria-controls="shotPanel" data-path="mi-ruta" data-caption="Tu mapa de hitos."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Mi ruta</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="practicar" data-caption="Preguntas cortas, respuesta al instante."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 5l12 7-12 7V5Z"/></svg>Practicar</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="radar" data-caption="Solo las novedades que te sirven."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>Radar<span class="showcase__badge">3</span></button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="informe" data-caption="Tu semana en un vistazo."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7V3Z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Informe</button>
-        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="como-funciona" data-caption="Cómo decide la app qué te toca."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg>Cómo funciona</button>
+      <div class="showcase__tabs" role="tablist" aria-label="Partes de la app">
+        <button type="button" class="showcase__tab is-active" role="tab" aria-selected="true" aria-controls="shotPanel" data-path="roadmap" data-caption="Tu mapa de hitos, paso a paso."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>Roadmap</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="practicando" data-caption="Preguntas cortas, respuesta al instante."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5l12 7-12 7V5Z"/></svg>Practicando</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="radar" data-caption="Solo las novedades que te sirven."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg>Radar</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="informe" data-caption="Tu semana en un vistazo."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7V3Z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Informe</button>
+        <button type="button" class="showcase__tab" role="tab" aria-selected="false" aria-controls="shotPanel" tabindex="-1" data-path="como-funciona" data-caption="Cómo decide la app qué te toca."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg>Cómo funciona</button>
       </div>
 
       <div class="browser" id="shotPanel" role="tabpanel">
         <div class="browser__bar">
           <span class="browser__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="browser__url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg><span class="browser__addr">app.xpedia.com/<b id="shotPath">mi-ruta</b></span></span>
+          <span class="browser__url"><span class="browser__addr">app.xpedia.com/<b id="shotPath">roadmap</b></span></span>
         </div>
         <div class="browser__screen">
-          <img class="is-active" src="assets/images/mi-ruta.png" width="1874" height="923" alt="Pantalla Mi ruta: mapa de hitos con nodos, progreso y recomendación del siguiente tema.">
-          <img src="assets/images/practicar.png" width="1871" height="922" loading="lazy" alt="Pantalla Practicar: pregunta de opción múltiple con feedback inmediato.">
-          <img src="assets/images/radar.png" width="1875" height="922" loading="lazy" alt="Pantalla Radar: novedades del rubro filtradas por relevancia para la ruta.">
-          <img src="assets/images/informe.png" width="1873" height="923" loading="lazy" alt="Pantalla Informe: resumen semanal generado por IA con avance, novedades y próximos pasos.">
-          <img src="assets/images/como-funciona.png" width="1873" height="922" loading="lazy" alt="Pantalla Cómo funciona: las cinco piezas del motor de Xpedia.">
+          <video class="is-active" src="assets/video/video-roadmap.mp4" poster="assets/images/mi-ruta.png" muted playsinline loop preload="metadata" aria-label="Video: Roadmap"></video>
+          <video src="assets/video/video-practica.mp4" poster="assets/images/practicar.png" muted playsinline loop preload="none" aria-label="Video: Practicando"></video>
+          <video src="assets/video/video-radar.mp4" poster="assets/images/radar.png" muted playsinline loop preload="none" aria-label="Video: Radar"></video>
+          <video src="assets/video/video-informe_semanal.mp4" poster="assets/images/informe.png" muted playsinline loop preload="none" aria-label="Video: Informe"></video>
+          <video src="assets/video/video-como_funciona.mp4" poster="assets/images/como-funciona.png" muted playsinline loop preload="none" aria-label="Video: Cómo funciona"></video>
+          <button type="button" class="showcase__nav showcase__nav--prev" aria-label="Video anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button type="button" class="showcase__nav showcase__nav--next" aria-label="Video siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <button type="button" class="showcase__play" id="shotPlay" aria-label="Pausar video"><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5L8 5.5Z"/></svg></button>
         </div>
       </div>
-      <p class="showcase__caption" id="shotCaption" aria-live="polite">Tu mapa de hitos.</p>
+      <p class="showcase__caption" id="shotCaption" aria-live="polite">Tu mapa de hitos, paso a paso.</p>
     </div>
   </section>
 
-  <!-- 5. VIDEO -->
-  <section class="section section--tint" id="video">
+  <!-- PLANES -->
+  <section class="section section--tint" id="planes">
     <div class="section__head">
-      <p class="eyebrow"><span class="eyebrow__node">5</span>Video</p>
-      <h2>Un recorrido de 90 segundos.</h2>
+      <p class="eyebrow"><span class="eyebrow__node">5</span>Planes</p>
+      <h2>Empezá gratis. Sumá a tu equipo cuando quieras.</h2>
     </div>
+    <div class="plans">
+      <article class="plan">
+        <h3>Individual</h3>
+        <p class="plan__price">Gratis</p>
+        <p class="plan__desc">Para mejorar en lo tuyo o cambiar de rubro.</p>
+        <ul class="plan__list">
+          <li>Tu ruta armada a partir de tu objetivo</li>
+          <li>Práctica diaria y pruebas por hito</li>
+          <li>Portfolio para compartir</li>
+          <li>Novedades de tu rubro</li>
+        </ul>
+        <a href="https://app.xpedia.com" class="btn btn--primary plan__cta">Empezar gratis</a>
+      </article>
+      <article class="plan plan--team">
+        <span class="plan__tag">Pago</span>
+        <h3>Empresas</h3>
+        <p class="plan__price">A medida</p>
+        <p class="plan__desc">Para desarrollar a tu equipo con rutas propias.</p>
+        <ul class="plan__list">
+          <li>Todo lo del plan individual</li>
+          <li>Rutas armadas junto con tu empresa</li>
+          <li>Evidencia de competencias por persona y rol</li>
+          <li>Métricas del equipo, cuidando la privacidad</li>
+        </ul>
+        <a href="mailto:hola@xpedia.com" class="btn btn--ghost plan__cta">Hablar con nosotros</a>
+      </article>
+    </div>
+  </section>
 
-    <div class="video-slot">
-      <!-- Para sumar el video: guardalo en assets/video/ y reemplazá el bloque .video-slot__frame por
-           <video class="video-slot__video" src="assets/video/recorrido.mp4" poster="assets/images/mi-ruta.png" controls playsinline></video> -->
-      <div class="video-slot__frame">
-        <img class="video-slot__poster" src="assets/images/mi-ruta.png" alt="" loading="lazy">
-        <div class="video-slot__overlay">
-          <span class="video-slot__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5L8 5.5Z"/></svg></span>
-          <p class="video-slot__text">Acá iría el video</p>
-        </div>
-        <span class="video-slot__time">1:30</span>
-      </div>
+  <!-- OPINIONES -->
+  <section class="section" id="opiniones">
+    <div class="section__head">
+      <p class="eyebrow"><span class="eyebrow__node">6</span>Lo que dicen</p>
+      <h2>Gente que ya encontró su camino.</h2>
+    </div>
+    <div class="quotes">
+      <figure class="quote">
+        <span class="quote__stars" aria-label="5 de 5">★★★★★</span>
+        <blockquote>“Trabajaba en una cocina y no sabía ni por dónde arrancar. Con la ruta hice un poco cada día y hoy tengo mi primer proyecto publicado.”</blockquote>
+        <figcaption><span class="quote__avatar" aria-hidden="true">L</span><div><strong>Lucía M.</strong><span>De gastronomía a desarrollo web</span></div></figcaption>
+      </figure>
+      <figure class="quote">
+        <span class="quote__stars" aria-label="5 de 5">★★★★★</span>
+        <blockquote>“Lo que más me sirve es que la app se da cuenta de lo que me cuesta y me lo vuelve a mostrar. No pierdo tiempo con lo que ya sé.”</blockquote>
+        <figcaption><span class="quote__avatar" aria-hidden="true">M</span><div><strong>Martín G.</strong><span>Usando IA en su trabajo</span></div></figcaption>
+      </figure>
+      <figure class="quote">
+        <span class="quote__stars" aria-label="5 de 5">★★★★★</span>
+        <blockquote>“Diez minutos por día y ya me animo a hablar en las reuniones. El portfolio me ayudó a mostrar lo que aprendí.”</blockquote>
+        <figcaption><span class="quote__avatar" aria-hidden="true">S</span><div><strong>Sofía R.</strong><span>Oratoria</span></div></figcaption>
+      </figure>
     </div>
   </section>
 
@@ -352,9 +395,34 @@
 </main>
 
 <footer class="footer">
-  <a href="#hero" class="brand brand--small"><span class="brand__mark">XP</span>edia</a>
-  <span>Plan, práctica y prueba en una sola ruta.</span>
-  <a href="https://app.xpedia.com" class="footer__link">Entrar a la app</a>
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="#hero" class="brand"><span class="brand__mark">XP</span><span class="brand__mid">ed</span>ia</a>
+      <p>Tu ruta para mejorar en lo que hacés o pasarte a otro rubro.</p>
+      <a href="https://app.xpedia.com" class="btn btn--primary">Entrar a Xpedia</a>
+    </div>
+    <div>
+      <h4>La landing</h4>
+      <ul>
+        <li><a href="#que-es">Qué es</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#capturas">La app</a></li>
+        <li><a href="#opiniones">Opiniones</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Xpedia</h4>
+      <ul>
+        <li><a href="https://app.xpedia.com">Entrar</a></li>
+        <li><a href="#empezar">Empezar gratis</a></li>
+        <li><a href="mailto:hola@xpedia.com">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Xpedia</span>
+    <span class="footer__made">Hecho en Argentina</span>
+  </div>
 </footer>
 
 <script src="assets/js/main.js"></script>

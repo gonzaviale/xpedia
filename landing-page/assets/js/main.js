@@ -249,19 +249,50 @@
     });
   }
 
-  /* ---------- La app: pestañas como las de la app, dentro de una ventana ---------- */
+  /* ---------- La app: slider de videos ---------- */
   var showcase = document.getElementById("showcase");
   if (showcase) {
     var shotTabs = Array.prototype.slice.call(showcase.querySelectorAll(".showcase__tab"));
-    var shotImgs = Array.prototype.slice.call(showcase.querySelectorAll(".browser__screen img"));
+    var shotVids = Array.prototype.slice.call(showcase.querySelectorAll(".browser__screen video"));
     var shotPath = document.getElementById("shotPath");
     var shotCaption = document.getElementById("shotCaption");
-    bindTabs(shotTabs, function (i) {
-      markTabs(shotTabs, i);
-      shotImgs.forEach(function (img, k) { img.classList.toggle("is-active", k === i); });
-      shotPath.textContent = shotTabs[i].getAttribute("data-path");
-      shotCaption.textContent = shotTabs[i].getAttribute("data-caption");
-    });
+    var shotPlay = document.getElementById("shotPlay");
+    var shotIndex = 0, shotPaused = prefersReducedMotion, shotVisible = false;
+
+    var syncPlayback = function () {
+      shotVids.forEach(function (v, k) {
+        if (k === shotIndex && shotVisible && !shotPaused) {
+          var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+        } else { v.pause(); }
+      });
+      shotPlay.classList.toggle("is-paused", shotPaused);
+      shotPlay.setAttribute("aria-label", shotPaused ? "Reproducir video" : "Pausar video");
+    };
+
+    var shotSelect = function (i) {
+      shotIndex = (i + shotVids.length) % shotVids.length;
+      markTabs(shotTabs, shotIndex);
+      shotVids.forEach(function (v, k) {
+        v.classList.toggle("is-active", k === shotIndex);
+        if (k === shotIndex) { v.preload = "auto"; v.currentTime = 0; }
+      });
+      shotPath.textContent = shotTabs[shotIndex].getAttribute("data-path");
+      shotCaption.textContent = shotTabs[shotIndex].getAttribute("data-caption");
+      syncPlayback();
+    };
+
+    bindTabs(shotTabs, shotSelect);
+    showcase.querySelector(".showcase__nav--prev").addEventListener("click", function () { shotSelect(shotIndex - 1); });
+    showcase.querySelector(".showcase__nav--next").addEventListener("click", function () { shotSelect(shotIndex + 1); });
+    shotPlay.addEventListener("click", function () { shotPaused = !shotPaused; syncPlayback(); });
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        shotVisible = entries[0].isIntersecting;
+        syncPlayback();
+      }, { threshold: 0.4 }).observe(showcase);
+    } else { shotVisible = true; }
+    syncPlayback();
   }
 
   /* ---------- Hero: demo de una ruta que se arma según el objetivo ---------- */
