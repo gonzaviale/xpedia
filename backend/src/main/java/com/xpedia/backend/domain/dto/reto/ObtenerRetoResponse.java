@@ -1,2 +1,22 @@
 package com.xpedia.backend.domain.dto.reto;
-public record ObtenerRetoResponse(RetoItem reto) {}
+
+import com.xpedia.backend.domain.model.enums.TipoReto;
+
+import java.time.OffsetDateTime;
+import java.util.Map;
+import java.util.UUID;
+
+public record ObtenerRetoResponse(
+        UUID id,
+        UUID rutaId,
+        UUID nodoId,
+        UUID hitoId,
+        TipoReto tipo,
+        String titulo,
+        Short nivel,
+        Map<String, Object> contenido,
+        String origen,
+        OffsetDateTime revisadoEn,
+        RubricaItem rubrica
+) {
+}

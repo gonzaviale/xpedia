@@ -5,19 +5,23 @@ import com.xpedia.backend.domain.model.reto.Reto;
 import com.xpedia.backend.domain.model.rubrica.Rubrica;
 import com.xpedia.backend.infrastructure.repository.entity.ActividadEntity;
 import org.springframework.stereotype.Component;
-import java.util.*;
 
 @Component
 public class RetoRepositoryMapper {
+
     public Reto toDomain(ActividadEntity entity, Rubrica rubrica) {
-        Map<String, Object> contenido = new LinkedHashMap<>();
-        for (String key : List.of("consigna", "contexto", "formatoEntrega")) {
-            Object value = entity.getContenido().get(key);
-            if (value instanceof String) contenido.put(key, value);
-        }
-        return Reto.builder().id(entity.getId()).rutaId(entity.getRutaId()).nodoId(entity.getNodoId())
-                .hitoId(entity.getHitoId()).tipo(TipoReto.valueOf(entity.getTipo())).titulo(entity.getTitulo())
-                .nivel(entity.getNivel()).contenido(Map.copyOf(contenido)).origen(entity.getOrigen())
-                .revisadoEn(entity.getRevisadoEn()).rubrica(rubrica).build();
+        return Reto.builder()
+                .id(entity.getId())
+                .rutaId(entity.getRutaId())
+                .nodoId(entity.getNodoId())
+                .hitoId(entity.getHitoId())
+                .tipo(TipoReto.valueOf(entity.getTipo()))
+                .titulo(entity.getTitulo())
+                .nivel(entity.getNivel())
+                .contenido(Reto.filtrarContenidoPublico(entity.getContenido()))
+                .origen(entity.getOrigen())
+                .revisadoEn(entity.getRevisadoEn())
+                .rubrica(rubrica)
+                .build();
     }
 }

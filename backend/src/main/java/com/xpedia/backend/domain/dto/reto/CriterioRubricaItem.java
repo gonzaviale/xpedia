@@ -1,9 +1,9 @@
-package com.xpedia.backend.domain.model.rubrica;
+package com.xpedia.backend.domain.dto.reto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record CriterioRubrica(
+public record CriterioRubricaItem(
         UUID id,
         Short posicion,
         String nombre,
@@ -12,8 +12,4 @@ public record CriterioRubrica(
         BigDecimal peso,
         boolean eliminatorio
 ) {
-
-    public BigDecimal puntajeMaximoPonderado() {
-        return peso.multiply(BigDecimal.valueOf(puntajeMax));
-    }
 }
