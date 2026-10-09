@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -48,10 +49,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException e, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
+            String fieldName = error instanceof FieldError fieldError ? fieldError.getField() : error.getObjectName();
             errors.put(fieldName, error.getDefaultMessage());
         });
         return buildResponse(HttpStatus.BAD_REQUEST, "Error de validación en los datos enviados", request, errors);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException e,
+                                                           HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Parámetro inválido: " + e.getName(), request,
+                Map.of(e.getName(), "El valor no tiene el formato esperado"));
     }
 
     @ExceptionHandler(Exception.class)
