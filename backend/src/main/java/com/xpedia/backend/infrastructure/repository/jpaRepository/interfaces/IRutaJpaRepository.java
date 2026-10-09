@@ -8,10 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.Optional;
 import java.util.UUID;
 
 public interface IRutaJpaRepository extends JpaRepository<RutaEntity, UUID> {
+
     @Query("""
             SELECT r FROM RutaEntity r
             WHERE r.organizacionId IS NULL
@@ -20,8 +22,8 @@ public interface IRutaJpaRepository extends JpaRepository<RutaEntity, UUID> {
               AND (:objetivo IS NULL OR r.objetivo = :objetivo)
             """)
     Page<RutaEntity> findPublicadasGlobales(@Param("tipo") TipoRuta tipo,
-                                           @Param("objetivo") ObjetivoRuta objetivo,
-                                           Pageable pageable);
+                                            @Param("objetivo") ObjetivoRuta objetivo,
+                                            Pageable pageable);
 
     @Query("""
             SELECT r FROM RutaEntity r
@@ -29,4 +31,11 @@ public interface IRutaJpaRepository extends JpaRepository<RutaEntity, UUID> {
               AND r.estado = com.xpedia.backend.domain.model.enums.EstadoRuta.PUBLICADA
             """)
     Optional<RutaEntity> findPublicadaGlobalById(@Param("id") UUID id);
+
+    @Query("""
+            SELECT COUNT(r) > 0 FROM RutaEntity r
+            WHERE r.id = :id AND r.organizacionId IS NULL
+              AND r.estado = com.xpedia.backend.domain.model.enums.EstadoRuta.PUBLICADA
+            """)
+    boolean existsPublicadaGlobalById(@Param("id") UUID id);
 }

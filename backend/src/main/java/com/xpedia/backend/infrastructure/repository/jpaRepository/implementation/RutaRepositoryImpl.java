@@ -10,12 +10,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class RutaRepositoryImpl implements RutaRepository {
+
     private final IRutaJpaRepository jpa;
     private final RutaRepositoryMapper mapper;
 
@@ -27,5 +29,10 @@ public class RutaRepositoryImpl implements RutaRepository {
     @Override
     public Optional<Ruta> findPublicadaGlobalById(UUID id) {
         return jpa.findPublicadaGlobalById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public boolean existsPublicadaGlobalById(UUID id) {
+        return jpa.existsPublicadaGlobalById(id);
     }
 }

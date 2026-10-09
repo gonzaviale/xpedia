@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RutaRepositoryMapper {
+
     public Ruta toDomain(RutaEntity entity) {
         return Ruta.builder()
                 .id(entity.getId())

@@ -1,11 +1,15 @@
 package com.xpedia.backend.infrastructure.repository.entity;
 
-import com.xpedia.backend.domain.model.enums.*;
+import com.xpedia.backend.domain.model.enums.EstadoRuta;
+import com.xpedia.backend.domain.model.enums.ObjetivoRuta;
+import com.xpedia.backend.domain.model.enums.TipoRuta;
+import com.xpedia.backend.domain.model.enums.ValidacionRuta;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import jakarta.persistence.*;
-import lombok.*;
 
 @Getter
 @Setter
@@ -15,6 +19,7 @@ import lombok.*;
 @Entity
 @Table(name = "ruta")
 public class RutaEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)

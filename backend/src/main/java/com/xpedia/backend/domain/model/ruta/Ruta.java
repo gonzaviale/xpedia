@@ -1,10 +1,18 @@
 package com.xpedia.backend.domain.model.ruta;
 
-import com.xpedia.backend.domain.model.enums.*;
+import com.xpedia.backend.domain.model.enums.EstadoRuta;
+import com.xpedia.backend.domain.model.enums.ObjetivoRuta;
+import com.xpedia.backend.domain.model.enums.TipoRuta;
+import com.xpedia.backend.domain.model.enums.ValidacionRuta;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import lombok.*;
 
 @Getter
 @Setter
@@ -12,6 +20,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ruta {
+
     private UUID id;
 
     private UUID organizacionId;

@@ -1,8 +1,10 @@
 package com.xpedia.backend.domain.mapper.ruta;
+
 import com.xpedia.backend.domain.dto.ruta.ObtenerRutaResponse;
 import com.xpedia.backend.domain.model.ruta.Ruta;
 
 public class ObtenerRutaMapper {
+
     public ObtenerRutaResponse toResponse(Ruta ruta) {
         return new ObtenerRutaResponse(
                 ruta.getId(),

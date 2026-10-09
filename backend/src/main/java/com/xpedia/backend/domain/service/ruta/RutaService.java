@@ -10,12 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RutaService {
+
     private final RutaRepository rutaRepository;
 
     public Page<Ruta> listar(TipoRuta tipo, ObjetivoRuta objetivo, Pageable pageable) {
@@ -25,5 +27,11 @@ public class RutaService {
     public Ruta obtener(UUID id) {
         return rutaRepository.findPublicadaGlobalById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ruta", "id", id));
+    }
+
+    public void validarVisible(UUID id) {
+        if (!rutaRepository.existsPublicadaGlobalById(id)) {
+            throw new ResourceNotFoundException("ruta", "id", id);
+        }
     }
 }

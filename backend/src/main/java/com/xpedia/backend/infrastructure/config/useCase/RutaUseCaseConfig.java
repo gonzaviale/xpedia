@@ -10,19 +10,26 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RutaUseCaseConfig {
-    @Bean
-    public ListarRutasMapper listarRutasMapper() { return new ListarRutasMapper(); }
 
     @Bean
-    public ObtenerRutaMapper obtenerRutaMapper() { return new ObtenerRutaMapper(); }
-
-    @Bean
-    public ListarRutasUseCase listarRutasUseCase(RutaService service, ListarRutasMapper mapper) {
-        return new ListarRutasUseCase(service, mapper);
+    public ListarRutasMapper listarRutasMapper() {
+        return new ListarRutasMapper();
     }
 
     @Bean
-    public ObtenerRutaUseCase obtenerRutaUseCase(RutaService service, ObtenerRutaMapper mapper) {
-        return new ObtenerRutaUseCase(service, mapper);
+    public ObtenerRutaMapper obtenerRutaMapper() {
+        return new ObtenerRutaMapper();
+    }
+
+    @Bean
+    public ListarRutasUseCase listarRutasUseCase(RutaService rutaService,
+                                                 ListarRutasMapper listarRutasMapper) {
+        return new ListarRutasUseCase(rutaService, listarRutasMapper);
+    }
+
+    @Bean
+    public ObtenerRutaUseCase obtenerRutaUseCase(RutaService rutaService,
+                                                 ObtenerRutaMapper obtenerRutaMapper) {
+        return new ObtenerRutaUseCase(rutaService, obtenerRutaMapper);
     }
 }
