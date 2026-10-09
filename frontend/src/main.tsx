@@ -5,7 +5,7 @@ import { env } from '@/shared/config/env';
 import '@/styles/index.css';
 
 async function iniciar() {
-  if (env.mocks) {
+  if (env.mocks !== 'ninguno') {
     const { worker } = await import('@/mocks/browser');
     await worker.start({ onUnhandledRequest: 'bypass', quiet: true }).catch((error: unknown) => {
       console.error('No se pudo iniciar la API simulada (MSW)', error);
