@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -24,6 +27,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("postgres-test")
@@ -254,5 +258,59 @@ class RutaPostgresIntegrationTest {
         assertThat(response.body()).contains("/api/rutas/{rutaId}/hitos", "/api/rutas/{rutaId}/nodos");
         assertThat(JsonPath.<List<String>>read(response.body(), "$.paths['/api/rutas/{rutaId}/nodos'].get.parameters[*].name"))
                 .contains("rutaId", "hitoId");
+    }
+
+    private void cargarPiloto() throws Exception {
+        try (var connection = jdbc.getDataSource().getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource("db/dev/ruta-piloto.sql"));
+        }
+    }
+
+    @Test
+    void pilotoPuedeCargarseDosVecesSinDuplicarNiBorrarDatosExistentes() throws Exception {
+        cargarPiloto();
+        var fecha = jdbc.queryForObject("SELECT creado_en FROM ruta WHERE slug = 'demo-atencion-cliente-remota'", java.time.OffsetDateTime.class);
+        cargarPiloto();
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM ruta", Integer.class)).isEqualTo(9);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM hito WHERE ruta_id = 'b1000000-0000-4000-8000-000000000001'", Integer.class)).isEqualTo(3);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM nodo WHERE ruta_id = 'b1000000-0000-4000-8000-000000000001'", Integer.class)).isEqualTo(6);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM nodo_prerrequisito WHERE nodo_id::text LIKE 'b4000000-%'", Integer.class)).isEqualTo(5);
+        assertThat(jdbc.queryForObject("SELECT creado_en FROM ruta WHERE slug = 'demo-atencion-cliente-remota'", java.time.OffsetDateTime.class)).isEqualTo(fecha);
+    }
+
+    @Test
+    void repetirPilotoConservaEdicionesLocales() throws Exception {
+        cargarPiloto();
+        jdbc.update("UPDATE hito SET titulo = 'Título editado' WHERE id = 'b2000000-0000-4000-8000-000000000001'");
+        cargarPiloto();
+        assertThat(jdbc.queryForObject("SELECT titulo FROM hito WHERE id = 'b2000000-0000-4000-8000-000000000001'", String.class)).isEqualTo("Título editado");
+    }
+
+    @Test
+    void errorEnPilotoRevierteTodaLaCarga() throws Exception {
+        String sql = new ClassPathResource("db/dev/ruta-piloto.sql").getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
+        try (var connection = jdbc.getDataSource().getConnection()) {
+            assertThatThrownBy(() -> ScriptUtils.executeSqlScript(connection,
+                    new ByteArrayResource(sql.replace("COMMIT;", "SELECT 1 / 0; COMMIT;").getBytes(java.nio.charset.StandardCharsets.UTF_8))))
+                    .isInstanceOf(org.springframework.jdbc.datasource.init.ScriptStatementFailedException.class);
+            connection.createStatement().execute("ROLLBACK");
+        }
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM ruta", Integer.class)).isEqualTo(8);
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM nodo WHERE id::text LIKE 'b4000000-%'", Integer.class)).isZero();
+    }
+
+    @Test
+    void swaggerPuedeRecorrerPilotoConIdsDocumentados() throws Exception {
+        cargarPiloto();
+        String ruta = "/api/rutas/b1000000-0000-4000-8000-000000000001";
+        assertThat(consultar(ruta).statusCode()).isEqualTo(200);
+        var hitos = consultar(ruta + "/hitos");
+        assertThat(hitos.statusCode()).isEqualTo(200);
+        assertThat(JsonPath.<List<Object>>read(hitos.body(), "$")).hasSize(3);
+        var nodos = consultar(ruta + "/nodos?hitoId=b2000000-0000-4000-8000-000000000002");
+        assertThat(nodos.statusCode()).isEqualTo(200);
+        assertThat(JsonPath.<List<String>>read(nodos.body(), "$[*].codigo")).containsExactly("DEMO-03", "DEMO-04");
+        assertThat(JsonPath.<List<String>>read(nodos.body(), "$[0].prerrequisitoIds"))
+                .containsExactly("b4000000-0000-4000-8000-000000000002");
     }
 }

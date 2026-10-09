@@ -64,6 +64,31 @@ Todas estas consultas exigen una ruta global publicada. Una ruta inexistente, pr
 
 Estas respuestas representan el contenido de la ruta. El estado de avance, dominio y desbloqueo de cada persona requiere una inscripción y queda para el módulo de progreso.
 
+### Piloto local para Swagger
+
+Desde `backend`, con PostgreSQL levantado:
+
+```powershell
+.\scripts\cargar-ruta-piloto.ps1
+```
+
+El script apunta al servicio PostgreSQL del compose local (`xpedia`, `xpedia_user`). Si configuraste otro usuario/base, adaptá esos dos argumentos explícitos antes de ejecutarlo. No utiliza la conexión configurada para otros entornos.
+
+La carga es manual y transaccional, está fuera de Flyway y puede repetirse sin duplicar ni sobrescribir registros. Un conflicto con una clave única distinta del ID produce un error y revierte la carga. Se publica una ruta **DEMO**, con tres hitos, dos ramas y seis nodos: es un subconjunto del borrador de atención al cliente, no material editorial validado ni la ruta completa. No crea usuarios ni progreso.
+
+En Swagger, abrí cada endpoint, elegí **Try it out**, completá los parámetros y presioná **Execute**. No llevan cuerpo JSON.
+
+| Consulta | Parámetros | Resultado esperado |
+|---|---|---|
+| `GET /api/rutas/{id}` | `id = b1000000-0000-4000-8000-000000000001` | 200, detalle DEMO |
+| `GET /api/rutas/{rutaId}/hitos` | `rutaId = b1000000-0000-4000-8000-000000000001` | 200, tres hitos |
+| `GET /api/rutas/{rutaId}/nodos` | mismo `rutaId`, `hitoId` vacío | 200, seis nodos |
+| `GET /api/rutas/{rutaId}/nodos` | mismo `rutaId`, `hitoId = b2000000-0000-4000-8000-000000000002` | 200, DEMO-03 y DEMO-04 |
+| Hitos o nodos de ruta inexistente | `rutaId = 00000000-0000-0000-0000-000000000000` | 404 |
+| UUID inválido | `rutaId = texto` | 400 |
+
+Los UUID que usa `rutas-test.sql` pertenecen a una base temporal; para Swagger local usá los del piloto. **No ejecutes `rutas-test.sql` en tu base local:** ese archivo elimina y reconstruye fixtures para las pruebas.
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
