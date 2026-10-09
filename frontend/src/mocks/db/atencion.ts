@@ -372,3 +372,68 @@ export const fuentesDelReto = [
     url: 'https://www.argentina.gob.ar/produccion/defensadelconsumidor/conoce-tus-derechos',
   },
 ];
+
+export type CuestionarioSeed = {
+  id: string;
+  nodoId: string;
+  titulo: string;
+  preguntas: {
+    id: string;
+    tipo: 'CONCEPTO' | 'APLICACION' | 'DETALLE';
+    enunciado: string;
+    opciones: string[];
+    correcta: number;
+    explicacion: string;
+  }[];
+};
+
+export const cuestionario: CuestionarioSeed = {
+  id: 'cuestionario-a1',
+  nodoId: 'nodo-a1',
+  titulo: 'Escuchar e indagar',
+  preguntas: [
+    {
+      id: 'cq-1',
+      tipo: 'CONCEPTO',
+      enunciado: '¿Qué es parafrasear en una conversación con un cliente?',
+      opciones: [
+        'Repetir sus palabras exactas',
+        'Decir con tus palabras lo que entendiste para confirmarlo',
+        'Resumir tu respuesta antes de darla',
+        'Corregir lo que dijo el cliente',
+      ],
+      correcta: 1,
+      explicacion:
+        'Parafrasear es devolverle al cliente lo que entendiste con tus palabras, para confirmar que ambos hablan de lo mismo.',
+    },
+    {
+      id: 'cq-2',
+      tipo: 'APLICACION',
+      enunciado:
+        'Un cliente escribe: «No me llegó el pedido y ya pasaron dos días». ¿Qué preguntás primero?',
+      opciones: [
+        '¿Seguro que lo pidió bien?',
+        '¿Me pasás el número de pedido para revisarlo ahora?',
+        'Eso depende del correo, no de nosotros',
+        '¿Por qué no reclamó antes?',
+      ],
+      correcta: 1,
+      explicacion:
+        'Pedir el dato que necesitás para actuar muestra que te hacés cargo y evita culpar al cliente.',
+    },
+    {
+      id: 'cq-3',
+      tipo: 'DETALLE',
+      enunciado: '¿Cuándo conviene hacer una pregunta cerrada?',
+      opciones: [
+        'Para confirmar un dato puntual',
+        'Para entender el problema desde cero',
+        'Para que el cliente se explaye',
+        'Nunca',
+      ],
+      correcta: 0,
+      explicacion:
+        'Las preguntas cerradas sirven para confirmar datos puntuales; para entender el problema conviene preguntar de forma abierta.',
+    },
+  ],
+};

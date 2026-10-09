@@ -4,6 +4,7 @@ import { ApiError, http, pageSchema } from '@/shared/api';
 import { env } from '@/shared/config/env';
 import { aRuta } from './adaptadores';
 import {
+  cuestionarioResumenBackendSchema,
   hitosBackendSchema,
   microleccionResumenBackendSchema,
   nodosBackendSchema,
@@ -49,10 +50,15 @@ export async function obtenerRuta(slug: string, signal?: AbortSignal): Promise<R
 
   const contenidos = await Promise.all(
     nodos.map(async (nodo) => {
-      const [microlecciones, retos] = await Promise.all([
+      const [microlecciones, cuestionarios, retos] = await Promise.all([
         http.get(
           `${base}/nodos/${nodo.id}/microlecciones`,
           z.array(microleccionResumenBackendSchema),
+          signal,
+        ),
+        http.get(
+          `${base}/nodos/${nodo.id}/cuestionarios`,
+          z.array(cuestionarioResumenBackendSchema),
           signal,
         ),
         http.get(`${base}/nodos/${nodo.id}/retos`, z.array(retoResumenBackendSchema), signal),
@@ -60,6 +66,7 @@ export async function obtenerRuta(slug: string, signal?: AbortSignal): Promise<R
       return {
         nodoId: nodo.id,
         tieneMicroleccion: microlecciones.length > 0,
+        tieneCuestionario: cuestionarios.length > 0,
         reto: retos[0] ?? null,
       };
     }),

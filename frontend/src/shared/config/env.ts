@@ -15,6 +15,8 @@ const envSchema = z.object({
   VITE_API_URL: z.string().default('/api'),
   VITE_API_MOCKS: modoMocksSchema,
   VITE_RUTA_SLUG: z.string().default('atencion-al-cliente-remota'),
+  // Provisorio hasta que haya identificación de personas: viaja en el cuerpo de POST /intentos.
+  VITE_USUARIO_ID: z.string().default('00000000-0000-4000-8000-000000000001'),
 });
 
 const parsed = envSchema.parse(import.meta.env);
@@ -25,4 +27,5 @@ export const env = {
   apiUrl: parsed.VITE_API_URL,
   mocks: parsed.VITE_API_MOCKS,
   rutaSlug: parsed.VITE_RUTA_SLUG,
+  usuarioId: parsed.VITE_USUARIO_ID,
 };

@@ -1,4 +1,4 @@
-import { microlecciones, reto, ruta } from './atencion';
+import { cuestionario, microlecciones, reto, ruta } from './atencion';
 
 // El seed de atencion.ts expresado con la forma de los DTOs del backend (/api/rutas/...), para que
 // los adaptadores del front se ejerciten igual contra MSW que contra el backend real.
@@ -53,6 +53,26 @@ export function microleccionesDto(nodoId: string) {
       contenido: { minutos: leccion.minutos, bloques: leccion.bloques },
       origen: 'IA',
       fuentes: leccion.fuentes,
+    },
+  ];
+}
+
+export function cuestionariosDto(nodoId: string) {
+  if (cuestionario.nodoId !== nodoId) return [];
+  return [
+    {
+      id: cuestionario.id,
+      rutaId: ruta.id,
+      nodoId,
+      titulo: cuestionario.titulo,
+      nivel: 1,
+      preguntas: cuestionario.preguntas.map((pregunta, indice) => ({
+        id: pregunta.id,
+        posicion: indice + 1,
+        tipo: pregunta.tipo,
+        enunciado: pregunta.enunciado,
+        opciones: pregunta.opciones,
+      })),
     },
   ];
 }

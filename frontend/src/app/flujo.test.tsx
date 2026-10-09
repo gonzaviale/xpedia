@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { diagnostico, reto, ruta } from '@/mocks/db/atencion';
+import { cuestionario, diagnostico, reto, ruta } from '@/mocks/db/atencion';
 import { estado } from '@/mocks/db/estado';
 import { crearInscripcion } from '@/mocks/diagnosticar';
 import { renderApp } from '@/test/render-app';
@@ -22,6 +22,24 @@ function sembrarInscripcion() {
     },
     ruta,
   );
+}
+
+type Usuario = ReturnType<typeof userEvent.setup>;
+
+async function responderCuestionario(user: Usuario, elegidas: number[]) {
+  for (const [indice, elegida] of elegidas.entries()) {
+    const letra = 'abcd'[elegida];
+    const [opcion] = await screen.findAllByRole(
+      'button',
+      { name: new RegExp(`^${letra} `) },
+      ESPERA,
+    );
+    if (!opcion) throw new Error(`No se renderizó la opción ${String(letra)}`);
+    await user.click(opcion);
+    await user.click(screen.getByRole('button', { name: 'Lo sabía' }));
+    const avanzar = indice === elegidas.length - 1 ? 'Ver resultado' : 'Siguiente';
+    await user.click(screen.getByRole('button', { name: avanzar }));
+  }
 }
 
 describe('flujo de la primera ruta', () => {
@@ -72,6 +90,45 @@ describe('flujo de la primera ruta', () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(/CC BY 4.0/)).toBeInTheDocument();
+  });
+
+  it('ofrece el cuestionario en los nodos que lo tienen', async () => {
+    sembrarInscripcion();
+    renderApp('/ruta');
+
+    expect(await screen.findByRole('link', { name: 'Cuestionario' }, ESPERA)).toHaveAttribute(
+      'href',
+      `/nodos/${cuestionario.nodoId}/cuestionario`,
+    );
+  });
+
+  it('responde el cuestionario y muestra la corrección con lo que se sabía', async () => {
+    const user = userEvent.setup();
+    sembrarInscripcion();
+    renderApp(`/nodos/${cuestionario.nodoId}/cuestionario`);
+
+    await responderCuestionario(
+      user,
+      cuestionario.preguntas.map((p) => p.correcta),
+    );
+
+    expect(await screen.findByText(/3 de 3 correctas/, {}, ESPERA)).toBeInTheDocument();
+    expect(screen.getByText('Aprobado')).toBeInTheDocument();
+    expect(screen.getAllByText('Lo sabías')).toHaveLength(3);
+  });
+
+  it('muestra la respuesta correcta y no aprueba cuando hay errores', async () => {
+    const user = userEvent.setup();
+    sembrarInscripcion();
+    renderApp(`/nodos/${cuestionario.nodoId}/cuestionario`);
+
+    // La correcta de cada pregunta del seed es b, b y a: las tres respuestas elegidas son erróneas.
+    await responderCuestionario(user, [0, 0, 3]);
+
+    expect(await screen.findByText(/0 de 3 correctas/, {}, ESPERA)).toBeInTheDocument();
+    expect(screen.getByText('No aprobado')).toBeInTheDocument();
+    expect(screen.getAllByText('Respuesta correcta:')).toHaveLength(3);
+    expect(screen.getAllByText(/Estabas seguro\/a y fallaste/)).toHaveLength(3);
   });
 
   it('valida el largo de la respuesta antes de enviar el reto', async () => {

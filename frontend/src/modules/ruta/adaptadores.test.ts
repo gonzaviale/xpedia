@@ -28,7 +28,7 @@ function nodo(id: string, hitoId: string | null, posicion: number): NodoBackend 
 }
 
 function contenido(nodoId: string, parcial: Partial<ContenidoNodo> = {}): ContenidoNodo {
-  return { nodoId, tieneMicroleccion: false, reto: null, ...parcial };
+  return { nodoId, tieneMicroleccion: false, tieneCuestionario: false, reto: null, ...parcial };
 }
 
 describe('aRuta', () => {
@@ -73,6 +73,27 @@ describe('aRuta', () => {
       ['MICROLECCION'],
       ['MICROLECCION', 'RETO'],
       [],
+    ]);
+  });
+
+  it('marca el cuestionario entre las actividades del nodo, entre la lección y el reto', () => {
+    const ruta = aRuta({
+      ruta: RUTA,
+      hitos: [hito('h1', 1)],
+      nodos: [nodo('a', 'h1', 1), nodo('b', 'h1', 2)],
+      contenidos: [
+        contenido('a', { tieneCuestionario: true }),
+        contenido('b', {
+          tieneMicroleccion: true,
+          tieneCuestionario: true,
+          reto: { id: 'x', titulo: 'Reto' },
+        }),
+      ],
+    });
+
+    expect(ruta.hitos[0]?.nodos.map((n) => n.actividades)).toEqual([
+      ['CUESTIONARIO'],
+      ['MICROLECCION', 'CUESTIONARIO', 'RETO'],
     ]);
   });
 

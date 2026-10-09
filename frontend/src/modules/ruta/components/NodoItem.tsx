@@ -39,6 +39,15 @@ export function NodoItem({ nodo, progreso }: NodoItemProps) {
               Lección
             </Link>
           )}
+          {nodo.actividades.includes('CUESTIONARIO') && (
+            <Link
+              to="/nodos/$nodoId/cuestionario"
+              params={{ nodoId: nodo.id }}
+              className={buttonClasses({ size: 'sm' })}
+            >
+              Cuestionario
+            </Link>
+          )}
           {nodo.actividades.includes('RETO') && (
             <Link
               to="/nodos/$nodoId/reto"
