@@ -50,7 +50,7 @@ GET http://localhost:8080/api/rutas?tipo=CAMBIO_RUBRO&objetivo=CAMBIAR&page=0&si
 GET http://localhost:8080/api/rutas/{id}
 ```
 
-El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto ni incluye todavía inscripciones.
+El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto; las inscripciones autenticadas se describen más abajo.
 
 ### Hitos, nodos y prerrequisitos
 
@@ -129,6 +129,153 @@ retoId: b5000000-0000-4000-8000-000000000002 (solo en el detalle)
 
 El listado devuelve un reto de escritura y el detalle devuelve ese mismo reto. La rúbrica DEMO tiene cuatro criterios, máximo 12 y aprobación 8; el criterio de política es eliminatorio. Son datos ficticios para comprobar la API. La carga conserva las ediciones existentes y no crea intentos ni evaluaciones.
 
+## Cuentas y acceso con email y contraseña
+
+El acceso usa Spring Security y sesiones JDBC persistidas en PostgreSQL. El registro
+crea una cuenta `PERSONA`, `ACTIVO`; no inicia sesión ni permite elegir rol o estado.
+Las inscripciones autenticadas se describen más abajo. El diagnóstico y los intentos siguen pendientes.
+
+| Endpoint | Cuerpo | Resultado |
+|---|---|---|
+| `GET /api/auth/csrf` | ninguno | 200, `token` y `headerName` |
+| `POST /api/auth/registro` | `nombre`, `email`, `contrasenia` | 201, usuario creado |
+| `POST /api/auth/login` | `email`, `contrasenia` | 200, usuario y cookie de sesión |
+| `GET /api/auth/actual` | ninguno | 200, usuario de la sesión; 401 sin sesión válida |
+| `POST /api/auth/logout` | ninguno | 204, sesión invalidada y cookie eliminada |
+
+El usuario público contiene únicamente `id`, `nombre`, `email` y `tipo`. Nunca se
+devuelve el hash ni la contraseña. Las respuestas de acceso no se almacenan en caché.
+El email se recorta y normaliza a minúsculas, incluso para detectar duplicados de
+cuentas anteriores. Un duplicado devuelve 409. El nombre admite hasta 100 caracteres
+y el email hasta 254. La contraseña de registro exige al menos 12 caracteres y
+hasta 72 bytes UTF-8; no se recorta. Se guarda con BCrypt y salt, en formato delegable.
+Login acepta contraseñas anteriores más cortas, con el mismo máximo de 72 bytes.
+
+Datos inválidos o JSON mal formado devuelven 400. Email desconocido, contraseña
+incorrecta, cuenta sin hash y cuenta suspendida usan el mismo error 401 genérico.
+Una suspensión posterior al login invalida el acceso en la siguiente petición.
+Todas las escrituras de acceso exigen CSRF: un token ausente o incorrecto devuelve
+403 con `ErrorResponse`. El registro no autentica: luego se debe ejecutar login.
+
+La cookie `SESSION` es HttpOnly y SameSite=Lax. Se rota al iniciar sesión y vence
+después de 30 minutos de inactividad (`SESSION_TIMEOUT`, configurable). Las sesiones
+persisten en las tablas de V2; su esquema lo administra Flyway. `SESSION_COOKIE_SECURE`
+es true por defecto y false para HTTP local con perfil dev. En HTTPS debe ser true.
+El despliegue de web y API en sitios distintos requiere revisar cookies y CORS.
+
+El catálogo público de rutas y contenidos sigue disponible sin login. `/api/puestos`
+requiere un usuario `ADMIN_XPEDIA`. El registro público no crea administradores.
+
+Para probar en Swagger: ejecutar `GET /api/auth/csrf`, copiar el token y cargarlo en
+**Authorize → csrf**. Usar después registro/login. La cookie se gestiona en el navegador;
+volver a obtener y autorizar un token nuevo después de login y después de logout.
+No copiar la cookie HttpOnly al campo de autorización de Swagger.
+
+Ejemplo en PowerShell, con el backend levantado (crea una cuenta si se ejecuta):
+
+```powershell
+$csrf = Invoke-RestMethod http://localhost:8080/api/auth/csrf -SessionVariable sesion
+$headers = @{ 'X-CSRF-TOKEN' = $csrf.token }
+$registro = @{ nombre = 'Persona de prueba'; email = 'prueba@example.com'; contrasenia = 'Una contraseña segura' }
+Invoke-RestMethod http://localhost:8080/api/auth/registro -Method Post -WebSession $sesion -Headers $headers -ContentType 'application/json' -Body ($registro | ConvertTo-Json)
+$login = @{ email = 'prueba@example.com'; contrasenia = 'Una contraseña segura' }
+Invoke-RestMethod http://localhost:8080/api/auth/login -Method Post -WebSession $sesion -Headers $headers -ContentType 'application/json' -Body ($login | ConvertTo-Json)
+Invoke-RestMethod http://localhost:8080/api/auth/actual -WebSession $sesion
+$csrf = Invoke-RestMethod http://localhost:8080/api/auth/csrf -WebSession $sesion
+Invoke-RestMethod http://localhost:8080/api/auth/logout -Method Post -WebSession $sesion -Headers @{ 'X-CSRF-TOKEN' = $csrf.token }
+```
+
+El frontend deberá enviar cookies (`credentials: 'include'`) y el header CSRF cuando
+se integre. Esta etapa solo modifica el backend. Google, recuperación de contraseña
+y verificación por email se incorporarán por separado.
+
+V2 agrega unicidad por `lower(trim(email))` y tablas de sesiones. Si existen emails
+que colisionan, la migración falla sin borrar ni fusionar usuarios: hay que resolver
+el conflicto explícitamente antes de reintentar. V1 conserva su contenido y checksum.
+
+## Elegir ruta y ritmo: inscripción y progreso inicial
+
+`POST /api/inscripciones` crea una inscripción para el usuario de la sesión; exige
+login y CSRF. No recibe ni permite elegir `usuarioId`, estado, dominio ni hito inicial.
+
+```json
+{
+  "rutaId": "b1000000-0000-4000-8000-000000000001",
+  "objetivo": "CAMBIAR",
+  "metaPersonal": "Conseguir trabajo en atención remota",
+  "ritmoMin": 20
+}
+```
+
+- `rutaId` es el UUID de la versión elegida en el catálogo, no el slug.
+- `objetivo` es obligatorio: `ARRANCAR`, `CAMBIAR` o `MEJORAR`.
+- `metaPersonal` es opcional, admite hasta 2000 caracteres y se recorta.
+- `ritmoMin` es un número JSON entero entre 1 y 1440; no se redondean decimales
+  ni se convierten cadenas como `"20"`.
+
+Devuelve **201** con `id`, `rutaId`, `rutaSlug`, `objetivo`, `metaPersonal`, `estado`,
+`hitoActualId`, `ritmoMin`, `fechaLlegadaEstimada` y `progreso`. Cada progreso contiene
+`nodoId`, `estado` y `dominio`. La ruta debe ser global PUBLICADA y tener un hito
+con algún nodo disponible. Se selecciona el primer hito con un nodo sin
+prerrequisitos, según el orden del catálogo.
+
+Se crea un progreso por nodo visible del catálogo: sin prerrequisitos visibles de
+ese recorrido queda `DISPONIBLE`; el resto, `BLOQUEADO`. `DISPONIBLE` corresponde
+al "SIGUIENTE" de la historia. Se incluyen temas visibles sin hito, pero un tema
+aislado no basta para iniciar una ruta. Se conserva la proyección del catálogo:
+nodos con hitos ajenos y prerrequisitos de otra ruta quedan fuera del recorrido.
+Dominio y nivel comienzan en cero, sin diagnóstico ni aprobación de actividades.
+
+La fecha estimada es la fecha UTC de inicio más
+`ceil(horasEstimadas * 60 / ritmoMin)` días, suponiendo práctica todos los días.
+Si la duración no está informada se devuelve `null`; si es cero/negativa se rechaza
+la inscripción. Es una estimación inicial, no una garantía de aprendizaje.
+
+Inscripción y progresos se guardan en una sola transacción. Otra inscripción
+ACTIVA o PAUSADA de la misma persona y versión de ruta devuelve **409**, también
+ante dos solicitudes simultáneas. Una anterior TERMINADA permite inscribirse otra
+vez sin reiniciar su progreso histórico. Se pueden tener varias rutas abiertas.
+
+`GET /api/inscripciones/actual` devuelve **200** con el mismo contrato y los
+progresos persistidos. Elige la ACTIVA más reciente de la persona, por fecha de
+inicio e ID descendentes. No devuelve inscripciones de otros usuarios. Sin activa,
+o si su ruta fue ocultada, devuelve **404**; no busca una ruta anterior como sustituto.
+Los registros previos a V3 pueden tener `objetivo = null`: no se inventa esa elección.
+Ambas respuestas exitosas llevan `Cache-Control: no-store`.
+
+Errores: **400** datos inválidos o recorrido sin inicio; **401** sin sesión válida
+o cuenta suspendida; **403** CSRF ausente/incorrecto; **404** ruta oculta/inexistente;
+**409** inscripción abierta o restricción de persistencia. Usan `ErrorResponse`.
+
+### Probar en Swagger
+
+Con el backend actualizado y el piloto local cargado:
+
+1. Iniciar sesión con una cuenta propia usando `/api/auth/login`.
+2. Obtener un token nuevo en `/api/auth/csrf` y pegarlo en **Authorize → csrf**.
+   La cookie de sesión la gestiona el navegador.
+3. Ejecutar `POST /api/inscripciones` con el JSON de arriba: **201**.
+4. Ejecutar `GET /api/inscripciones/actual`: **200**, misma inscripción y progresos.
+5. Repetir el POST: **409**, sin duplicar ni reiniciar datos.
+
+La app que estaba ejecutándose antes de esta etapa requiere reiniciarse para cargar
+el código nuevo. V3 se aplica al arrancar y conserva los datos. No se debe borrar
+el volumen ni editar V1/V2 para hacerlo funcionar.
+
+### Integración pendiente del frontend
+
+Esta etapa solo modifica backend. El frontend vigente todavía usa MSW para
+inscripciones/diagnóstico y envía `rutaSlug` + `respuestas`; espera un resultado
+`diagnostico` que esta API no genera. Antes de conectar el POST real, debe usar el
+`rutaId` resuelto desde el catálogo, enviar cookies y CSRF, y adaptar sus schemas
+para llegada/objetivo desconocidos y diagnóstico pendiente. El supuesto del mock
+es seis días de práctica por semana; la estimación inicial real usa práctica diaria.
+No se deben presentar los datos del mock como resultados del backend.
+
+El diagnóstico y la personalización, cambios de ritmo, selección explícita entre
+varias inscripciones, respuestas e intentos quedan para etapas posteriores. El estado
+para compañeros y asistentes está en [CONTINUIDAD.md](docs/CONTINUIDAD.md).
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
@@ -140,7 +287,7 @@ docker compose up -d postgres
 ./mvnw spring-boot:run
 ```
 
-- `docker compose up -d postgres` crea la base `xpedia` con pgvector. Flyway no crea bases: crea las tablas al arrancar la app. Si la base quedó a medias por un intento anterior, se borra el volumen con `docker compose down -v` y se vuelve a levantar.
+- `docker compose up -d postgres` levanta la base `xpedia` con pgvector y conserva el volumen existente. Flyway aplica las migraciones al arrancar la app. Si hay un error de migración, revisar su causa y corregirla conservando los datos; no borrar el volumen para recuperarlo.
 - El perfil por defecto es `dev`. Usa `localhost:5434/xpedia` con `xpedia_user` / `xpedia_pass`. Se puede sobrescribir con variables de entorno o con `application-xpedia-secrets.properties` (ver el `.example`).
 - Swagger: http://localhost:8080/swagger-ui.html
 
@@ -150,7 +297,7 @@ docker compose up -d postgres
 ./mvnw test
 ```
 
-El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del catálogo usa Testcontainers con PostgreSQL 17 y pgvector: aplica V1, valida las entities JPA y prueba consultas HTTP y OpenAPI. **Docker debe estar funcionando** para ejecutar la suite completa. El contenedor y los datos de prueba son descartables; no se conecta a la base local `xpedia`.
+El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del catálogo usa Testcontainers con PostgreSQL 17 y pgvector: aplica las migraciones versionadas, valida las entities JPA y prueba consultas HTTP y OpenAPI. **Docker debe estar funcionando** para ejecutar la suite completa. El contenedor y los datos de prueba son descartables; no se conecta a la base local `xpedia`.
 
 Para ejecutar solo las pruebas del catálogo en PowerShell, desde la carpeta `backend`:
 

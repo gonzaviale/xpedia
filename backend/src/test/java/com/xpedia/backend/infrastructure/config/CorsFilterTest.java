@@ -110,7 +110,8 @@ class CorsFilterTest {
         assertThat(response.getHeader(ALLOW_ORIGIN_HEADER)).isEqualTo(FRONTEND_URL);
         assertThat(response.getHeader("Access-Control-Allow-Credentials")).isEqualTo("true");
         assertThat(response.getHeader("Access-Control-Allow-Methods")).contains("GET", "OPTIONS");
-        assertThat(response.getHeader("Access-Control-Allow-Headers")).isEqualTo("Authorization, Content-Type");
+        assertThat(response.getHeader("Access-Control-Allow-Headers"))
+                .isEqualTo("Authorization, Content-Type, X-CSRF-TOKEN");
         assertThat(response.getHeader("Access-Control-Max-Age")).isEqualTo("86400");
     }
 

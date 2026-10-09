@@ -1,3 +1,5 @@
+-- Exclusivo del PostgreSQL temporal: eliminar primero las inscripciones que referencian rutas.
+DELETE FROM inscripcion;
 DELETE FROM ruta;
 DELETE FROM organizacion;
 DELETE FROM habilidad;

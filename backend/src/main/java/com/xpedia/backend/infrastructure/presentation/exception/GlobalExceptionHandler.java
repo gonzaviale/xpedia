@@ -1,12 +1,15 @@
 package com.xpedia.backend.infrastructure.presentation.exception;
 
 import com.xpedia.backend.domain.exception.BusinessRuleException;
+import com.xpedia.backend.domain.exception.CredencialesInvalidasException;
 import com.xpedia.backend.domain.exception.DuplicateResourceException;
 import com.xpedia.backend.domain.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.CacheControl;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +25,20 @@ import java.util.UUID;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ErrorResponse> handleCredentials(CredencialesInvalidasException e,
+                                                         HttpServletRequest request) {
+        ResponseEntity<ErrorResponse> error = buildResponse(HttpStatus.UNAUTHORIZED, e.getMessage(), request, null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).cacheControl(CacheControl.noStore())
+                .body(error.getBody());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadable(HttpMessageNotReadableException e,
+                                                        HttpServletRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "El cuerpo JSON no es válido", request, null);
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException e, HttpServletRequest request) {
