@@ -34,6 +34,25 @@ El flujo de un request es:
 
 El ABM de ejemplo es **puesto** (`/api/puestos`).
 
+## Catálogo público de rutas
+
+- `GET /api/rutas`: lista paginada de rutas globales con estado `PUBLICADA`.
+- `GET /api/rutas/{id}`: detalle de una ruta del catálogo por UUID.
+- Las rutas de empresa (`organizacion_id` con valor), en borrador, en armado o archivadas no aparecen; su detalle devuelve `404`, igual que un ID inexistente.
+
+El listado admite `tipo` (`TECNICA`, `CAMBIO_RUBRO`, `HABILIDAD_BLANDA`) y `objetivo` (`ARRANCAR`, `CAMBIAR`, `MEJORAR`). Los filtros son opcionales y se combinan. `page` comienza en 0 y `size` admite de 1 a 100; los valores por defecto son 0 y 20. El orden es por título e ID, para mantener estable la paginación. Los filtros, UUID o valores de paginación inválidos devuelven `400` con el formato común `ErrorResponse`.
+
+Ejemplos en Swagger o en un cliente HTTP:
+
+```text
+GET http://localhost:8080/api/rutas
+GET http://localhost:8080/api/rutas?tipo=CAMBIO_RUBRO&objetivo=CAMBIAR&page=0&size=20
+GET http://localhost:8080/api/rutas/{id}
+```
+
+El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto ni incluye todavía hitos, nodos o inscripciones.
+
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
@@ -55,4 +74,12 @@ docker compose up -d postgres
 ./mvnw test
 ```
 
-Los tests usan H2 (perfil `h2-test`) sin Flyway. Requieren JDK 21 en `JAVA_HOME`.
+El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del catálogo usa Testcontainers con PostgreSQL 17 y pgvector: aplica V1, valida las entities JPA y prueba consultas HTTP y OpenAPI. **Docker debe estar funcionando** para ejecutar la suite completa. El contenedor y los datos de prueba son descartables; no se conecta a la base local `xpedia`.
+
+Para ejecutar solo las pruebas del catálogo en PowerShell, desde la carpeta `backend`:
+
+```powershell
+.\mvnw.cmd '-Dtest=RutaControllerTest,RutaPostgresIntegrationTest' test
+```
+
+La versión objetivo de Java es 21. Usar un JDK compatible en `JAVA_HOME`.
