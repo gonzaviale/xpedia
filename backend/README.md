@@ -50,8 +50,19 @@ GET http://localhost:8080/api/rutas?tipo=CAMBIO_RUBRO&objetivo=CAMBIAR&page=0&si
 GET http://localhost:8080/api/rutas/{id}
 ```
 
-El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto ni incluye todavía hitos, nodos o inscripciones.
+El listado devuelve `content`, `pageNumber`, `pageSize`, `totalElements`, `totalPages`, `first` y `last`. Cada ruta incluye su meta, duración y sello de validación. El detalle añade perfil inicial, estado y fechas; no expone IDs de empresas ni de revisores. Una base sin rutas devuelve una página vacía con `200`. Este módulo no carga contenido piloto ni incluye todavía inscripciones.
 
+### Hitos, nodos y prerrequisitos
+
+- `GET /api/rutas/{rutaId}/hitos`: array de hitos, ordenado por `posicion` e ID. Incluye objetivo, horas estimadas, `esFinal` y `evidenciaEsperada`.
+- `GET /api/rutas/{rutaId}/nodos`: array de nodos con `hitoId`, `ramaId`, `habilidadId`, código, tipo, nivel, minutos estimados, palabras clave y `prerrequisitoIds`.
+- `GET /api/rutas/{rutaId}/nodos?hitoId={hitoId}`: nodos de un hito específico. El hito debe pertenecer a la ruta; de lo contrario devuelve `404`.
+
+Los nodos se ordenan por posición del hito, posición del nodo e ID. Los temas `TEMA` sin hito aparecen al final del listado general y no aparecen al filtrar por hito. Los prerrequisitos del mismo roadmap se conservan aunque pertenezcan a un hito anterior al consultado.
+
+Todas estas consultas exigen una ruta global publicada. Una ruta inexistente, privada o no publicada devuelve `404`; un UUID inválido devuelve `400`. Una ruta válida sin contenido devuelve `200` con `[]`. No se exponen nodos cuyo hito pertenezca a otra ruta, prerrequisitos de otra ruta ni IDs de ramas ajenas o habilidades privadas. Los prerrequisitos y las referencias se cargan en lote para evitar una consulta por nodo.
+
+Estas respuestas representan el contenido de la ruta. El estado de avance, dominio y desbloqueo de cada persona requiere una inscripción y queda para el módulo de progreso.
 
 ## Migraciones
 
@@ -79,7 +90,7 @@ El test de contexto usa H2 (perfil `h2-test`) sin Flyway. La integración del ca
 Para ejecutar solo las pruebas del catálogo en PowerShell, desde la carpeta `backend`:
 
 ```powershell
-.\mvnw.cmd '-Dtest=RutaControllerTest,RutaPostgresIntegrationTest' test
+.\mvnw.cmd '-Dtest=RutaControllerTest,ContenidoRutaControllerTest,RutaPostgresIntegrationTest' test
 ```
 
 La versión objetivo de Java es 21. Usar un JDK compatible en `JAVA_HOME`.
