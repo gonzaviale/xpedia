@@ -5,8 +5,9 @@ services:
     branch: main
     dockerContext: backend
     dockerfilePath: backend/Dockerfile
-    # El despliegue lo dispara el pipeline (deploy hook) una vez pasados los tests
-    autoDeployTrigger: off
+    # Render despliega solo al pushear a main. Para desplegar desde el
+    # pipeline (deploy hook) cambiar a "off" y descomentar el job en deploy-main.yml
+    autoDeployTrigger: commit
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
