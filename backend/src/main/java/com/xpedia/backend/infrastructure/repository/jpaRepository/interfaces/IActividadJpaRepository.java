@@ -23,6 +23,8 @@ import java.util.UUID;
  * es un texto con algún carácter que no sea espacio en blanco.</p>
  *
  * <p>Microlecciones (MICROLECCION): tienen al menos una fuente global asociada.</p>
+ *
+ * <p>Cuestionarios (CUESTIONARIO): tienen al menos una pregunta cargada.</p>
  */
 public interface IActividadJpaRepository extends JpaRepository<ActividadEntity, UUID> {
 
@@ -44,6 +46,23 @@ public interface IActividadJpaRepository extends JpaRepository<ActividadEntity, 
               AND NOT EXISTS (SELECT 1 FROM actividad_fuente af JOIN fuente f ON f.id = af.fuente_id
                               WHERE af.actividad_id = a.id AND f.organizacion_id IS NOT NULL)
             """;
+
+    String CUESTIONARIOS_VISIBLES = """
+            SELECT a.* FROM actividad a
+            JOIN nodo n ON n.id = a.nodo_id AND n.ruta_id = a.ruta_id
+            LEFT JOIN hito h ON h.id = n.hito_id AND h.ruta_id = n.ruta_id
+            WHERE a.tipo = 'CUESTIONARIO' AND a.estado_revision = 'APROBADA'
+              AND (n.hito_id IS NULL OR h.id IS NOT NULL)
+              AND (a.hito_id IS NULL OR a.hito_id = n.hito_id)
+              AND EXISTS (SELECT 1 FROM pregunta p WHERE p.actividad_id = a.id)
+            """;
+
+    @Query(value = CUESTIONARIOS_VISIBLES + " AND a.ruta_id = :rutaId AND a.nodo_id = :nodoId"
+            + " ORDER BY a.nivel, a.creado_en, a.id", nativeQuery = true)
+    List<ActividadEntity> findCuestionariosAprobados(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId);
+
+    @Query(value = CUESTIONARIOS_VISIBLES + " AND a.id = :actividadId", nativeQuery = true)
+    Optional<ActividadEntity> findCuestionarioAprobadoById(@Param("actividadId") UUID actividadId);
 
     @Query(value = RETOS_VISIBLES + " ORDER BY a.nivel, a.creado_en, a.id", nativeQuery = true)
     List<ActividadEntity> findRetosAprobados(@Param("rutaId") UUID rutaId, @Param("nodoId") UUID nodoId);

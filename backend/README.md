@@ -129,6 +129,29 @@ retoId: b5000000-0000-4000-8000-000000000002 (solo en el detalle)
 
 El listado devuelve un reto de escritura y el detalle devuelve ese mismo reto. La rúbrica DEMO tiene cuatro criterios, máximo 12 y aprobación 8; el criterio de política es eliminatorio. Son datos ficticios para comprobar la API. La carga conserva las ediciones existentes y no crea intentos ni evaluaciones.
 
+### Cuestionarios e intentos
+
+- `GET /api/rutas/{rutaId}/nodos/{nodoId}/cuestionarios`: array de cuestionarios (`CUESTIONARIO`) aprobados del nodo, cada uno con sus preguntas ordenadas por posición. Cada pregunta informa tipo, enunciado y opciones; **no** incluye la opción correcta ni la explicación.
+- `POST /api/intentos`: corrige las respuestas de un cuestionario, guarda el intento (`intento` y `respuesta`) y devuelve la corrección.
+
+Cuerpo del `POST`:
+
+```json
+{
+  "usuarioId": "uuid",
+  "inscripcionId": "uuid (opcional)",
+  "actividadId": "uuid del cuestionario",
+  "iniciadoEn": "2026-10-09T14:55:00Z (opcional)",
+  "respuestas": [
+    { "preguntaId": "uuid", "elegida": 1, "confianza": "SABIA | DUDE | ADIVINE", "milisegundos": 1500 }
+  ]
+}
+```
+
+La respuesta es `201` con `puntaje` (porcentaje de aciertos con dos decimales), `aprobado` (80 % o más), `correctas`, `total` y un elemento de `correcciones` por pregunta con `correcta`, `opcionCorrecta`, `confianza` y `explicacion`. Hay que responder todas las preguntas del cuestionario una sola vez y con una opción que exista; si no, `400`. Cuestionario oculto o inexistente (no aprobado, sin preguntas o de una ruta no publicada), `404`. Un `usuarioId` o `inscripcionId` que no existen violan una clave foránea y devuelven `409`.
+
+Provisorio: mientras no haya autenticación, `usuarioId` viaja en el cuerpo. Cuando exista identificación de personas, debe salir de la sesión y dejar de aceptarse en el cuerpo. El intento se guarda siempre en modo `PRACTICA`.
+
 ## Migraciones
 
 En `src/main/resources/db/migration`, con el formato `V{n}__{descripcion}.sql` (dos guiones bajos). Las aplica Flyway al arrancar y `ddl-auto=none`. **Nunca se edita una migración ya aplicada**: para cambiar algo se crea una nueva.
