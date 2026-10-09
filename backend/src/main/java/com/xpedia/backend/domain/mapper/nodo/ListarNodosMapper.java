@@ -1,30 +1,32 @@
 package com.xpedia.backend.domain.mapper.nodo;
 
-import com.xpedia.backend.domain.dto.nodo.NodoItem;
 import com.xpedia.backend.domain.dto.nodo.ListarNodosResponse;
+import com.xpedia.backend.domain.dto.nodo.NodoItem;
 import com.xpedia.backend.domain.model.nodo.Nodo;
+
 import java.util.List;
 
 public class ListarNodosMapper {
-    public ListarNodosResponse toResponse(List<Nodo> items) {
-        return new ListarNodosResponse(items.stream().map(this::toItem).toList());
+
+    public ListarNodosResponse toResponse(List<Nodo> nodos) {
+        return new ListarNodosResponse(nodos.stream().map(this::toItem).toList());
     }
 
-    private NodoItem toItem(Nodo item) {
+    private NodoItem toItem(Nodo nodo) {
         return new NodoItem(
-                item.getId(),
-                item.getRutaId(),
-                item.getHitoId(),
-                item.getRamaId(),
-                item.getHabilidadId(),
-                item.getCodigo(),
-                item.getTitulo(),
-                item.getResumen(),
-                item.getTipo(),
-                item.getNivel(),
-                item.getMinutosEstimados(),
-                item.getPalabrasClave(),
-                item.getPosicion(),
-                item.getPrerrequisitoIds());
+                nodo.getId(),
+                nodo.getRutaId(),
+                nodo.getHitoId(),
+                nodo.getRamaId(),
+                nodo.getHabilidadId(),
+                nodo.getCodigo(),
+                nodo.getTitulo(),
+                nodo.getResumen(),
+                nodo.getTipo(),
+                nodo.getNivel(),
+                nodo.getMinutosEstimados(),
+                nodo.getPalabrasClave(),
+                nodo.getPosicion(),
+                nodo.getPrerrequisitoIds());
     }
 }

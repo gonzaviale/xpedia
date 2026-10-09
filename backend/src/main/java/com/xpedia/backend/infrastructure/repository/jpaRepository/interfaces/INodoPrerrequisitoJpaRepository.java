@@ -5,10 +5,13 @@ import com.xpedia.backend.infrastructure.repository.entity.NodoPrerrequisitoId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.UUID;
 
-public interface INodoPrerrequisitoJpaRepository extends JpaRepository<NodoPrerrequisitoEntity, NodoPrerrequisitoId> {
+public interface INodoPrerrequisitoJpaRepository
+        extends JpaRepository<NodoPrerrequisitoEntity, NodoPrerrequisitoId> {
+
     @Query("""
             SELECT p FROM NodoPrerrequisitoEntity p
             JOIN NodoEntity requerido ON requerido.id = p.prerrequisitoId
@@ -18,5 +21,5 @@ public interface INodoPrerrequisitoJpaRepository extends JpaRepository<NodoPrerr
             ORDER BY p.nodoId, p.prerrequisitoId
             """)
     List<NodoPrerrequisitoEntity> findDeNodosEnRuta(@Param("nodoIds") List<UUID> nodoIds,
-                                                  @Param("rutaId") UUID rutaId);
+                                                    @Param("rutaId") UUID rutaId);
 }

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ContenidoRutaUseCaseConfig {
+
     @Bean
     public ListarHitosMapper listarHitosMapper() {
         return new ListarHitosMapper();
@@ -22,12 +23,14 @@ public class ContenidoRutaUseCaseConfig {
     }
 
     @Bean
-    public ListarHitosUseCase listarHitosUseCase(HitoService service, ListarHitosMapper mapper) {
-        return new ListarHitosUseCase(service, mapper);
+    public ListarHitosUseCase listarHitosUseCase(HitoService hitoService,
+                                                 ListarHitosMapper listarHitosMapper) {
+        return new ListarHitosUseCase(hitoService, listarHitosMapper);
     }
 
     @Bean
-    public ListarNodosUseCase listarNodosUseCase(NodoService service, ListarNodosMapper mapper) {
-        return new ListarNodosUseCase(service, mapper);
+    public ListarNodosUseCase listarNodosUseCase(NodoService nodoService,
+                                                 ListarNodosMapper listarNodosMapper) {
+        return new ListarNodosUseCase(nodoService, listarNodosMapper);
     }
 }

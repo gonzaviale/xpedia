@@ -1,12 +1,13 @@
 package com.xpedia.backend.infrastructure.repository.entity;
 
-import lombok.*;
-import java.util.UUID;
-import java.time.OffsetDateTime;
 import com.xpedia.backend.domain.model.enums.TipoNodo;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,6 +17,7 @@ import org.hibernate.type.SqlTypes;
 @Entity
 @Table(name = "nodo")
 public class NodoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)

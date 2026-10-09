@@ -4,10 +4,12 @@ import com.xpedia.backend.infrastructure.repository.entity.NodoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface INodoJpaRepository extends JpaRepository<NodoEntity, UUID> {
+
     @Query("""
             SELECT COUNT(n) > 0 FROM NodoEntity n
             LEFT JOIN HitoEntity h ON h.id = n.hitoId AND h.rutaId = n.rutaId
@@ -16,8 +18,11 @@ public interface INodoJpaRepository extends JpaRepository<NodoEntity, UUID> {
     boolean existsVisibleByIdAndRutaId(@Param("id") UUID id, @Param("rutaId") UUID rutaId);
 
     interface ReferenciasVisibles {
+
         UUID getNodoId();
+
         UUID getRamaId();
+
         UUID getHabilidadId();
     }
 
@@ -31,7 +36,7 @@ public interface INodoJpaRepository extends JpaRepository<NodoEntity, UUID> {
             WHERE n.ruta_id = :rutaId AND n.id IN (:ids)
             """, nativeQuery = true)
     List<ReferenciasVisibles> findReferenciasVisibles(@Param("rutaId") UUID rutaId,
-                                                    @Param("ids") List<UUID> ids);
+                                                      @Param("ids") List<UUID> ids);
 
     @Query("""
             SELECT n FROM NodoEntity n

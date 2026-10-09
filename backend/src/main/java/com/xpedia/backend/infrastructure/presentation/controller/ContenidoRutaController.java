@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -19,24 +20,30 @@ import java.util.UUID;
 @RequestMapping("/api/rutas/{rutaId}")
 @Tag(name = "Rutas", description = "Catálogo público de rutas de Xpedia")
 public class ContenidoRutaController {
+
     private final ListarHitosUseCase listarHitosUseCase;
     private final ListarNodosUseCase listarNodosUseCase;
-    private final HitoPresentationMapper hitoMapper;
-    private final NodoPresentationMapper nodoMapper;
+    private final HitoPresentationMapper hitoPresentationMapper;
+    private final NodoPresentationMapper nodoPresentationMapper;
 
     @GetMapping("/hitos")
     @Operation(summary = "Listar hitos de una ruta global publicada",
             description = "Orden por posición e ID. Ruta inexistente o fuera del catálogo: 404.")
     public ResponseEntity<List<HitoResponse>> listarHitos(@PathVariable UUID rutaId) {
-        return ResponseEntity.ok(hitoMapper.toResponse(listarHitosUseCase.execute(hitoMapper.toRequest(rutaId))));
+        return ResponseEntity.ok(
+                hitoPresentationMapper.toResponse(
+                        listarHitosUseCase.execute(hitoPresentationMapper.toRequest(rutaId))));
     }
 
     @GetMapping("/nodos")
     @Operation(summary = "Listar nodos y sus prerrequisitos",
-            description = "Filtro opcional hitoId, que debe pertenecer a la ruta. Los temas sin hito aparecen al final del listado general.")
-    public ResponseEntity<List<NodoResponse>> listarNodos(@PathVariable UUID rutaId,
-                                                        @RequestParam(required = false) UUID hitoId) {
-        return ResponseEntity.ok(nodoMapper.toResponse(
-                listarNodosUseCase.execute(nodoMapper.toRequest(rutaId, hitoId))));
+            description = "Filtro opcional hitoId, que debe pertenecer a la ruta. "
+                    + "Los temas sin hito aparecen al final del listado general.")
+    public ResponseEntity<List<NodoResponse>> listarNodos(
+            @PathVariable UUID rutaId,
+            @RequestParam(required = false) UUID hitoId) {
+        return ResponseEntity.ok(
+                nodoPresentationMapper.toResponse(
+                        listarNodosUseCase.execute(nodoPresentationMapper.toRequest(rutaId, hitoId))));
     }
 }

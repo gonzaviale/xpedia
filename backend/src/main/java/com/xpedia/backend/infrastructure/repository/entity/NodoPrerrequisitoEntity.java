@@ -2,8 +2,9 @@ package com.xpedia.backend.infrastructure.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.UUID;
+
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import java.time.OffsetDateTime;
 @Table(name = "nodo_prerrequisito")
 @IdClass(NodoPrerrequisitoId.class)
 public class NodoPrerrequisitoEntity {
+
     @Id
     @Column(name = "nodo_id", nullable = false)
     private UUID nodoId;

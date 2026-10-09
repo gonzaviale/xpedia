@@ -1,10 +1,15 @@
 package com.xpedia.backend.domain.model.nodo;
 
-import lombok.*;
-import java.util.UUID;
+import com.xpedia.backend.domain.model.enums.TipoNodo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.OffsetDateTime;
 import java.util.List;
-import com.xpedia.backend.domain.model.enums.TipoNodo;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,6 +17,7 @@ import com.xpedia.backend.domain.model.enums.TipoNodo;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Nodo {
+
     private UUID id;
 
     private UUID rutaId;

@@ -1,8 +1,9 @@
 package com.xpedia.backend.domain.dto.nodo;
 
-import java.util.UUID;
-import java.util.List;
 import com.xpedia.backend.domain.model.enums.TipoNodo;
+
+import java.util.List;
+import java.util.UUID;
 
 public record NodoItem(
         UUID id,

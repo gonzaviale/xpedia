@@ -3,12 +3,14 @@ package com.xpedia.backend.infrastructure.repository.mapper;
 import com.xpedia.backend.domain.model.nodo.Nodo;
 import com.xpedia.backend.infrastructure.repository.entity.NodoEntity;
 import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Component
 public class NodoRepositoryMapper {
+
     public Nodo toDomain(NodoEntity entity, List<UUID> prerrequisitoIds, UUID ramaId, UUID habilidadId) {
         return Nodo.builder()
                 .id(entity.getId())
