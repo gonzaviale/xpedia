@@ -1,5 +1,8 @@
 export {
   RUTA_SLUG,
+  cargarRutaActual,
+  obtenerRuta,
+  useRutaActual,
   inscripcionActualQuery,
   rutaKeys,
   rutaQuery,

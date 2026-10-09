@@ -25,15 +25,17 @@ export function Sidebar() {
         <PathIcon aria-hidden size={17} />
         Mi ruta
       </Link>
-      <Link
-        to="/nodos/$nodoId/reto"
-        params={{ nodoId: ruta.practicaEstrella.nodoId }}
-        className={itemBase}
-        activeProps={itemActivo}
-      >
-        <SwordIcon aria-hidden size={17} />
-        Práctica estrella
-      </Link>
+      {ruta.practicaEstrella && (
+        <Link
+          to="/nodos/$nodoId/reto"
+          params={{ nodoId: ruta.practicaEstrella.nodoId }}
+          className={itemBase}
+          activeProps={itemActivo}
+        >
+          <SwordIcon aria-hidden size={17} />
+          Práctica estrella
+        </Link>
+      )}
       <div className="mt-auto hidden border-t border-line px-2.5 pt-3 md:block">
         <p className="text-[11px] text-muted">Ruta activa</p>
         <p className="text-[13px]">{ruta.titulo}</p>

@@ -21,21 +21,23 @@ export function RutaPage() {
           <HojaDeRuta ruta={ruta} inscripcion={inscripcion} />
         </Panel>
         <aside className="flex flex-col gap-4">
-          <Panel className="flex flex-col gap-3">
-            <p className="text-[11px] tracking-widest text-accent-300 uppercase">
-              Práctica estrella
-            </p>
-            <h2 className="m-0 text-[17px]">{practicaEstrella.nombre}</h2>
-            <p className="text-neutral-300">{practicaEstrella.descripcion}</p>
-            <Link
-              to="/nodos/$nodoId/reto"
-              params={{ nodoId: practicaEstrella.nodoId }}
-              className={buttonClasses({ variant: 'solid', className: 'self-start' })}
-            >
-              <SwordIcon aria-hidden />
-              Empezar el reto
-            </Link>
-          </Panel>
+          {practicaEstrella && (
+            <Panel className="flex flex-col gap-3">
+              <p className="text-[11px] tracking-widest text-accent-300 uppercase">
+                Práctica estrella
+              </p>
+              <h2 className="m-0 text-[17px]">{practicaEstrella.nombre}</h2>
+              <p className="text-neutral-300">{practicaEstrella.descripcion}</p>
+              <Link
+                to="/nodos/$nodoId/reto"
+                params={{ nodoId: practicaEstrella.nodoId }}
+                className={buttonClasses({ variant: 'solid', className: 'self-start' })}
+              >
+                <SwordIcon aria-hidden />
+                Empezar el reto
+              </Link>
+            </Panel>
+          )}
           {ruta.validacion === 'BORRADOR_IA' && (
             <Note warn>
               Esta ruta es un borrador generado con IA y todavía no la revisó una persona. Cada

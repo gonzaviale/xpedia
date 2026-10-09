@@ -33,11 +33,13 @@ export const rutaSchema = z.object({
   meta: z.string(),
   horasEstimadas: z.number(),
   validacion: validacionSchema,
-  practicaEstrella: z.object({
-    nodoId: z.string(),
-    nombre: z.string(),
-    descripcion: z.string(),
-  }),
+  practicaEstrella: z
+    .object({
+      nodoId: z.string(),
+      nombre: z.string(),
+      descripcion: z.string(),
+    })
+    .nullable(),
   hitos: z.array(hitoSchema).nonempty(),
 });
 
