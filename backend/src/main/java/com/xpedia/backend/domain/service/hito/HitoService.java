@@ -7,6 +7,7 @@ import com.xpedia.backend.domain.service.ruta.RutaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -14,11 +15,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class HitoService {
+
     private final HitoRepository hitoRepository;
     private final RutaService rutaService;
 
     public List<Hito> listar(UUID rutaId) {
-        rutaService.obtener(rutaId);
+        rutaService.validarVisible(rutaId);
         return hitoRepository.findByRutaId(rutaId);
     }
 

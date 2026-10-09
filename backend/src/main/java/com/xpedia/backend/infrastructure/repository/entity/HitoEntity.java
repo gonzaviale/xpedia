@@ -1,12 +1,12 @@
 package com.xpedia.backend.infrastructure.repository.entity;
 
-import lombok.*;
-import java.util.UUID;
-import java.time.OffsetDateTime;
-import java.math.BigDecimal;
 import com.xpedia.backend.domain.model.enums.EstadoPropuestaHito;
 import jakarta.persistence.*;
+import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "hito")
 public class HitoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)

@@ -1,7 +1,7 @@
 package com.xpedia.backend.domain.dto.hito;
 
-import java.util.UUID;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record HitoItem(
         UUID id,

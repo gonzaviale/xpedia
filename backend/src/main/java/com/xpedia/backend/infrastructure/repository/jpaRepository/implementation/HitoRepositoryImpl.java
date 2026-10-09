@@ -6,12 +6,14 @@ import com.xpedia.backend.infrastructure.repository.jpaRepository.interfaces.IHi
 import com.xpedia.backend.infrastructure.repository.mapper.HitoRepositoryMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class HitoRepositoryImpl implements HitoRepository {
+
     private final IHitoJpaRepository jpa;
     private final HitoRepositoryMapper mapper;
 

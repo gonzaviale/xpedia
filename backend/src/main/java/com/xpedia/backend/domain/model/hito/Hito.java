@@ -1,10 +1,15 @@
 package com.xpedia.backend.domain.model.hito;
 
-import lombok.*;
-import java.util.UUID;
-import java.time.OffsetDateTime;
-import java.math.BigDecimal;
 import com.xpedia.backend.domain.model.enums.EstadoPropuestaHito;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,6 +17,7 @@ import com.xpedia.backend.domain.model.enums.EstadoPropuestaHito;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hito {
+
     private UUID id;
 
     private UUID rutaId;

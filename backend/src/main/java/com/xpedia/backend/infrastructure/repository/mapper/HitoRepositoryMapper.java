@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HitoRepositoryMapper {
+
     public Hito toDomain(HitoEntity entity) {
         return Hito.builder()
                 .id(entity.getId())
